@@ -1561,7 +1561,7 @@ const REPORT_EMAIL='drmanishstiwari@gmail.com';
 /* Visitor counts: GoatCounter site code (e.g. 'flapshots' for flapshots.goatcounter.com). Empty = off. */
 const GC_CODE='';
 /* Member sign-ups: Google Form "formResponse" URL and the entry ids of its questions. Empty url = off. */
-const SIGNUP={url:'',f:{name:'',role:'',focus:'',institution:'',city:'',country:'',regNo:'',email:'',digest:'',topics:'',vid:'',kind:''}};
+const SIGNUP={url:'https://docs.google.com/forms/d/e/1FAIpQLSeNUS0Yur2I_wTp35opbpNI3T2oNjo7xJsfrBWQW5K0iNpNhQ/formResponse',f:{name:'entry.1745553417',role:'entry.348116155',focus:'entry.2135813957',institution:'entry.1376213516',city:'entry.31515118',country:'entry.834806224',regNo:'entry.1691522250',email:'entry.938354676',digest:'entry.974416394',topics:'entry.2123935416',vid:'entry.1999298312',kind:'entry.1885583431'}};
 if(GC_CODE){const g=document.createElement('script');g.async=true;g.src='https://gc.zgo.at/count.js';g.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;g.onload=()=>track(S.profile?'open-member':S.guest?'open-guest':'open-new');document.head.appendChild(g);}
 function track(ev){try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'event-'+ev,title:ev,event:true});}catch(e){}}
 async function sendSignup(kind){
