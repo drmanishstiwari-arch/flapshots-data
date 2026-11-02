@@ -1662,7 +1662,7 @@ function maybeA2HS(){
   if(ios&&(a.n||0)>=1){showIosBanner();return;}   /* iPhone: full picture guide once, then a small banner on later visits */
   if((a.n||0)>=3)return;
   if(a.last&&Date.now()-a.last<5*864e5)return;
-  if(!deferredInstall&&!ios)return;
+  if(!deferredInstall&&!ios&&!(isAndroid()&&!canOneTap()))return;
   S.a2hs={...a,n:(a.n||0)+1,last:Date.now(),ld:todayKey()};persist();
   a2hsSheet();
 }
@@ -1733,7 +1733,28 @@ function showIosBanner(){
 }
 if(isIOS()&&isStandalone()&&!(S.a2hs||{}).done){S.a2hs={...(S.a2hs||{}),done:1};persist();track('open-installed-ios');}
 /* Android, opened from the install link: a one-tap install screen before anything else */
+/* Android browsers: only Chrome (and Samsung Internet, Edge) offer one-tap install. Others get "Open in Chrome". */
+const UA=navigator.userAgent;
+const isAndroid=()=>/Android/i.test(UA);
+const canOneTap=()=>/Chrome\/\d+/.test(UA)&&!/(HeyTapBrowser|OppoBrowser|OnePlusBrowser|MiuiBrowser|XiaoMi|VivoBrowser|UCBrowser|OPR\/|OPX\/|Opera|YaBrowser|Firefox|DuckDuckGo|Brave|PhxBrowser|HiBrowser|HuaweiBrowser|QQBrowser|Instagram|FBAN|FBAV|LinkedInApp|Line\/|wv\)|Version\/\d)/.test(UA);
+const chromeIntent=()=>{const u=location.origin+location.pathname.replace(/[^/]*$/,'')+'install/';return 'intent://'+u.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(u)+';end';};
+function openInChrome(){track('open-in-chrome');location.href=chromeIntent();}
 function androidInstallScreen(){
+  if(!canOneTap()){
+    const o=document.createElement('div');o.className='inst';o.id='inst';
+    o.innerHTML=`<svg class="inst-logo" viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg>
+     <div class="inst-word">flap<b>shots</b></div>
+     <p class="inst-tag">Head and neck evidence in three minutes a day</p>
+     <button class="inst-btn" id="inst-chrome">Open in Chrome to install</button>
+     <p class="inst-note">This browser can't install apps. Chrome will open FlapShots with a one-tap <b>Install</b> button.</p>
+     <button class="inst-skip" id="inst-skip">Continue in this browser</button>`;
+    document.body.appendChild(o);
+    const done=()=>{o.classList.add('out');setTimeout(()=>o.remove(),450);};
+    $('inst-chrome').onclick=openInChrome;
+    $('inst-skip').onclick=()=>{done();track('install-skip');};
+    track('install-otherbrowser');
+    return;
+  }
   const o=document.createElement('div');o.className='inst';o.id='inst';
   o.innerHTML=`<svg class="inst-logo" viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg>
    <div class="inst-word">flap<b>shots</b></div>
@@ -1743,7 +1764,7 @@ function androidInstallScreen(){
    <button class="inst-skip" id="inst-skip">Continue in browser</button>`;
   document.body.appendChild(o);
   const done=()=>{o.classList.add('out');setTimeout(()=>o.remove(),450);};
-  const fallback=()=>{$('inst-note').innerHTML='Tap the browser menu <b>⋮</b> (top right) and choose <b>Install app</b>. If you only see “Add to Home screen”, wait a few seconds and tap <b>Try again</b>.';$('inst-go').textContent='Try again';track('install-fallback');};
+  const fallback=()=>{$('inst-note').innerHTML='If FlapShots is already on your home screen, just open it from there. Otherwise tap the browser menu <b>⋮</b> and choose <b>Install app</b>, or tap <b>Try again</b> in a few seconds.';$('inst-go').textContent='Try again';track('install-fallback');};
   addEventListener('beforeinstallprompt',()=>{const b=$('inst-go');if(b&&b.textContent!=='Install app'){b.textContent='Install app';$('inst-note').textContent='Free · no app store · takes 2 seconds';}});
   $('inst-skip').onclick=()=>{done();track('install-skip');};
   $('inst-go').onclick=async()=>{
@@ -1760,10 +1781,11 @@ function androidInstallScreen(){
   };
 }
 function a2hsSheet(){
-  const how=deferredInstall?'prompt':isIOS()?'ios':'other';
+  const how=deferredInstall?'prompt':isIOS()?'ios':(isAndroid()&&!canOneTap())?'chrome':'other';
   const sh=openSheet(`<div class="a2hs"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div><h3>Add FlapShots to your home screen</h3><p>Open it in one tap, full screen, like an app. Free, no app store needed.</p></div></div>
    ${how==='prompt'?'<div class="row"><button class="btn primary" id="a2-yes">Add to home screen</button><button class="btn ghost" id="a2-no">Not now</button></div>'
     :how==='ios'?iosGuideHTML()
+    :how==='chrome'?'<p class="a2steps">This browser can\'t install apps. Open FlapShots in Chrome for a one-tap <b>Install</b>.</p><div class="row"><button class="btn primary" id="a2-chrome">Open in Chrome</button><button class="btn ghost" id="a2-no">Not now</button></div>'
     :/(FBAN|FBAV|Instagram|Line\/|LinkedInApp|wv\))/.test(navigator.userAgent)?'<p class="a2steps">This page opened inside another app. Tap the menu (⋮ or ⋯) and choose <b>Open in Chrome</b> (or <b>Open in browser</b>), then tap <b>Install</b>.</p>'
     :'<p class="a2steps">Open your browser menu (⋮) and choose <b>Install app</b> or <b>Add to Home screen</b>.</p>'}`);
   track(how==='ios'?(iosInApp()?'a2hs-ios-inapp':'a2hs-ios'):'a2hs-shown');
@@ -1771,6 +1793,7 @@ function a2hsSheet(){
   const y=sh.querySelector('#a2-yes'),no=sh.querySelector('#a2-no');
   if(y)y.onclick=async()=>{const ev=deferredInstall;deferredInstall=null;closeSheet();if(!ev)return;ev.prompt();try{const r=await ev.userChoice;if(r.outcome==='accepted'){S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');}}catch(e){}};
   if(no)no.onclick=()=>{closeSheet();track('a2hs-later');};
+  const ch=sh.querySelector('#a2-chrome');if(ch)ch.onclick=()=>{closeSheet();openInChrome();};
 }
 document.addEventListener('click',e=>{if(e.target.closest('#p-a2hs')){closeSheet();setTimeout(a2hsSheet,250);}});
 /* Install link: https://flapshots.drmanishtiwari.com/install (or ?install=1) opens straight to the install prompt. */
