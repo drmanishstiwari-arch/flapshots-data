@@ -949,6 +949,7 @@ const DEFAULTS=()=>({seen:[],liked:{},saved:{},lastN:0,profile:null,guest:false,
 let S=DEFAULTS();
 try{Object.assign(S,JSON.parse(localStorage.getItem('flapshots2')||'{}'));}catch(e){}
 const persist=()=>{try{localStorage.setItem('flapshots2',JSON.stringify(S));}catch(e){}};
+if(new URLSearchParams(location.search).has('reset-install')){S.a2hs={};S.visits=0;persist();history.replaceState(null,'',location.pathname);}
 if(!S.vid){S.vid='v'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);persist();}
 /* ?r= carries name, role, topics, goal, likes, saves and streak (never mobile, email or registration no.) into a newly added home-screen app */
 (function(){
@@ -1662,7 +1663,7 @@ function maybeA2HS(){
   if((a.n||0)>=3)return;
   if(a.last&&Date.now()-a.last<5*864e5)return;
   if(!deferredInstall&&!ios)return;
-  S.a2hs={...a,n:(a.n||0)+1,last:Date.now()};persist();
+  S.a2hs={...a,n:(a.n||0)+1,last:Date.now(),ld:todayKey()};persist();
   a2hsSheet();
 }
 /* ---- iPhone: picture guide, "open in Safari" helper, gentle reminder banner ---- */
@@ -1721,11 +1722,11 @@ function hideIosBanner(){const b=$('ios-banner');if(b)b.remove();}
 let iosBannerShown=false;
 function showIosBanner(){
   const a=S.a2hs||{}, now=Date.now();
-  if(iosBannerShown||(a.bn||0)>=3)return;
-  if(a.bl&&now-a.bl<2*864e5)return;
-  if(a.last&&now-a.last<864e5)return;
+  const day=todayKey();
+  if(iosBannerShown||(a.bn||0)>=6)return;          /* at most 6 reminders in all */
+  if(a.bd===day||a.ld===day)return;                 /* at most one a day, never on the day of the full guide */
   iosBannerShown=true;
-  S.a2hs={...a,bn:(a.bn||0)+1,bl:now};persist();track('ios-banner');
+  S.a2hs={...a,bn:(a.bn||0)+1,bl:now,bd:day};persist();track('ios-banner');
   document.body.insertAdjacentHTML('beforeend',`<div class="ios-banner" id="ios-banner" role="dialog" aria-label="Add FlapShots to your home screen"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div class="ib-t"><b>Add FlapShots to your home screen</b><span>Opens in one tap, like an app</span></div><button class="ib-how" id="ib-how">How?</button><button class="ib-x" id="ib-x" aria-label="Close">×</button></div>`);
   $('ib-how').onclick=()=>{hideIosBanner();a2hsSheet();};
   $('ib-x').onclick=()=>{hideIosBanner();track('ios-banner-close');};
