@@ -1747,10 +1747,12 @@ function androidInstallScreen(){
      <p class="inst-tag">Head and neck evidence in three minutes a day</p>
      <button class="inst-btn" id="inst-chrome">Open in Chrome to install</button>
      <p class="inst-note">This browser can't install apps. Chrome will open FlapShots with a one-tap <b>Install</b> button.</p>
-     <button class="inst-skip" id="inst-skip">Continue in this browser</button>`;
+     <button class="inst-skip" id="inst-short" style="margin-top:6px">Or add a shortcut in this browser</button>
+     <button class="inst-skip" id="inst-skip" style="margin-top:4px">Continue in this browser</button>`;
     document.body.appendChild(o);
     const done=()=>{o.classList.add('out');setTimeout(()=>o.remove(),450);};
     $('inst-chrome').onclick=openInChrome;
+    $('inst-short').onclick=()=>{track('install-shortcut');o.querySelector('.inst-note').innerHTML='Tap this browser\'s menu (<b>☰</b> at the bottom, or <b>⋮</b> at the top) and choose <b>Add to Home screen</b>. The shortcut opens FlapShots inside this browser; for the full-screen app, use <b>Open in Chrome</b>.';$('inst-short').remove();};
     $('inst-skip').onclick=()=>{done();track('install-skip');};
     track('install-otherbrowser');
     return;
