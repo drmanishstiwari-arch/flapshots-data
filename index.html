@@ -1,0 +1,1589 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FlapShots · Head and neck evidence in three minutes a day</title>
+<meta name="description" content="Swipe-card summaries of new head and neck oncology and microvascular reconstruction evidence, in plain words, with the source one tap away. By Dr Manish S. Tiwari.">
+<link rel="canonical" href="https://flapshots.drmanishtiwari.com/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="FlapShots">
+<meta property="og:title" content="FlapShots · Head and neck evidence in three minutes a day">
+<meta property="og:description" content="Plain-language takeaways from new papers, guidelines and news in head and neck surgery and reconstruction.">
+<meta property="og:url" content="https://flapshots.drmanishtiwari.com/">
+<meta property="og:image" content="https://flapshots.drmanishtiwari.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#000000">
+<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,500&family=Figtree:wght@400;500;600;700;800&family=Gaegu:wght@700&family=Plus+Jakarta+Sans:wght@700;800&display=swap">
+<style>
+/* Layout: Inshorts-style column. Black chrome (tabs, bottom nav), one full-height card per swipe:
+   image on top, dark one-line ribbon in the middle, 2-line headline + ~60-word takeaway below, small footer with actions.
+   Overlays: animated splash logo, first-run track picker, bottom sheets. */
+:root{
+  --chrome:#000000; --chrome-ink:#FFFFFF; --chrome-dim:#8E8E93; --chrome-card:#1A1A1D;
+  --card:#FFFFFF; --ink:#141414; --body:#3A3A3C; --muted:#8A8A8E; --line:#E5E5EA;
+  --ribbon:#111113; --ribbon-ink:#FFFFFF; --ribbon-dim:#B8B8BE;
+  --teal:#E0405F; --teal-ink:#FFFFFF; --heart:#E2475B; --sheet:#FFFFFF; --chip:#F0F0F3;
+  --f-body:"Figtree","Segoe UI",system-ui,sans-serif; --f-hand:"Gaegu","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --card:#161618; --ink:#F2F2F7; --body:#C9C9CF; --muted:#8E8E93; --line:#2C2C2E;
+  --ribbon:#2A2A2E; --ribbon-dim:#AEAEB2; --teal:#FF7F8E; --teal-ink:#2A0710; --sheet:#1C1C1E; --chip:#2C2C2E; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --card:#161618; --ink:#F2F2F7; --body:#C9C9CF; --muted:#8E8E93; --line:#2C2C2E;
+  --ribbon:#2A2A2E; --ribbon-dim:#AEAEB2; --teal:#FF7F8E; --teal-ink:#2A0710; --sheet:#1C1C1E; --chip:#2C2C2E; color-scheme:dark }
+
+html,body{height:100%}
+body{background:var(--chrome);color:var(--ink);font-family:var(--f-body);overflow:hidden}
+.app{height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;background:var(--chrome)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 20px 14px;flex:0 0 auto}
+.tabs{display:flex;gap:26px;min-width:0}
+.tab{background:none;border:0;padding:4px 0;color:var(--chrome-dim);font:600 18px var(--f-body);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:62vw}
+.tab[aria-selected="true"]{color:var(--chrome-ink);border-color:var(--chrome-ink)}
+.pill{flex:0 0 auto;border:0;background:var(--chrome-card);color:var(--chrome-ink);font:600 12.5px var(--f-body);padding:7px 11px;border-radius:999px;font-variant-numeric:tabular-nums}
+.pill.live{background:var(--teal);color:var(--teal-ink);cursor:pointer}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:0 16px 12px;scrollbar-width:none;flex:0 0 auto}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:0;background:var(--chrome-card);color:#D9D9DF;border-radius:999px;padding:8px 13px;font:600 13px var(--f-body);white-space:nowrap;cursor:pointer}
+.chip i{font-style:normal;opacity:.55;margin-left:5px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:linear-gradient(135deg,#FF9B6B,#F0476E);color:#fff}
+.chip[aria-pressed="true"] i{opacity:.85}
+/* gentle motion for cartoons and charts, only on the card in view */
+.cb{transform-box:fill-box;transform-origin:50% 100%}
+.card.vis .cb{animation:bob 2.8s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-4px) rotate(-2deg)}65%{transform:translateY(-1px) rotate(1.5deg)}}
+.eye{transform-box:fill-box;transform-origin:center}
+.card.vis .eye{animation:blink 4.2s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.bar{transform-box:fill-box;transform-origin:0 50%}
+.card.vis .bar{animation:growx 1.1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes growx{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.trow{opacity:1}
+.card.vis .trow{animation:rowin .5s ease-out both}
+@keyframes rowin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.statn{transform-box:fill-box;transform-origin:center}
+.card.vis .statn{animation:popn .8s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes popn{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+.feed{flex:1;min-height:0;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none}
+.feed::-webkit-scrollbar{display:none}
+.card{height:100%;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;background:var(--card);border-radius:18px 18px 0 0;overflow:hidden}
+.img{flex:0 0 auto;height:42%;background:#FFFDF8;position:relative;user-select:none;-webkit-user-select:none;cursor:pointer}
+.img > svg:not(.burst){width:100%;height:100%;display:block}
+.burst{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;pointer-events:none;opacity:0}
+.burst.go{animation:burst .7s ease-out}
+@keyframes burst{0%{opacity:0;transform:scale(.4)}30%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1.3)}}
+.ribbon{flex:0 0 auto;display:flex;align-items:center;gap:10px;background:var(--ribbon);color:var(--ribbon-ink);text-decoration:none;padding:10px 12px 10px 20px}
+.ribbon b{flex:1;min-width:0;font-size:15.5px;line-height:1.3;font-weight:700;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ribbon span{flex:0 0 auto;font-size:11.5px;font-weight:700;color:var(--ribbon-ink);border:1px solid var(--ribbon-dim);border-radius:999px;padding:4px 8px;white-space:nowrap}
+.body{flex:1;min-height:0;overflow:hidden;padding:16px 22px 6px;display:flex;flex-direction:column;gap:10px}
+h2{flex:0 0 auto;margin:0;font-weight:700;font-size:21px;line-height:1.3;letter-spacing:-.01em;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-wrap:balance}
+.take{flex:0 0 auto;margin:0;font-size:17px;line-height:1.55;color:var(--body)}
+.foot{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:4px 12px 8px 22px}
+.meta{flex:1;min-width:0;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta .fresh{color:var(--teal);font-weight:700}
+.tool{background:none;border:0;color:var(--ink);padding:8px;border-radius:10px;cursor:pointer;display:grid;place-items:center}
+.tool svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tool[aria-pressed="true"] svg{fill:currentColor}
+.tool.like[aria-pressed="true"]{color:var(--heart)}
+.done .body{justify-content:center;text-align:center;align-items:center;gap:12px}
+.done .take{max-width:34ch}
+.body > *{flex-shrink:0}
+.cd{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.btn{border:0;border-radius:12px;padding:12px 16px;font:700 14.5px var(--f-body);cursor:pointer}
+.btn.primary{background:var(--teal);color:var(--teal-ink)}
+.btn.ghost{background:var(--chip);color:var(--ink)}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+nav.bottom{flex:0 0 auto;display:flex;justify-content:space-around;padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px));background:var(--chrome)}
+.nb{background:none;border:0;color:var(--chrome-dim);padding:6px 18px;cursor:pointer}
+.nb svg{width:26px;height:26px;fill:currentColor}
+.nb[aria-current="true"]{color:var(--chrome-ink)}
+button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2px}
+.empty{height:100%;display:grid;place-items:center;text-align:center;color:var(--muted);background:var(--card);border-radius:18px 18px 0 0;padding:24px;line-height:1.5}
+.sheet-wrap{position:fixed;inset:0;background:rgb(0 0 0 / .5);display:flex;align-items:flex-end;justify-content:center;z-index:30}
+.sheet{width:100%;max-width:480px;max-height:80%;overflow-y:auto;background:var(--sheet);color:var(--ink);border-radius:18px 18px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.sheet h3{margin:0;font-size:17px;font-weight:800}
+.sheet p{margin:0;color:var(--muted);line-height:1.5;font-size:14px}
+.grid{display:flex;flex-wrap:wrap;gap:8px}
+.grid button,.grid a{border:0;background:var(--chip);color:var(--ink);font:600 14px var(--f-body);padding:10px 14px;border-radius:999px;cursor:pointer;text-decoration:none}
+.grid [aria-pressed="true"]{background:var(--ink);color:var(--card)}
+.close{background:none;border:1px solid var(--line);color:var(--ink);padding:11px;border-radius:12px;font:600 14px var(--f-body);cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#fff;color:#000;padding:10px 16px;border-radius:999px;font-weight:600;font-size:13px;z-index:70;box-shadow:0 4px 18px rgb(0 0 0 / .25);white-space:nowrap}
+
+/* splash: logo B. Coral tile spins in (3D), swipe card slides in, the flap leaf grows from its pedicle and sways to the right with a light sheen, wordmark flips in */
+.splash{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;overflow:hidden;background:radial-gradient(120% 85% at 50% 38%,#6A2340 0%,#2A0E1B 55%,#12060C 100%);transition:opacity .6s}
+.splash.out{opacity:0;pointer-events:none}
+.orbs i{position:absolute;width:46vmax;height:46vmax;border-radius:50%;filter:blur(64px);opacity:.36;animation:drift 7s ease-in-out infinite alternate}
+.orbs i:nth-child(1){background:#FF9B6B;left:-18vmax;top:-14vmax}
+.orbs i:nth-child(2){background:#F0476E;right:-22vmax;top:22vh;animation-delay:-2.5s}
+.orbs i:nth-child(3){background:#FFB86B;left:4vmax;bottom:-28vmax;animation-delay:-4.5s}
+@keyframes drift{to{transform:translate(6vmax,-5vmax) scale(1.15)}}
+.stage{perspective:800px}
+.logo{width:156px;height:156px;display:block;filter:drop-shadow(0 22px 34px rgb(0 0 0 / .5)) drop-shadow(0 0 40px rgb(240 71 110 / .35))}
+.logo .tile,.logo .scard,.logo .grow,.logo .sway{transform-box:view-box}
+.logo .tile{transform-origin:60px 60px}
+.logo .scard{transform-origin:60px 59px}
+.logo .grow,.logo .sway{transform-origin:60px 94px}
+.splash:not(.run) .logo{animation:breathe 2.6s ease-in-out infinite}
+.logo .sway{animation:sway 2.6s ease-in-out infinite}
+.run .logo{animation:spin 1.5s cubic-bezier(.18,.9,.25,1) both}
+.run .logo .scard{animation:cardin .8s .7s cubic-bezier(.2,.9,.3,1.2) both}
+.run .logo .grow{animation:growl 1s 1.1s cubic-bezier(.25,1.5,.5,1) both}
+.run .logo .sway{animation:sway 2.6s 2.1s ease-in-out infinite}
+.run .logo .vein{stroke-dasharray:60;animation:draw .9s 1.6s ease-out both}
+.run .logo .ped{stroke-dasharray:40;animation:draw .6s 1.9s ease-out both}
+.run .logo .sheen{animation:sheen 1.6s 2.3s ease-in-out infinite}
+@keyframes spin{0%{transform:perspective(600px) rotateY(-540deg) rotateX(25deg) scale(.2);opacity:0}65%{transform:perspective(600px) rotateY(12deg) rotateX(-6deg) scale(1.07);opacity:1}100%{transform:perspective(600px) rotateY(0) scale(1);opacity:1}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes cardin{from{transform:translateX(50px) rotate(18deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes growl{from{transform:scale(0) rotate(-25deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes sway{0%,100%{transform:rotate(0) skewX(0)}30%{transform:rotate(9deg) skewX(-5deg)}55%{transform:rotate(3deg) skewX(2deg)}75%{transform:rotate(7deg) skewX(-3deg)}}
+@keyframes sheen{0%{transform:translateX(0)}70%,100%{transform:translateX(110px)}}
+@keyframes draw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+.word{font:800 46px "Plus Jakarta Sans",var(--f-body);letter-spacing:-.025em;white-space:nowrap;perspective:600px;color:#FFE9E2}
+.word b{color:#FF7A6B;font-weight:800}
+.word span{display:inline-block;text-shadow:0 2px 0 rgb(0 0 0 / .25),0 10px 22px rgb(0 0 0 / .45)}
+.run .word span{animation:flip .6s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes flip{from{opacity:0;transform:rotateX(-100deg) translateY(16px)}to{opacity:1;transform:none}}
+.tag{font:600 14.5px var(--f-body);color:#FFD9CF;text-align:center;padding-inline:24px}
+.run .tag{animation:rise .6s 3s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.copy{position:absolute;bottom:calc(20px + env(safe-area-inset-bottom,0px));font:500 12px var(--f-body);color:rgb(255 225 214 / .7);letter-spacing:.02em}
+.run .copy{animation:rise .6s 3.2s ease-out both}
+.tapgo{position:absolute;bottom:calc(64px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#FF9B6B,#F0476E);color:#fff;border:0;border-radius:999px;padding:14px 26px;font:800 16px var(--f-body);cursor:pointer;box-shadow:0 10px 30px rgb(240 71 110 / .45);animation:tappulse 1.6s ease-in-out infinite}
+.tapgo svg{width:18px;height:18px;fill:currentColor}
+@keyframes tappulse{0%,100%{transform:scale(1);box-shadow:0 10px 30px rgb(240 71 110 / .45)}50%{transform:scale(1.06);box-shadow:0 10px 44px rgb(240 71 110 / .75)}}
+.run .tapgo{display:none}
+.fserr{position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#300;color:#fdd;font:12px/1.4 monospace;padding:8px;border-radius:8px;white-space:pre-wrap}
+.sound{position:absolute;bottom:calc(52px + env(safe-area-inset-bottom,0px));background:rgb(255 255 255 / .1);color:#FFE9E2;border:1px solid rgb(255 255 255 / .25);border-radius:999px;padding:9px 16px;font:600 13px var(--f-body);cursor:pointer;backdrop-filter:blur(6px)}
+.sound svg{width:15px;height:15px;vertical-align:-3px;margin-right:6px;fill:currentColor}
+
+/* header goal ring + streak */
+.tr{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.goal{display:flex;align-items:center;gap:3px;background:var(--chrome-card);border:0;border-radius:999px;padding:3px 10px 3px 3px;color:#fff;font:700 13px var(--f-body);cursor:pointer;font-variant-numeric:tabular-nums}
+.goal svg:first-child{width:28px;height:28px;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:#3A3A40;stroke-width:3}
+.ring-fg{fill:none;stroke:#FF7A6B;stroke-width:3;stroke-linecap:round;stroke-dasharray:69.1;stroke-dashoffset:69.1;transition:stroke-dashoffset .6s}
+.goal .flame{width:14px;height:14px;fill:#FF9B6B;margin-left:2px}
+.tab{font-size:17px}
+.tabs{gap:20px}
+/* text size preference */
+:root[data-ts="s"] .take{font-size:15px}
+:root[data-ts="l"] .take{font-size:19px;line-height:1.5}
+/* profile, search, admin, forms */
+.prof{display:flex;align-items:center;gap:12px}
+.av{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#FF9B6B,#F0476E);color:#fff;font:800 18px var(--f-body);flex:0 0 auto}
+.pn{display:flex;flex-direction:column;gap:2px;min-width:0}
+.pn b{font-size:17px}.pn span{color:var(--muted);font-size:13.5px}
+.vb{font-style:normal;font-size:12px;font-weight:700;color:var(--muted)}
+.vb.ok{color:#1F9E7A}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stats div{background:var(--chip);border-radius:12px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.stats b{font-size:17px;font-variant-numeric:tabular-nums}.stats span{font-size:11.5px;color:var(--muted)}
+.danger{color:var(--heart)!important}
+.legal p{margin:0 0 10px;color:var(--ink);font-size:14px;line-height:1.55}
+.sinput{width:100%;box-sizing:border-box;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:12px;padding:12px;font:500 15px var(--f-body);resize:vertical}
+.sres{display:flex;flex-direction:column;gap:6px}
+.sr{display:flex;flex-direction:column;gap:2px;text-align:left;border:0;background:var(--chip);color:var(--ink);border-radius:12px;padding:10px 12px;cursor:pointer;font-family:var(--f-body)}
+.sr b{font-size:14px}.sr span,.cnt{font-size:12px;color:var(--muted)}
+.alist{display:flex;flex-direction:column;gap:6px}
+.arow{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--chip);border-radius:12px;padding:10px 12px}
+.arow div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.arow b{font-size:14px}.arow span{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.arow button{flex:0 0 auto;border:0;border-radius:999px;padding:7px 12px;font:700 12.5px var(--f-body);background:var(--card);color:var(--ink);cursor:pointer}
+.arow button[aria-pressed="true"]{background:#1F9E7A;color:#fff}
+.vp{margin:4px 0 8px;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px}
+.vp li{color:#C9C9D1;font-size:15px;line-height:1.45;padding-left:22px;position:relative}
+.vp li::before{content:"";position:absolute;left:0;top:7px;width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#FF9B6B,#F0476E)}
+.vp b{color:#fff}
+.ghostbtn{background:transparent;color:#fff;border:1px solid #3A3A40;border-radius:14px;padding:14px;font:700 15px var(--f-body);cursor:pointer}
+.lnk{background:none;border:0;padding:0;color:#FF9B8B;text-decoration:underline;font:inherit;cursor:pointer}
+.f label{font-size:13px;font-weight:600;color:#C9C9CF;margin-top:4px}
+.f input:not([type=checkbox]),.f select{width:100%;box-sizing:border-box;background:#1A1A1D;color:#fff;border:1px solid #34343A;border-radius:12px;padding:12px;font:500 15px var(--f-body)}
+.f input:focus,.f select:focus{outline:2px solid #FF7A6B;outline-offset:1px}
+.f .chk{display:flex;gap:10px;align-items:flex-start;font-weight:500;color:#D5D5DB;line-height:1.4;font-size:14px}
+.f .chk input{width:18px;height:18px;margin-top:1px;accent-color:#F0476E;flex:0 0 auto}
+.opt-l{font-weight:500;color:#85858D}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two div{display:flex;flex-direction:column;gap:8px;min-width:0}
+.seg,.pick{display:flex;flex-wrap:wrap;gap:8px}
+.seg button,.pick button{border:1px solid #34343A;background:#1A1A1D;color:#E5E5EA;border-radius:999px;padding:9px 14px;font:600 14px var(--f-body);cursor:pointer}
+.seg button[aria-pressed="true"],.pick button[aria-pressed="true"]{background:linear-gradient(135deg,#FF9B6B,#F0476E);border-color:transparent;color:#fff}
+.steps{font-size:12.5px;color:#9A9AA2;letter-spacing:.02em}.steps b{color:#FF9B8B}
+.err{color:#FF8A8A;min-height:1em;margin:0!important;font-size:14px}
+.join .row{margin-top:4px}
+/* onboarding */
+.onboard{position:fixed;inset:0;background:#000;color:#fff;z-index:25;display:flex;justify-content:center;overflow-y:auto}
+.ob{width:100%;max-width:480px;padding:48px 20px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
+.ob h1{margin:0;font:800 28px/1.15 var(--f-body);letter-spacing:-.02em;text-wrap:balance}
+.ob p{margin:0 0 8px;color:#A1A1A8;font-size:15px;line-height:1.5}
+.opt{display:flex;align-items:center;gap:14px;text-align:left;background:#1A1A1D;color:#fff;border:2px solid transparent;border-radius:18px;padding:12px 16px 12px 10px;cursor:pointer;font-family:var(--f-body)}
+.opt svg{flex:0 0 auto;width:78px;height:64px;background:#FFFDF8;border-radius:12px}
+.opt b{display:block;font-size:17px;margin-bottom:3px}
+.opt span{font-size:13.5px;color:#A1A1A8;line-height:1.4}
+.opt[aria-pressed="true"]{border-color:#FF7A6B;background:#2A1218}
+.start{margin-top:auto;background:linear-gradient(135deg,#FF9B6B,#F0476E);color:#fff;border:0;border-radius:14px;padding:15px;font:800 16px var(--f-body);cursor:pointer}
+.start:disabled{opacity:.35;cursor:default}
+.obrand{display:flex;align-items:center;gap:10px;font:800 22px "Plus Jakarta Sans",var(--f-body);color:#FFE9E2;letter-spacing:-.02em}
+.obrand svg{width:40px;height:40px}
+.obrand b{color:#FF7A6B}
+.obcopy{text-align:center;color:#77777F;font-size:12px}
+@media (max-height:700px){.take{font-size:15.5px;line-height:1.45}.img{height:38%}}
+@media (prefers-reduced-motion: reduce){.card.vis .cb,.card.vis .eye,.card.vis .bar,.card.vis .trow,.card.vis .statn{animation:none!important}.burst.go{animation:none!important}}
+
+/* ---------- Daily tips: relaxing theme ---------- */
+.tipcard{--tp-bg1:#F5EFE4;--tp-bg2:#E2EDE4;--tp-ink:#34433A;--tp-ink2:#4E6355;--tp-sage:#A9C9AF;--tp-sage-d:#7FA488;--tp-rose:#F3C4C4;--tp-gold:#E8C77A;--tp-glass:#FFF6D9;--tp-metal:#C3CEC6;--tp-frame:rgba(255,255,255,.62);--tp-line:rgba(127,164,136,.45);
+  position:relative;background:linear-gradient(165deg,var(--tp-bg1) 0%,#EEF0E6 48%,var(--tp-bg2) 100%);color:var(--tp-ink);display:flex;flex-direction:column}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tipcard{--tp-bg1:#1F2925;--tp-bg2:#18231F;--tp-ink:#E3ECE5;--tp-ink2:#3C4E43;--tp-sage:#8DB496;--tp-sage-d:#9CC3A5;--tp-rose:#E8B4B4;--tp-gold:#E6C677;--tp-glass:#FFF3CF;--tp-metal:#A9B6AD;--tp-frame:rgba(20,30,26,.55);--tp-line:rgba(156,195,165,.32);--tp-amb:.22;--tp-inset:rgba(255,255,255,.03)}}
+:root[data-theme="dark"] .tipcard{--tp-bg1:#1F2925;--tp-bg2:#18231F;--tp-ink:#E3ECE5;--tp-ink2:#3C4E43;--tp-sage:#8DB496;--tp-sage-d:#9CC3A5;--tp-rose:#E8B4B4;--tp-gold:#E6C677;--tp-glass:#FFF3CF;--tp-metal:#A9B6AD;--tp-frame:rgba(20,30,26,.55);--tp-line:rgba(156,195,165,.32);--tp-amb:.22;--tp-inset:rgba(255,255,255,.03)}
+.tp-amb{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.tp-amb i{position:absolute;border-radius:50%;filter:blur(38px);opacity:var(--tp-amb,.55)}
+.tp-amb i:first-child{width:62%;aspect-ratio:1;background:var(--tp-sage);top:-12%;left:-18%}
+.tp-amb i:last-child{width:55%;aspect-ratio:1;background:var(--tp-rose);bottom:-10%;right:-16%;opacity:calc(var(--tp-amb,.55)*.75)}
+.tipcard.vis .tp-amb i{animation:tpdrift 14s ease-in-out infinite alternate}
+.tipcard.vis .tp-amb i:last-child{animation-duration:18s;animation-direction:alternate-reverse}
+@keyframes tpdrift{to{transform:translate(12%,9%) scale(1.12)}}
+.tp-head{position:relative;display:flex;justify-content:space-between;align-items:center;padding:16px 22px 6px;font-size:13px}
+.tp-lbl{display:inline-flex;align-items:center;gap:7px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12px;color:var(--tp-sage-d)}
+.tp-lbl svg{width:18px;height:18px}
+.tp-n{font-variant-numeric:tabular-nums;opacity:.65}
+.tp-rail{position:relative;flex:1;min-height:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+.tp-rail::-webkit-scrollbar{display:none}
+.tp-slide{box-sizing:border-box;flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;padding:8px 20px 6px;display:flex;min-height:0}
+.tp-frame{box-sizing:border-box;position:relative;flex:1;border-radius:26px;border:1.5px solid var(--tp-line);background:var(--tp-frame);box-shadow:inset 0 0 0 6px var(--tp-inset,rgba(255,255,255,.18)),0 10px 30px rgba(52,67,58,.08);padding:26px 24px;display:flex;flex-direction:column;justify-content:center;gap:12px;overflow:hidden;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.tp-frame::before{content:"";position:absolute;inset:10px;border-radius:19px;border:1px dashed var(--tp-line);pointer-events:none}
+.tp-first{align-items:center;text-align:center}
+.tp-first .bulb{width:min(48%,190px);height:auto;overflow:visible}
+.tipcard.vis .bulb{animation:tpfloat 5s ease-in-out infinite}
+.bulb .glow{transform-origin:60px 52px;opacity:.7}
+.tipcard.vis .bulb .glow{animation:tpglow 4s ease-in-out infinite}
+.bulb .rays{transform-origin:60px 52px;opacity:.85}
+.tipcard.vis .bulb .rays{animation:tpspin 40s linear infinite}
+@keyframes tpfloat{50%{transform:translateY(-6px)}}
+@keyframes tpglow{50%{opacity:1;transform:scale(1.08)}}
+@keyframes tpspin{to{transform:rotate(360deg)}}
+.tp-cat{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:99px;background:rgba(169,201,175,.35);color:var(--tp-sage-d)}
+.tp-tip{font-family:Lora,Georgia,serif;font-style:italic;font-size:clamp(21px,6.2vw,28px);line-height:1.38;margin:2px 4px;color:var(--tp-ink);text-wrap:balance}
+.tp-hint{display:inline-flex;align-items:center;gap:6px;font-size:13px;opacity:.7;margin-top:4px}
+.tp-hint svg{width:16px;height:16px}
+.tipcard.vis .tp-hint svg{animation:tpnudge 2.2s ease-in-out infinite}
+@keyframes tpnudge{50%{transform:translateX(6px)}}
+.tp-step{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:15px;background:var(--tp-sage);color:#fff;box-shadow:0 0 0 6px rgba(169,201,175,.25)}
+.tp-frame h3{margin:4px 0 0;font-family:Lora,Georgia,serif;font-size:clamp(21px,5.4vw,25px);font-weight:600;color:var(--tp-ink)}
+.tp-frame p{margin:0;font-size:clamp(15.5px,4.2vw,17.5px);line-height:1.6;color:var(--tp-ink);opacity:.88}
+.tp-end{margin-top:6px;font-size:13px;font-weight:600;color:var(--tp-sage-d)}
+.tp-sprig{position:absolute;right:18px;bottom:16px;width:64px;opacity:.8}
+.tp-dots{position:relative;display:flex;justify-content:center;gap:7px;padding:10px 0 16px}
+.tp-dots i{width:7px;height:7px;border-radius:99px;background:var(--tp-sage-d);opacity:.3;transition:all .35s ease}
+.tp-dots i.on{width:22px;opacity:.9}
+@media (prefers-reduced-motion: reduce){.tipcard *{animation:none!important}}
+</style>
+
+<div class="splash" id="splash" aria-label="FlapShots">
+  <div class="orbs" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="stage"><svg class="logo" viewBox="0 0 120 120" role="img" aria-label="FlapShots logo"><defs>
+      <linearGradient id="lb-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF9B6B"/><stop offset="1" stop-color="#F0476E"/></linearGradient>
+      <linearGradient id="lb-sh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <clipPath id="lb-clip"><path d="M60 20 C88 38 90 70 60 94 C30 70 32 38 60 20 Z"/></clipPath></defs>
+      <g class="tile"><rect width="120" height="120" rx="28" fill="url(#lb-bg)"/><rect x="1" y="1" width="118" height="118" rx="27" fill="none" stroke="#fff" stroke-opacity=".18"/></g>
+      <rect class="scard" x="31" y="20" width="58" height="78" rx="13" fill="#fff" fill-opacity=".22" transform="rotate(-11 60 59)"/>
+      <g class="grow"><g class="sway">
+        <path d="M60 20 C88 38 90 70 60 94 C30 70 32 38 60 20 Z" fill="#FFF7F2"/>
+        <g clip-path="url(#lb-clip)"><rect class="sheen" x="-30" y="15" width="26" height="85" fill="url(#lb-sh)" transform="skewX(-15)"/></g>
+        <path class="vein" d="M60 30 V86" stroke="#F0476E" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+        <path class="vein" d="M60 50 L72 41 M60 62 L47 53 M60 74 L72 65" stroke="#F0476E" stroke-width="2.4" stroke-linecap="round" fill="none"/></g></g>
+      <path class="ped" d="M58 94 C56 102 49 106 40 106" stroke="#B3123A" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+      <path class="ped" d="M62 94 C61 104 53 109 44 110" stroke="#2E5FD8" stroke-width="3.6" fill="none" stroke-linecap="round"/></svg></div>
+  <div class="word" id="word" aria-label="flapshots"></div>
+  <div class="tag">Head &amp; neck evidence, one swipe at a time</div>
+  <button class="tapgo" id="tapgo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>Tap to start</button>
+  <div class="copy">© 2026 Dr Manish S. Tiwari. All rights reserved.</div>
+</div>
+
+<script>
+/* safety net: show any script error on screen, and never let the intro block the app */
+(function(){var shown=0;function show(m){if(shown>2)return;shown++;var d=document.createElement('div');d.className='fserr';d.textContent='FlapShots error: '+m;document.body.appendChild(d);}
+window.addEventListener('error',function(e){show((e.message||'unknown')+(e.lineno?' (line '+e.lineno+')':''));});
+window.addEventListener('unhandledrejection',function(e){var r=e.reason;if(r&&r.code)return;show('promise: '+(r&&r.message||r));});
+setTimeout(function(){var sp=document.getElementById('splash');if(sp&&!sp.hidden&&!window.__fsBooted){if(typeof window.__fsEnd==='function'){try{window.__fsEnd();return;}catch(e){}}sp.hidden=true;show('the intro did not finish, so it was skipped. Please send a screenshot of this message.');}},15000);})();
+</script>
+<div class="app">
+  <div class="top">
+    <div class="tabs" role="tablist">
+      <button class="tab" id="tab-feed" role="tab" aria-selected="true" data-tab="feed">My Feed</button>
+      <button class="tab" id="tab-saved" role="tab" aria-selected="false" data-tab="saved">Saved</button>
+    </div>
+    <div class="tr"><button class="goal" id="goal" aria-label="Daily goal"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ring-bg" cx="14" cy="14" r="11"/><circle class="ring-fg" cx="14" cy="14" r="11"/></svg><svg class="flame" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4-3 5.5-3 9.5a3 3 0 0 0 6 0c0-1.2-.5-2.2-1-3 2.2 1.2 4.2 3.6 4.2 6.6A6.2 6.2 0 0 1 5.8 15C5.8 9.2 12 7.5 12 2z"/></svg><span class="sn">0</span></button><button class="pill" id="pill" tabindex="-1"></button></div>
+  </div>
+  <nav class="chips" id="chips" aria-label="Categories"></nav>
+  <main class="feed" id="feed"></main>
+  <nav class="bottom" aria-label="Main">
+    <button class="nb" id="nb-topics" aria-label="Search"><svg viewBox="0 0 24 24"><path d="M10.5 3a7.5 7.5 0 0 1 6 12l4.2 4.2a1.3 1.3 0 0 1-1.8 1.8L14.7 16.8A7.5 7.5 0 1 1 10.5 3zm0 2.6a4.9 4.9 0 1 0 0 9.8 4.9 4.9 0 0 0 0-9.8z"/></svg></button>
+    <button class="nb" id="nb-home" aria-label="Feed" aria-current="true"><svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5V20a1.5 1.5 0 0 1-1.5 1.5H15V15a3 3 0 0 0-6 0v6.5H5.5A1.5 1.5 0 0 1 4 20z"/></svg></button>
+    <button class="nb" id="nb-me" aria-label="Profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 21c.6-4.4 4-7 8.5-7s7.9 2.6 8.5 7z"/></svg></button>
+  </nav>
+</div>
+<div class="onboard" id="acct" hidden></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" id="gdefs"><defs><radialGradient id="tp-glow"><stop offset="0" stop-color="#FFE7A3" stop-opacity=".95"/><stop offset=".55" stop-color="#F6D98A" stop-opacity=".35"/><stop offset="1" stop-color="#F6D98A" stop-opacity="0"/></radialGradient></defs>
+  <symbol id="brandmark" viewBox="0 0 120 120"><linearGradient id="bm-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF9B6B"/><stop offset="1" stop-color="#F0476E"/></linearGradient><rect width="120" height="120" rx="28" fill="url(#bm-bg)"/><rect x="31" y="20" width="58" height="78" rx="13" fill="#fff" fill-opacity=".22" transform="rotate(-11 60 59)"/><path d="M60 20 C88 38 90 70 60 94 C30 70 32 38 60 20 Z" fill="#FFF7F2"/><path d="M60 30 V86 M60 50 L72 41 M60 62 L47 53 M60 74 L72 65" stroke="#F0476E" stroke-width="2.8" stroke-linecap="round" fill="none"/><path d="M58 94 C56 102 49 106 40 106" stroke="#B3123A" stroke-width="3.6" fill="none" stroke-linecap="round"/><path d="M62 94 C61 104 53 109 44 110" stroke="#2E5FD8" stroke-width="3.6" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24"><path d="M6 3.5h12v17l-6-4-6 4z"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/></symbol>
+</svg>
+<div id="sheet" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const INK='#2B2440';
+const C={tumour:'#9B7FD6',tongue:'#EE8E86',artery:'#E05A5A',vein:'#5B86D9',bone:'#F2E6C8',flap:'#F4A98B',flapBad:'#8E7BB8',node:'#8CCB9E',blob:'#F6C9A8',vial:'#CFE5F7',doc:'#7FC4C0',lens:'#DCEFFF'};
+const pm=q=>'https://pubmed.ncbi.nlm.nih.gov/?term='+encodeURIComponent(q);
+
+/* tr: a = ablative, r = reconstructive, g = both. Library order = release order (8 first, then 6 every 4 hours). */
+const LIB=[
+{id:'neck',tr:'a',cat:'Neck',ev:'RCT · NEJM 2015',
+ fig:{type:'bars',title:'3-year overall survival',unit:'%',bars:[{l:'Wait and watch',v:67.5},{l:'Elective neck dissection',v:80.0,hi:1}],from:"D'Cruz et al., NEJM 2015",ch:'node'},
+ head:"Remove the neck nodes upfront in early mouth cancer",
+ take:"In a Tata Memorial trial of small mouth cancers with a normal-feeling neck, removing the neck nodes at the first operation beat waiting and watching. Three-year survival rose from 67.5% to 80%, and more patients stayed cancer-free. Waiting for a lump to appear often meant the second operation came too late. Treat the neck at the same sitting.",
+ rib:"Early mouth cancer with a normal neck: dissect the neck upfront",more:"Read the trial",u:"https://www.nejm.org/doi/full/10.1056/NEJMoa1506007",likes:1842},
+
+{id:'coupler',tr:'r',cat:'Anastomosis',ev:'Meta-analyses',
+ panels:[
+  {bg:'lilac',cap:["ARTERY AND VEIN","NEED TO JOIN."],ch:[{k:'vessel',c:'artery',m:'happy',x:.5,y:-14,s:.72},{k:'vessel',c:'vein',m:'calm',x:.5,y:22,s:.72}]},
+  {bg:'pink',cap:["HAND-SEWING","TAKES TIME."],ch:[{k:'doc',m:'worried',x:.34},{k:'clock',x:.72,s:.75}]},
+  {bg:'butter',cap:["THE COUPLER RING","SNAPS VEINS."],ch:[{k:'vessel',c:'vein',m:'happy',x:.5,l:'COUPLER',ring:true}]},
+  {bg:'mint',cap:["FEW CLOTS,","QUICKER JOINS."],ch:[{k:'flap',m:'happy',x:.5}]}],
+ head:"A coupler joins flap veins as safely as stitches, and faster",
+ take:"A ring-pin coupler snaps two vein ends together in minutes. Pooled studies of head and neck flaps show clotting rates equal to or lower than hand stitching, with less time without blood flow. Arteries have thicker, stiffer walls and are still usually stitched. Size the vein with the gauge and keep sutures ready if the ends do not match.",
+ rib:"Couple veins when sizes match; hand-sew the arteries",more:"See the evidence",u:pm('venous coupler head and neck free flap meta-analysis'),likes:1267},
+
+{id:'kerala',tr:'g',cat:'Early detection',ev:'Cluster RCT · Lancet 2005',
+ fig:{type:'stat',big:'34%',lines:['fewer oral cancer deaths','in tobacco or alcohol users'],from:'Sankaranarayanan et al., Lancet 2005',ch:'lens'},
+ head:"Simple mouth checks by health workers saved lives in Kerala",
+ take:"In a large cluster-randomised trial in Trivandrum, trained health workers looked inside people's mouths every three years. Among tobacco and alcohol users, oral cancer deaths fell by about a third. No machines, just a torch and a trained eye. For India, regular mouth checks in high-risk people are cheap and proven.",
+ rib:"Regular mouth checks by trained health workers cut oral cancer deaths",more:"Read the trial",u:pm('Sankaranarayanan oral cancer screening Kerala Lancet 2005'),likes:2210},
+
+{id:'alt',tr:'r',cat:'ALT flap',ev:'Expert view',
+ panels:[
+  {bg:'butter',cap:["THIGH SKIN ON","A TINY VESSEL."],ch:[{k:'flap',m:'happy',x:.5,l:'ALT'}]},
+  {bg:'lilac',cap:["THE VESSEL PLAYS","HIDE-AND-SEEK."],ch:[{k:'vessel',c:'artery',m:'worried',x:.5,l:'PERFORATOR'}]},
+  {bg:'pink',cap:["DOPPLER MARKS","THE SPOT."],ch:[{k:'screen',t:'DOPPLER',x:.5,w:1.3}]},
+  {bg:'mint',cap:["TONGUE, CHEEK,","FULL THICKNESS."],ch:[{k:'flap',m:'happy',x:.5}]}],
+ head:"Thigh flap fits most mouth defects, once you find its vessel",
+ take:"The anterolateral thigh flap gives a large skin paddle on a long vessel, ideal for tongue, floor of mouth and cheek. Its small feeding vessels vary in position and are occasionally absent, so mark them with a handheld Doppler before starting and keep a backup flap in mind. Leg problems afterwards are minimal, and a thick flap can be thinned.",
+ rib:"Mark the perforator with Doppler first and always plan a backup flap",more:"See the evidence",u:pm('anterolateral thigh flap oral cavity reconstruction perforator variation'),likes:1652},
+
+{id:'tp53',tr:'g',cat:'Genetics simplified',ev:'Genome atlas · Nature 2015',
+ panels:[
+  {bg:'mint',cap:["TP53 IS THE","CELL'S GUARD."],ch:[{k:'dna',m:'happy',x:.5,l:'TP53'}]},
+  {bg:'lilac',cap:["TOBACCO BREAKS","THE GUARD."],ch:[{k:'dna',m:'sad',x:.5}]},
+  {bg:'pink',cap:["DAMAGED CELLS","MULTIPLY."],ch:[{k:'tumour',m:'angry',x:.5}]},
+  {bg:'butter',cap:["NO PILL YET;","PREVENTION WINS."],ch:[{k:'doc',m:'calm',x:.5}]}],
+ head:"TP53, the guardian gene, is broken in most tobacco cancers",
+ take:"TP53 is the gene that stops damaged cells from dividing. The Cancer Genome Atlas found it mutated in most tobacco-related head and neck cancers, often alongside CDKN2A, another brake on cell growth. There is no TP53 pill yet, but it explains why these cancers grow fast and why the whole tobacco-exposed lining stays at risk.",
+ rib:"Tobacco knocks out TP53, the gene that stops damaged cells dividing",more:"Read the paper",u:"https://www.nature.com/articles/nature14129",likes:1033},
+
+{id:'kn689',tr:'a',cat:'Immunotherapy',ev:'RCT · NEJM 2025 · Practice-changing',
+ fig:{type:'bars',title:'Median event-free survival',unit:' mo',bars:[{l:'Standard care',v:30.4},{l:'+ Pembrolizumab before and after surgery',v:51.8,hi:1}],from:'KEYNOTE-689, NEJM 2025',ch:'vial'},
+ head:"Pembrolizumab before surgery cuts relapse in advanced cancer",
+ take:"In KEYNOTE-689 (714 patients), two doses of pembrolizumab before surgery, continued afterwards with radiotherapy, cut the risk of the cancer returning by 30% in PD-L1 positive tumours. Side effects rarely delayed surgery. Survival data are still maturing. The US FDA approved this in June 2025, so ask for PD-L1 testing on the biopsy.",
+ rib:"Test PD-L1; pembrolizumab around surgery cuts relapse",more:"Read the trial",u:"https://www.nejm.org/doi/full/10.1056/NEJMoa2415434",likes:2611},
+
+{id:'failure',tr:'r',cat:'Flap failure',ev:'Cohort studies',
+ panels:[
+  {bg:'pink',cap:["FLAP TURNS BLUE","AND SWOLLEN."],ch:[{k:'flap',m:'sad',bad:true,x:.5}]},
+  {bg:'lilac',cap:["MOST CLOTS COME","IN 48 HOURS."],ch:[{k:'clock',x:.5}]},
+  {bg:'butter',cap:["BACK TO OT","WITHIN HOURS."],ch:[{k:'doc',m:'angry',x:.5,l:'GO NOW'}]},
+  {bg:'mint',cap:["EARLY RETURN,","FLAP SAVED."],ch:[{k:'flap',m:'happy',x:.5}]}],
+ head:"Most flap problems show within 48 hours; act within hours",
+ take:"A flap that turns blue, swollen or pale usually means a vein or artery has clotted, most often in the first one to two days. The sooner it goes back to theatre, the more often it is saved. Hourly bedside checks of colour, refill and bleeding on the first day, plus a clear call-and-return rule, save flaps.",
+ rib:"Check hourly on day one and re-explore within hours of trouble",more:"See the evidence",u:pm('free flap salvage timing head and neck'),likes:2034},
+
+{id:'doi',tr:'a',cat:'Tongue cancer',ev:'Guideline · AJCC 8th / NCCN',
+ fig:{type:'table',title:'T stage in mouth cancer (AJCC 8th, simplified)',cols:['T','Size','Depth of invasion'],w:[1,3,3],rows:[['T1','2 cm or less','and 5 mm or less'],['T2','Up to 4 cm','up to 10 mm'],['T3','More than 4 cm','or more than 10 mm'],['T4a','Into bone, sinus or facial skin','any depth']],hi:2,from:'AJCC Cancer Staging Manual, 8th edition'},
+ head:"In tongue cancer, depth matters more than width",
+ take:"Two tongue cancers can look the same size on the surface, but the one growing deeper is more dangerous. Staging now counts depth: over 10 mm makes it T3 even when small. Deeper tumours hide neck spread more often, and guidelines advise treating the neck once depth passes 4 mm. Ask your pathologist to report depth in millimetres.",
+ rib:"Report depth of invasion in mm; deeper than 4 mm, treat the neck",more:"See the guideline",u:"https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1437",likes:1390},
+
+{id:'eras',tr:'g',cat:'Postoperative care',ev:'Guideline · ERAS Society 2017',
+ panels:[
+  {bg:'butter',cap:["NO LONG FASTING;","CARB DRINK."],ch:[{k:'vial',m:'happy',x:.5,l:'CARB DRINK'}]},
+  {bg:'pink',cap:["ABOUT A DAY OF","ANTIBIOTICS."],ch:[{k:'vial',m:'calm',x:.5,l:'ANTIBIOTIC'}]},
+  {bg:'lilac',cap:["LESS MORPHINE,","MIXED PAIN RELIEF."],ch:[{k:'blob',m:'calm',x:.5}]},
+  {bg:'mint',cap:["UP AND WALKING","EARLY."],ch:[{k:'blob',m:'happy',x:.5,l:'PATIENT'}]}],
+ head:"Simple care bundles speed recovery after flap surgery",
+ take:"The ERAS Society's advice for major head and neck flap surgery is a set of small habits: no long fasting, a carbohydrate drink before surgery, about a day of antibiotics rather than a week, clot prevention, careful fluids, less morphine with mixed pain relief, and getting patients up early. A printed order set keeps the whole team on the same plan.",
+ rib:"Short fasting, a day of antibiotics, less morphine and early walking",more:"Read the guideline",u:pm('Dort optimal perioperative care major head and neck cancer surgery free flap'),likes:988},
+
+{id:'buccal',tr:'a',cat:'Buccal cancer',ev:'Expert view',
+ panels:[
+  {bg:'butter',cap:["A TOBACCO","CHEWER'S CHEEK."],ch:[{k:'blob',m:'worried',x:.5,l:'CHEEK'}]},
+  {bg:'lilac',cap:["TUMOUR PUSHES","TOWARD SKIN."],ch:[{k:'tumour',m:'angry',x:.5}]},
+  {bg:'pink',cap:["SKIN TETHERED?","GO FULL THICKNESS."],ch:[{k:'doc',m:'calm',x:.5}]},
+  {bg:'mint',cap:["REBUILD LINING","AND SKIN."],ch:[{k:'flap',m:'happy',x:.5,l:'FOLDED ALT'}]}],
+ head:"Buccal cancer: check the cheek skin before planning surgery",
+ take:"Cheek cancer is India's commonest mouth cancer, driven by chewing tobacco and areca nut. When the tumour sits close to the skin, removing the full thickness of the cheek is the safest way to clear margins. Feel the cheek and check the fat layer on MRI beforehand, so consent covers skin removal and the flap rebuilds both lining and skin.",
+ rib:"Skin near the tumour? Go full thickness, rebuild lining and skin",more:"See the evidence",u:pm('buccal mucosa carcinoma through and through defect reconstruction'),likes:1105},
+
+{id:'fibula',tr:'r',cat:'Fibula flap',ev:'Meta-analyses',
+ panels:[
+  {bg:'pink',cap:["A JAW SEGMENT","IS REMOVED."],ch:[{k:'bone',m:'worried',x:.5,l:'MANDIBLE'}]},
+  {bg:'lilac',cap:["PLAN THE CUTS","ON A 3D MODEL."],ch:[{k:'screen',t:'3D',x:.5}]},
+  {bg:'butter',cap:["PRINTED GUIDES","FIT THE BONE."],ch:[{k:'bone',m:'happy',x:.5,l:'FIBULA'}]},
+  {bg:'mint',cap:["A BETTER-FITTING","NEW JAW."],ch:[{k:'blob',m:'happy',x:.5,l:'PATIENT'}]}],
+ head:"Planning the new jaw on a computer gives a better fit",
+ take:"With virtual surgical planning, the jaw and leg-bone cuts are designed on a 3D model and printed guides are used in theatre. Pooled studies show a more accurate jaw shape, better bone contact and less time with the flap off its blood supply. Cost and waiting time are the trade-offs. It helps most in complex, multi-piece jaw rebuilds.",
+ rib:"Virtual planning and printed guides give a more accurate fibula jaw",more:"See the evidence",u:pm('virtual surgical planning fibula mandible reconstruction meta-analysis'),likes:1544},
+
+{id:'opmd',tr:'g',cat:'Early detection',ev:'Guideline · WHO 2020',
+ panels:[
+  {bg:'butter',cap:["WHITE PATCH:","WATCH CLOSELY."],ch:[{k:'tongue',m:'calm',x:.5,l:'WHITE'}]},
+  {bg:'pink',cap:["RED PATCH:","HIGHER RISK."],ch:[{k:'tongue',m:'worried',x:.5,l:'RED'}]},
+  {bg:'lilac',cap:["NOT HEALED IN","2 WEEKS?"],ch:[{k:'clock',x:.5}]},
+  {bg:'mint',cap:["BIOPSY,","NOT OINTMENT."],ch:[{k:'doc',m:'happy',x:.5}]}],
+ head:"A red patch in the mouth worries more than a white one",
+ take:"White patches (leukoplakia) are common; red patches (erythroplakia) are rarer but far more likely to be, or become, cancer. Submucous fibrosis from areca nut also carries risk. Any patch or ulcer that has not healed two weeks after removing the cause deserves a biopsy, not another course of ointment.",
+ rib:"Red patch or ulcer not healed in 2 weeks: biopsy, not ointment",more:"See the evidence",u:pm('WHO 2020 oral potentially malignant disorders nomenclature classification'),likes:1721},
+
+{id:'scapula',tr:'r',cat:'Scapula flap',ev:'Cohort studies',
+ panels:[
+  {bg:'butter',cap:["LEGS WITH POOR","CIRCULATION?"],ch:[{k:'bone',m:'sad',x:.5,l:'FIBULA'}]},
+  {bg:'lilac',cap:["USE THE SHOULDER","BLADE TIP."],ch:[{k:'bone',m:'happy',x:.5,l:'SCAPULA'}]},
+  {bg:'pink',cap:["PATIENT WALKS","EARLY."],ch:[{k:'blob',m:'happy',x:.5}]},
+  {bg:'mint',cap:["GREAT FOR THE","UPPER JAW."],ch:[{k:'doc',m:'happy',x:.5}]}],
+ head:"Shoulder-blade tip flap: the backup when leg vessels are poor",
+ take:"Older patients often have narrowed leg arteries, which makes the fibula risky. The tip of the shoulder blade, fed by its own branch artery, gives bone on a long vessel without touching the leg, so patients walk early. It suits upper-jaw and palate defects well. The bone is thinner than fibula, so dental implants are less predictable.",
+ rib:"Poor leg vessels? The scapular tip gives bone without touching the leg",more:"See the evidence",u:pm('scapular tip free flap head and neck reconstruction'),likes:876},
+
+{id:'nivo',tr:'a',cat:'Systemic therapy',ev:'RCT · JCO 2023 · Tata Memorial',
+ fig:{type:'bars',title:'1-year overall survival',unit:'%',bars:[{l:'Oral metronomic chemotherapy',v:6.7},{l:'+ Low-dose nivolumab (20 mg)',v:16.6,hi:1}],from:'Patil et al., JCO 2023',ch:'vial'},
+ head:"Low-dose nivolumab adds survival at a fraction of the cost",
+ take:"For recurrent or metastatic head and neck cancer, Tata Memorial added a tiny flat dose of nivolumab (20 mg every 3 weeks) to cheap oral metronomic chemotherapy. One-year survival rose from 6.7% to 16.6%. Full-dose immunotherapy is unaffordable for most Indian patients; this low-dose approach brings it within reach.",
+ rib:"20 mg nivolumab plus oral metronomic chemo: survival, affordably",more:"Read the trial",u:pm('Patil low dose nivolumab metronomic head and neck J Clin Oncol 2023'),likes:2388},
+
+{id:'itf',tr:'a',cat:'ITF clearance',ev:'Cohort studies · Indian series',
+ panels:[
+  {bg:'lilac',cap:["CANCER CREEPS","BEHIND THE CHEEK."],ch:[{k:'tumour',m:'angry',x:.5}]},
+  {bg:'pink',cap:["BELOW THE JAW","NOTCH?"],ch:[{k:'screen',t:'MRI',x:.5}]},
+  {bg:'butter',cap:["REMOVE THE WHOLE","COMPARTMENT."],ch:[{k:'doc',m:'calm',x:.5,l:'EN BLOC'}]},
+  {bg:'mint',cap:["CLEAR MARGINS,","BETTER CONTROL."],ch:[{k:'blob',m:'happy',x:.5,l:'PATIENT'}]}],
+ head:"Cancer below the jaw notch is often still operable",
+ take:"Gum and cheek cancers can spread backwards into the space behind the jaw. If the spread stays below the notch of the jawbone, the whole compartment can be removed in one block, with results close to other advanced mouth cancers in Indian series. Spread above the notch or to the skull base does worse. Read the MRI before calling it inoperable.",
+ rib:"ITF spread below the sigmoid notch can be cleared en bloc",more:"See the evidence",u:pm('infratemporal fossa clearance oral cancer'),likes:1478},
+
+{id:'monitor',tr:'r',cat:'Flap monitoring',ev:'Cohort studies',
+ panels:[
+  {bg:'mint',cap:["LOOK AT","THE COLOUR."],ch:[{k:'flap',m:'happy',x:.5}]},
+  {bg:'butter',cap:["PRESS: QUICK","REFILL IS GOOD."],ch:[{k:'clock',x:.5}]},
+  {bg:'lilac',cap:["BURIED FLAP?","USE A DOPPLER."],ch:[{k:'screen',t:'DOPPLER',x:.5,w:1.3}]},
+  {bg:'pink',cap:["NURSE CALLS","EARLY."],ch:[{k:'doc',m:'calm',x:.5}]}],
+ head:"A trained eye at the bedside is still the best flap monitor",
+ take:"Colour, warmth, capillary refill and a pinprick bleed, checked often by trained nurses, catch most failing flaps. Implantable Dopplers help for buried flaps that cannot be seen. Smartphone photos shared with the surgeon speed decisions at night. The key is a clear schedule, hourly at first, and a low threshold to call.",
+ rib:"Colour, refill and pinprick checks remain the best flap monitor",more:"See the evidence",u:pm('free flap monitoring methods head and neck review'),likes:1312},
+
+{id:'hpv',tr:'g',cat:'HPV and oropharynx',ev:'Guideline · AJCC 8th',
+ panels:[
+  {bg:'pink',cap:["TONSIL CANCER","IN A NON-SMOKER?"],ch:[{k:'blob',m:'worried',x:.5}]},
+  {bg:'lilac',cap:["HPV MAY BE","THE CAUSE."],ch:[{k:'tumour',m:'calm',x:.5,l:'HPV'}]},
+  {bg:'butter',cap:["CHECK p16 ON","THE BIOPSY."],ch:[{k:'screen',t:'p16+',x:.5}]},
+  {bg:'mint',cap:["BETTER OUTCOMES,","OWN STAGING."],ch:[{k:'blob',m:'happy',x:.5}]}],
+ head:"HPV throat cancers are a different, more curable disease",
+ take:"Cancers of the tonsil and tongue base caused by HPV behave differently from tobacco cancers: they occur in younger people, respond well to treatment and have their own staging system. A p16 stain on the biopsy is the usual test. HPV is rare in mouth (oral cavity) cancers, which are still mostly driven by tobacco and areca nut.",
+ rib:"Check p16 in tonsil and tongue-base cancers; HPV ones do better",more:"See the guideline",u:"https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1437",likes:964},
+
+{id:'rff',tr:'r',cat:'Radial forearm flap',ev:'Expert view',
+ panels:[
+  {bg:'butter',cap:["THIN FOREARM","SKIN."],ch:[{k:'flap',m:'happy',x:.5,l:'RFF'}]},
+  {bg:'lilac',cap:["ALLEN TEST","FIRST."],ch:[{k:'vessel',c:'artery',m:'calm',x:.5,l:'RADIAL'}]},
+  {bg:'pink',cap:["FITS A HALF","TONGUE."],ch:[{k:'tongue',m:'happy',x:.5}]},
+  {bg:'mint',cap:["TONGUE MOVES,","SPEECH STAYS."],ch:[{k:'blob',m:'happy',x:.5}]}],
+ head:"Forearm flap: thin and pliable for a moving tongue",
+ take:"The radial forearm flap gives thin, flexible skin on a long, reliable vessel, ideal for half-tongue and floor-of-mouth defects where movement matters for speech and swallowing. Check the hand's back-up blood supply with an Allen test first. The forearm scar and skin graft are its main costs; a suprafascial harvest helps the graft take.",
+ rib:"Thin, pliable forearm skin keeps a reconstructed tongue moving",more:"See the evidence",u:pm('radial forearm free flap hemiglossectomy reconstruction'),likes:1150},
+
+{id:'margins',tr:'a',cat:'Margins',ev:'Cohort studies · Guideline',
+ panels:[
+  {bg:'mint',cap:["5 MM OF HEALTHY","TISSUE = CLEAR."],ch:[{k:'screen',t:'5 mm',x:.5}]},
+  {bg:'butter',cap:["CHECK THE","REMOVED SPECIMEN."],ch:[{k:'doc',m:'calm',x:.5}]},
+  {bg:'pink',cap:["RE-CUTTING THE BED","IS NOT ENOUGH."],ch:[{k:'tumour',m:'angry',x:.5}]},
+  {bg:'lilac',cap:["WIDE FIRST CUT,","INK IT."],ch:[{k:'tongue',m:'happy',x:.5}]}],
+ head:"Check margins on the specimen, not just the wound bed",
+ take:"A clear margin is at least 5 mm of healthy tissue on the final report; 1 to 5 mm is close. Frozen sections taken from the removed specimen predict local control better than samples from the wound bed, and re-cutting a positive bed margin does not fully restore safety. Plan a wide first cut and ink the specimen in theatre.",
+ rib:"Aim for 5 mm clear margins and take frozen sections from the specimen",more:"See the evidence",u:pm('specimen-driven versus defect-driven margin oral tongue cancer local control'),likes:1406},
+
+{id:'hopon',tr:'g',cat:'Osteoradionecrosis',ev:'RCT · HOPON 2019',
+ fig:{type:'bars',title:'Bone death (ORN) at 6 months',unit:'%',bars:[{l:'30 hyperbaric oxygen sessions',v:6.4},{l:'No oxygen (antibiotics + mouthwash)',v:5.7,hi:1}],from:'Shaw et al., HOPON, IJROBP 2019',ch:'bone'},
+ head:"Skip hyperbaric oxygen before extracting teeth after radiation",
+ take:"The HOPON trial randomised 144 patients needing extractions or implants in a jaw that had received radiotherapy. Bone death at six months was 6.4% with 30 hyperbaric oxygen sessions and 5.7% without; everyone got antibiotics and mouthwash. Oxygen eased short-term discomfort but not long-term pain or quality of life. Gentle extraction with antibiotic cover is enough.",
+ rib:"After radiotherapy, extract with antibiotic cover; skip routine HBO",more:"Read the trial",u:"https://eprints.whiterose.ac.uk/143209",likes:1199},
+
+{id:'pmmc',tr:'r',cat:'Pectoralis major flap',ev:'Cohort studies',
+ panels:[
+  {bg:'pink',cap:["NO MICROSCOPE","TODAY?"],ch:[{k:'screen',t:'NO SCOPE',x:.5,w:1.4}]},
+  {bg:'butter',cap:["CHEST MUSCLE","TO THE RESCUE."],ch:[{k:'flap',m:'happy',x:.5,l:'PMMC'}]},
+  {bg:'mint',cap:["A LIFEBOAT","AFTER FAILURE."],ch:[{k:'doc',m:'happy',x:.5}]},
+  {bg:'lilac',cap:["BULKY, SO PICK","THE RIGHT DEFECT."],ch:[{k:'blob',m:'calm',x:.5}]}],
+ head:"The pectoralis flap is still a reliable workhorse",
+ take:"The pectoralis major flap needs no microscope and no vessel joins, so it remains vital where free flaps are not possible, for frail patients, and as a lifeboat after a free flap fails. It is bulky and can pull on the neck, so it suits large defects and neck cover better than a thin, moving tongue.",
+ rib:"No microscope or a failed free flap? Pectoralis major delivers",more:"See the evidence",u:pm('pectoralis major myocutaneous flap head and neck reconstruction free flap era'),likes:1288},
+
+{id:'sentinel',tr:'a',cat:'Neck',ev:'RCTs · France and Japan',
+ fig:{type:'bars',title:'2-year overall survival',unit:'%',bars:[{l:'Elective neck dissection',v:92.6},{l:'Sentinel node biopsy',v:88.7,hi:1}],from:'Garrel et al., JCO 2020 (equivalence trial)',ch:'node'},
+ head:"Sentinel node biopsy can spare the neck in small mouth cancers",
+ take:"Instead of removing all the neck nodes, a tracer finds the first node the cancer drains to, which is checked under the microscope. In a French trial of 279 patients, two-year survival was equivalent (88.7% vs 92.6%), with a shorter stay and better early shoulder function; a Japanese trial agreed. It needs nuclear medicine and an experienced team; without these, elective dissection remains the safe default.",
+ rib:"Sentinel node biopsy: same survival as neck dissection, less harm",more:"See the evidence",u:'https://ascopost.com/news/october-2020/sentinel-node-biopsy-vs-neck-node-dissection-in-operable-oral-or-oropharyngeal-cancer-equivalence-trial',likes:1376},
+
+{id:'adjuvant',tr:'a',cat:'Adjuvant therapy',ev:'RCTs · NEJM 2004',
+ panels:[
+  {bg:'pink',cap:["NODE BURSTS","ITS CAPSULE?"],ch:[{k:'node',m:'angry',x:.5,l:'ENE'}]},
+  {bg:'lilac',cap:["OR CANCER AT","THE MARGIN?"],ch:[{k:'tumour',m:'angry',x:.5}]},
+  {bg:'butter',cap:["RADIATION +","CISPLATIN."],ch:[{k:'vial',m:'calm',x:.5,l:'CISPLATIN'}]},
+  {bg:'mint',cap:["OTHER RISKS:","RADIATION ALONE."],ch:[{k:'blob',m:'happy',x:.5}]}],
+ head:"Add chemotherapy to radiation only when the risk is high",
+ take:"Two large trials, later pooled, showed that adding cisplatin to radiotherapy after surgery helps mainly when cancer breaks through a lymph node's capsule (extranodal extension) or reaches a margin. For other risk factors, radiotherapy alone is usually enough. Ask pathology to report extranodal extension and margins clearly, because they decide the plan.",
+ rib:"Extranodal extension or positive margin: add cisplatin to RT",more:"Read the trials",u:pm('Bernier Cooper postoperative chemoradiotherapy head and neck NEJM 2004'),likes:1190},
+
+{id:'vessels',tr:'r',cat:'Vessel-depleted neck',ev:'Expert view',
+ panels:[
+  {bg:'pink',cap:["NECK SCARRED,","NO VESSELS."],ch:[{k:'vessel',c:'vein',m:'sad',x:.5}]},
+  {bg:'butter',cap:["TRY LOW: TRANS-","VERSE CERVICAL."],ch:[{k:'vessel',c:'artery',m:'happy',x:.5}]},
+  {bg:'lilac',cap:["OR CHEST AND","ARM VESSELS."],ch:[{k:'vessel',c:'vein',m:'happy',x:.5}]},
+  {bg:'mint',cap:["MAP WITH CT","ANGIO FIRST."],ch:[{k:'screen',t:'CTA',x:.5}]}],
+ head:"No vessels left in the neck? There are still options",
+ take:"After previous surgery or radiation, usable neck vessels may be gone. The transverse cervical vessels low in the neck are often spared. The internal mammary vessels in the chest, or a cephalic vein swung up from the arm, can also work. Map the vessels with CT angiography before a redo case.",
+ rib:"Transverse cervical or internal mammary vessels rescue the neck",more:"See the evidence",u:pm('vessel-depleted neck free flap recipient vessels'),likes:902},
+
+{id:'adjuncts',tr:'g',cat:'Early detection',ev:'Meta-analysis · Cochrane',
+ panels:[
+  {bg:'lilac',cap:["BLUE LIGHT SAYS","ALL CLEAR..."],ch:[{k:'screen',t:'GLOW',x:.5}]},
+  {bg:'pink',cap:["BUT LIGHTS","CAN MISS CANCER."],ch:[{k:'tumour',m:'angry',x:.5}]},
+  {bg:'butter',cap:["A BIOPSY GIVES","THE ANSWER."],ch:[{k:'doc',m:'happy',x:.5}]},
+  {bg:'mint',cap:["LOOK, FEEL,","THEN BIOPSY."],ch:[{k:'lens',m:'happy',x:.5}]}],
+ head:"Glowing lights and dyes cannot replace a biopsy",
+ take:"Screening gadgets such as light-based scopes, dyes and brush tests promise quick answers, but Cochrane reviews find none accurate enough to replace a biopsy. They can help choose where to biopsy within a large patch. A careful look and feel by a trained clinician, then a biopsy of anything suspicious, remains the standard.",
+ rib:"Lights and dyes can guide you; only a biopsy diagnoses cancer",more:"See the review",u:pm('Cochrane diagnostic tests oral cancer potentially malignant disorders adjuncts'),likes:845},
+
+{id:'rtog1016',tr:'a',cat:'HPV and oropharynx',ev:'RCT · Lancet 2019',
+ fig:{type:'bars',title:'5-year overall survival, HPV+ oropharynx',unit:'%',bars:[{l:'Radiotherapy + cetuximab',v:77.9},{l:'Radiotherapy + cisplatin',v:84.6,hi:1}],from:'RTOG 1016, Lancet 2019',ch:'vial'},
+ head:"HPV throat cancer: cisplatin still beats cetuximab",
+ take:"Hoping to treat HPV cancers more gently, trials swapped cisplatin for cetuximab alongside radiotherapy. In RTOG 1016, five-year survival was lower with cetuximab: 77.9% against 84.6%. The European De-ESCALaTE trial agreed. Gentler treatment needs proof first; cisplatin remains the standard partner for radiotherapy in fit patients.",
+ rib:"With radiation for HPV throat cancer, cisplatin beats cetuximab",more:"Read the trial",u:pm('RTOG 1016 cetuximab cisplatin HPV oropharyngeal Lancet 2019'),likes:1022},
+
+{id:'anticoag',tr:'r',cat:'Anastomosis',ev:'Meta-analyses',
+ panels:[
+  {bg:'lilac',cap:["A DRIP TO","PROTECT THE JOIN?"],ch:[{k:'vial',m:'calm',x:.5,l:'HEPARIN'}]},
+  {bg:'butter',cap:["NO MORE","FLAPS SAVED."],ch:[{k:'flap',m:'calm',x:.5}]},
+  {bg:'pink',cap:["MORE BLEEDING,","MORE HAEMATOMA."],ch:[{k:'blob',m:'worried',x:.5}]},
+  {bg:'mint',cap:["A PERFECT JOIN","MATTERS MOST."],ch:[{k:'vessel',c:'artery',m:'happy',x:.5}]}],
+ head:"Routine blood thinners do not save more flaps",
+ take:"Heparin, aspirin and dextran are often given to protect the vessel join, but pooled studies show no clear gain in flap survival. Heavier anticoagulation raises the risk of neck haematoma, which can itself kill a flap. Standard clot prevention for the legs is enough; a technically perfect join matters more than any drug.",
+ rib:"Routine heparin or aspirin doesn't save flaps; technique does",more:"See the evidence",u:pm('antithrombotic prophylaxis free flap head and neck meta-analysis'),likes:1098},
+
+{id:'port',tr:'a',cat:'Adjuvant therapy',ev:'RCT · IJROBP 2001',
+ panels:[
+  {bg:'mint',cap:["SURGERY","IS DONE."],ch:[{k:'doc',m:'happy',x:.5}]},
+  {bg:'pink',cap:["CELLS LEFT BEHIND","KEEP GROWING."],ch:[{k:'tumour',m:'angry',x:.5}]},
+  {bg:'butter',cap:["START RADIATION","WITHIN 6 WEEKS."],ch:[{k:'clock',x:.5}]},
+  {bg:'lilac',cap:["WHOLE PACKAGE","UNDER 11 WEEKS."],ch:[{k:'blob',m:'happy',x:.5}]}],
+ head:"Finish everything, surgery to last radiation, within 11 weeks",
+ take:"Cancer cells left behind keep multiplying while the wound heals. A randomised study showed better control when the whole package, from surgery to the last radiotherapy session, was finished in under 11 weeks. Start radiotherapy within about six weeks of surgery. Wound problems, dental clearance and paperwork are the usual causes of delay.",
+ rib:"Start RT within 6 weeks; finish everything within 11 weeks",more:"Read the trial",u:pm('Ang postoperative radiotherapy total treatment package time head neck 2001'),likes:1167},
+
+{id:'dental',tr:'r',cat:'Dental rehab',ev:'Cohort studies',
+ panels:[
+  {bg:'pink',cap:["NEW JAW,","NO TEETH."],ch:[{k:'bone',m:'sad',x:.5}]},
+  {bg:'lilac',cap:["PLAN IMPLANTS","WITH THE CUTS."],ch:[{k:'screen',t:'3D',x:.5}]},
+  {bg:'butter',cap:["PLACE THEM","AT SURGERY."],ch:[{k:'doc',m:'happy',x:.5}]},
+  {bg:'mint',cap:["BACK TO","CHEWING."],ch:[{k:'blob',m:'happy',x:.5}]}],
+ head:"Plan the teeth when you plan the jaw",
+ take:"A new jaw without teeth leaves patients unable to chew. Dental implants in a fibula flap survive well, and placing them at the first operation, guided by virtual planning, gets patients chewing months sooner. Radiation lowers implant success but does not rule it out. Involve the prosthodontist before surgery, not after.",
+ rib:"Plan and place implants with the fibula to get patients chewing sooner",more:"See the evidence",u:pm('fibula free flap dental implant primary placement survival'),likes:933},
+
+{id:'field',tr:'g',cat:'Genetics simplified',ev:'Concept · genomic studies',
+ panels:[
+  {bg:'butter',cap:["TOBACCO BATHES","THE WHOLE MOUTH."],ch:[{k:'blob',m:'worried',x:.5,l:'MOUTH'}]},
+  {bg:'lilac',cap:["DAMAGE SPREADS","ACROSS THE LINING."],ch:[{k:'dna',m:'sad',x:.5}]},
+  {bg:'pink',cap:["A SECOND CANCER","CAN POP UP."],ch:[{k:'tumour',m:'angry',x:.5}]},
+  {bg:'mint',cap:["QUIT TOBACCO,","KEEP CHECKING."],ch:[{k:'doc',m:'happy',x:.5}]}],
+ head:"Tobacco damages the whole lining, not just the tumour spot",
+ take:"Tobacco bathes the entire mouth and throat, so genetic damage spreads across the lining, called field cancerisation. That is why second cancers appear years after a successful operation, and why new cancers can grow beside a clear scar. Lifelong check-ups, stopping tobacco and areca nut, and biopsy of new patches matter as much as the first surgery.",
+ rib:"Tobacco damages the whole lining; check for second cancers for life",more:"See the evidence",u:pm('field cancerization head and neck second primary'),likes:1011},
+
+{id:'mandible',tr:'a',cat:'Mandible',ev:'Cohort studies',
+ panels:[
+  {bg:'pink',cap:["CANCER TOUCHES","THE JAW."],ch:[{k:'bone',m:'worried',x:.5,l:'JAW'}]},
+  {bg:'lilac',cap:["NO BONE BITE","ON CT?"],ch:[{k:'screen',t:'CT',x:.5}]},
+  {bg:'butter',cap:["SHAVE THE","RIM ONLY."],ch:[{k:'doc',m:'calm',x:.5}]},
+  {bg:'mint',cap:["JAW KEEPS","ITS SHAPE."],ch:[{k:'bone',m:'happy',x:.5}]}],
+ head:"Keep the jaw rim when cancer only touches it",
+ take:"When a gum or floor-of-mouth cancer sits next to the jaw without eating into it, removing just a rim of bone (marginal mandibulectomy) controls the cancer as well as removing a full segment, and keeps the jaw's shape. Deep bone invasion on CT, especially into the nerve canal, or a thin toothless jaw means a segmental resection.",
+ rib:"No bone invasion on CT? A marginal mandibulectomy keeps the jaw intact",more:"See the evidence",u:pm('marginal mandibulectomy oncological outcome oral cancer'),likes:1084},
+{id:'bonner',tr:'a',cat:'Systemic therapy',ev:'RCT · NEJM 2006',
+ fig:{type:'bars',title:'Median overall survival',unit:' mo',bars:[{l:'Radiotherapy alone',v:29.3},{l:'Radiotherapy + cetuximab',v:49.0,hi:1}],from:'Bonner et al., NEJM 2006',ch:'vial'},
+ head:"Cetuximab with radiation helps when cisplatin is unsafe",
+ take:"In the Bonner trial, adding weekly cetuximab to radiotherapy for locally advanced head and neck cancer extended median survival from 29.3 to 49 months compared with radiotherapy alone. Later trials showed it is weaker than cisplatin, so today it partners radiotherapy only when cisplatin is unsafe, for example with kidney damage or hearing loss.",
+ rib:"Cisplatin unsafe? Cetuximab is the radiotherapy partner",more:"Read the trial",u:pm('Bonner radiotherapy plus cetuximab head and neck NEJM 2006'),likes:880},
+
+{id:'kn048',tr:'a',cat:'Immunotherapy',ev:'RCT · Lancet 2019',
+ fig:{type:'bars',title:'Median survival, first-line recurrent/metastatic',unit:' mo',bars:[{l:'Cetuximab + chemo (EXTREME)',v:10.7},{l:'Pembrolizumab + chemo',v:13.0,hi:1}],from:'KEYNOTE-048, Lancet 2019',ch:'vial'},
+ head:"Pembrolizumab is first-line for recurrent or metastatic disease",
+ take:"KEYNOTE-048 made pembrolizumab the first treatment for recurrent or metastatic head and neck cancer. With chemotherapy it extended median survival from 10.7 to 13 months compared with the old cetuximab regimen. Given alone, it worked best when PD-L1 CPS was 20 or more. Check CPS on the biopsy before choosing.",
+ rib:"Recurrent or metastatic: start with pembrolizumab, guided by CPS",more:"Read the trial",u:pm('KEYNOTE-048 pembrolizumab first-line recurrent metastatic head and neck Lancet 2019'),likes:1540},
+
+{id:'cm141',tr:'a',cat:'Immunotherapy',ev:'RCT · NEJM 2016',
+ fig:{type:'bars',title:'1-year overall survival',unit:'%',bars:[{l:'Standard single drug',v:16.6},{l:'Nivolumab',v:36.0,hi:1}],from:'CheckMate 141, NEJM 2016',ch:'vial'},
+ head:"After platinum fails, nivolumab doubles one-year survival",
+ take:"For cancer that came back within six months of platinum chemotherapy, CheckMate 141 compared nivolumab with standard single drugs. One-year survival more than doubled, 36% against 16.6%, with fewer serious side effects. It established immunotherapy for platinum-refractory disease; Tata Memorial's low-dose approach makes a version of this affordable in India.",
+ rib:"Platinum-refractory disease: immunotherapy doubles one-year survival",more:"Read the trial",u:pm('CheckMate 141 nivolumab recurrent head and neck NEJM 2016'),likes:1210},
+
+{id:'mach',tr:'a',cat:'Systemic therapy',ev:'Meta-analysis · MACH-NC',
+ fig:{type:'stat',big:'6.5%',lines:['more patients alive at 5 years','when chemo is given with radiotherapy'],from:'MACH-NC meta-analysis (Pignon et al.)',ch:'vial'},
+ head:"Chemo works best given alongside radiotherapy",
+ take:"The MACH-NC meta-analysis pooled almost 100 trials and over 17,000 patients. Chemotherapy given at the same time as radiotherapy added about 6.5 extra survivors per 100 at five years, while chemotherapy before or after added little. The benefit fades in patients over 70. That is why concurrent cisplatin is the backbone of chemoradiation.",
+ rib:"Chemotherapy helps most when given with radiotherapy, not before",more:"Read the paper",u:pm('Pignon MACH-NC meta-analysis chemotherapy head and neck cancer'),likes:990},
+
+{id:'weekly',tr:'a',cat:'Adjuvant therapy',ev:'RCT · JCO 2018 · Tata Memorial',
+ fig:{type:'bars',title:'2-year locoregional control',unit:'%',bars:[{l:'Weekly cisplatin 30 mg/m²',v:58.5},{l:'3-weekly cisplatin 100 mg/m²',v:73.1,hi:1}],from:'Noronha et al., JCO 2018',ch:'vial'},
+ head:"Three-weekly cisplatin beats low-dose weekly with radiation",
+ take:"Many centres give low weekly cisplatin with radiotherapy for convenience. A Tata Memorial trial, mostly in patients treated after surgery, found weekly 30 mg/m² controlled the cancer worse than 100 mg/m² every three weeks: 58.5% against 73.1% at two years. Use the three-weekly schedule whenever the patient can tolerate it.",
+ rib:"With radiotherapy, give cisplatin 3-weekly rather than low-dose weekly",more:"Read the trial",u:pm('Noronha once-a-week versus once-every-3-weeks cisplatin chemoradiation J Clin Oncol 2018'),likes:1320},
+
+{id:'areca',tr:'g',cat:'Early detection',ev:'IARC Monograph',
+ scene:{bg:'butter',cap:['ARECA NUT ALONE','CAUSES CANCER'],ch:[{k:'blob',m:'worried',x:.3,l:'CHEWER'},{k:'tumour',m:'angry',x:.7,s:1}]},
+ head:"Areca nut causes mouth cancer, even without tobacco",
+ take:"The WHO cancer agency classes areca nut as a definite human carcinogen, even without tobacco. Gutkha, paan masala and betel quid with tobacco multiply the risk and also cause submucous fibrosis, a stiff, pale mouth that can turn cancerous. Asking every patient about chewing habits and advising them to stop is the cheapest cancer prevention in Indian practice.",
+ rib:"Ask every patient about areca nut; it causes cancer even alone",more:"See the evidence",u:pm('IARC areca nut betel quid carcinogenic monograph'),likes:1660},
+
+{id:'hpvvax',tr:'g',cat:'HPV and oropharynx',ev:'RCT · PLoS One 2013',
+ fig:{type:'stat',big:'93%',lines:['fewer oral HPV 16/18 infections','after HPV vaccination'],from:'Herrero et al., Costa Rica Vaccine Trial',ch:'lens'},
+ head:"HPV vaccination also protects the throat",
+ take:"In the Costa Rica vaccine trial, vaccinated women had 93% fewer oral HPV 16 and 18 infections four years later; these are the infections behind most HPV throat cancers. The vaccine is given for cervical cancer, but it is expected to prevent throat cancers too. India now has an affordable home-made vaccine, so encourage it for adolescents.",
+ rib:"HPV vaccination is likely to prevent throat cancers too",more:"Read the trial",u:pm('Herrero reduced prevalence oral HPV vaccination Costa Rica 2013'),likes:870},
+
+{id:'petneck',tr:'a',cat:'Neck',ev:'RCT · NEJM 2016',
+ fig:{type:'bars',title:'2-year overall survival',unit:'%',bars:[{l:'Planned neck dissection',v:81.5},{l:'PET-CT surveillance',v:84.9,hi:1}],from:'PET-NECK, Mehanna et al., NEJM 2016',ch:'node'},
+ head:"A clear PET-CT after chemoradiation can spare the neck",
+ take:"After chemoradiation for nodal disease, PET-NECK compared planned neck dissection for everyone with a PET-CT scan at 12 weeks, operating only when the scan was not clear. Two-year survival was the same (84.9% against 81.5%) while far fewer neck operations were needed, and it cost less. A clear 12-week PET-CT safely spares the neck.",
+ rib:"Clear PET-CT 12 weeks after chemoradiation? Spare the neck",more:"Read the trial",u:pm('Mehanna PET-CT surveillance versus neck dissection advanced head and neck NEJM 2016'),likes:1105},
+
+{id:'shoulder',tr:'a',cat:'Neck',ev:'RCT · Cancer 2008 · cohort studies',
+ scene:{bg:'lilac',cap:['SPARE THE NERVE,','SAVE THE SHOULDER'],ch:[{k:'doc',m:'happy',x:.3},{k:'blob',m:'happy',x:.7,l:'SHOULDER'}]},
+ head:"Spare the accessory nerve and start shoulder physio early",
+ take:"Lifting the shoulder depends on the spinal accessory nerve, which neck dissection can stretch or cut. Preserve it whenever the cancer allows and avoid heavy traction in levels IIb and V. When the shoulder still droops, a randomised trial showed progressive resistance exercises reduced pain and disability. Refer to physiotherapy early, before a frozen shoulder sets in.",
+ rib:"Spare the accessory nerve; start shoulder physiotherapy early",more:"See the evidence",u:pm('McNeely progressive resistance exercise shoulder dysfunction head and neck cancer'),likes:760},
+
+{id:'leech',tr:'r',cat:'Flap failure',ev:'Cohort studies',
+ scene:{bg:'pink',cap:['CONGESTED FLAP?','LEECHES BUY TIME'],ch:[{k:'flap',m:'worried',bad:true,x:.33},{k:'vial',m:'calm',x:.72,l:'CIPROFLOXACIN',s:1.05}]},
+ head:"Leeches can rescue a congested flap, with antibiotic cover",
+ take:"When a pedicled flap or replant is congested and the vein cannot be fixed surgically, medicinal leeches drain blood and buy time for new veins to grow in. Their gut bacterium, Aeromonas, can infect the flap, so give prophylactic antibiotics such as ciprofloxacin. In a free flap, explore the anastomosis first; leeches are a rescue, not a cure.",
+ rib:"Leeches buy time for a congested flap; always add antibiotic cover",more:"See the evidence",u:pm('medicinal leech therapy venous congestion flap Aeromonas prophylaxis'),likes:940},
+
+{id:'caprini',tr:'g',cat:'Postoperative care',ev:'Cohort studies',
+ scene:{bg:'butter',cap:['LONG SURGERY','RAISES CLOT RISK'],ch:[{k:'blob',m:'worried',x:.3,l:'PATIENT'},{k:'vial',m:'happy',x:.7,l:'HEPARIN',s:1.05}]},
+ head:"Score every patient for blood-clot risk after big surgery",
+ take:"Clots in the legs and lungs are an avoidable killer after long head and neck operations. The Caprini score adds points for age, cancer, long surgery and immobility to find the highest-risk patients. Use stockings and calf pumps for everyone, add low-molecular-weight heparin in high scorers, and get patients walking early.",
+ rib:"Score clot risk, give heparin to high scorers, mobilise early",more:"See the evidence",u:pm('Caprini risk venous thromboembolism head and neck free flap'),likes:690},
+
+{id:'swallow',tr:'g',cat:'Postoperative care',ev:'Cohort studies',
+ scene:{bg:'mint',cap:['SWALLOWING:','USE IT OR LOSE IT'],ch:[{k:'tongue',m:'happy',x:.33,l:'TONGUE'},{k:'blob',m:'happy',x:.7}]},
+ head:"Keep patients swallowing during and after treatment",
+ take:"Swallowing muscles weaken fast when they are not used during radiotherapy or after surgery. Starting swallowing exercises early, keeping some food by mouth when safe, and involving a swallow therapist before treatment are linked with better long-term swallowing and fewer permanent feeding tubes. Use it or lose it applies to the throat.",
+ rib:"Start swallowing exercises before treatment; keep some oral intake",more:"See the evidence",u:pm('prophylactic swallowing exercises head and neck cancer radiotherapy outcomes'),likes:710},
+
+{id:'trach',tr:'g',cat:'Postoperative care',ev:'Cohort studies',
+ scene:{bg:'lilac',cap:['A TRACHEOSTOMY','FOR EVERYONE?'],ch:[{k:'doc',m:'calm',x:.3},{k:'blob',m:'worried',x:.7,l:'PATIENT'}]},
+ head:"Tracheostomy by indication, not by habit",
+ take:"A tracheostomy protects the airway after big mouth and jaw operations, but it adds hospital days, chest infections and distress. Selected patients with smaller resections and a secure airway can safely avoid one, and when it is placed, decannulating early once swelling settles shortens the stay. Decide case by case rather than by routine.",
+ rib:"Tracheostomy only when indicated; decannulate as soon as safe",more:"See the evidence",u:pm('tracheostomy versus no tracheostomy free flap oral cavity reconstruction'),likes:650},
+
+{id:'egfr',tr:'g',cat:'Genetics simplified',ev:'Biology · reviews',
+ scene:{bg:'pink',cap:['TOO MANY GROWTH','SWITCHES (EGFR)'],ch:[{k:'tumour',m:'angry',x:.3,l:'EGFR HIGH'},{k:'vial',m:'happy',x:.7,l:'CETUXIMAB',s:1.05}]},
+ head:"EGFR is the growth switch that cetuximab blocks",
+ take:"Most head and neck cancers carry far too many EGFR receptors, the switches that tell cells to grow, and high EGFR is linked with poorer outcomes. Cetuximab is an antibody that blocks this switch. Unlike lung cancer, there is no useful EGFR mutation test in head and neck cancer, so cetuximab is given without testing.",
+ rib:"EGFR is overactive in most cases; cetuximab blocks it, no test needed",more:"See the evidence",u:pm('EGFR overexpression head and neck squamous cell carcinoma prognosis review'),likes:600},
+
+{id:'cps',tr:'g',cat:'Immunotherapy',ev:'Guideline · NCCN / KEYNOTE-048',
+ fig:{type:'table',title:'What the PD-L1 combined positive score means',cols:['CPS','What it suggests'],w:[1,3],rows:[['Below 1','Immunotherapy alone unlikely to help'],['1 to 19','Pembrolizumab, usually with chemotherapy'],['20 or more','Pembrolizumab alone is a strong option']],hi:2,from:'KEYNOTE-048 and NCCN guidance'},
+ head:"PD-L1 CPS decides the immunotherapy plan",
+ take:"The combined positive score counts PD-L1 stained cancer and immune cells per 100 cancer cells. It predicts who benefits from immunotherapy: below 1, little benefit; 20 or more, pembrolizumab alone works well; in between, it is usually given with chemotherapy. Ask the pathologist for CPS on every biopsy of advanced disease.",
+ rib:"Ask the pathologist for PD-L1 CPS on every advanced biopsy",more:"See the guideline",u:"https://www.nccn.org/guidelines/guidelines-detail?category=1&id=1437",likes:1180},
+
+{id:'brown',tr:'r',cat:'Maxillectomy',ev:'Classification · Lancet Oncol 2010',
+ fig:{type:'table',title:'Brown classification of maxillectomy (simplified)',cols:['Class','What is removed','Typical choice'],w:[1,3,3],rows:[['I','Palate bone, no opening into the sinus','Local repair'],['II','Low maxilla, orbit floor kept','Obturator or soft-tissue flap'],['III','Includes the orbital floor','Bone flap: fibula or scapula'],['IV','Includes the eye (exenteration)','Large soft-tissue or bone flap'],['a-d','How much palate is lost','More palate, stronger case for bone']],from:'Brown and Shaw, Lancet Oncol 2010'},
+ head:"Describe a maxillectomy by height and palate, then pick the flap",
+ take:"Brown's classification describes a maxillectomy by how high it goes, from palate only up to the orbit, and by how much palate it takes, letters a to d. Low defects suit an obturator or soft-tissue flap. Once the orbital floor or a large part of the palate is lost, bone flaps such as fibula or scapular tip support the eye and future teeth best.",
+ rib:"Class the defect by height and palate; orbital floor lost means bone",more:"Read the paper",u:pm('Brown Shaw reconstruction of the maxilla and midface classification Lancet Oncol 2010'),likes:820},
+
+{id:'obturator',tr:'r',cat:'Maxillectomy',ev:'Cohort studies',
+ scene:{bg:'butter',cap:['PLUG IT OR','REBUILD IT?'],ch:[{k:'screen',t:'OBTURATOR',w:1.6,x:.3},{k:'flap',m:'happy',x:.72,l:'FREE FLAP'}]},
+ head:"Obturator for small palate defects, flap for large ones",
+ take:"A dental obturator plugs a palate defect quickly and lets you inspect the cavity for recurrence, which suits small defects and frail patients. For larger defects, obturators leak, loosen and affect speech, and a free flap gives better speech, swallowing and quality of life. Involve the prosthodontist before surgery either way.",
+ rib:"Small palate defect: obturator; large defect: free flap does better",more:"See the evidence",u:pm('obturator versus free flap maxillectomy quality of life'),likes:640},
+
+{id:'dentalrt',tr:'g',cat:'Dental rehab',ev:'Guidelines · consensus',
+ scene:{bg:'mint',cap:['FIX THE TEETH','BEFORE RADIATION'],ch:[{k:'bone',m:'happy',x:.3,l:'JAW'},{k:'doc',m:'happy',x:.7}]},
+ head:"Dental clearance at least two weeks before radiotherapy",
+ take:"Bad teeth in the radiation field are the commonest trigger for jaw bone death later. Get a dental assessment before radiotherapy, remove teeth with a poor outlook at least two weeks before treatment so the sockets heal, and give fluoride trays for life. A day spent on dental planning saves months of osteoradionecrosis care.",
+ rib:"Extract doubtful teeth at least 2 weeks before radiotherapy starts",more:"See the evidence",u:pm('pre-radiotherapy dental extraction timing osteoradionecrosis prevention'),likes:930},
+
+{id:'pentoclo',tr:'g',cat:'Osteoradionecrosis',ev:'Cohort studies',
+ scene:{bg:'lilac',cap:['DEAD BONE','IN THE JAW'],ch:[{k:'bone',m:'sad',x:.3,l:'JAW'},{k:'vial',m:'happy',x:.7,l:'PENTO + VIT E',s:1.05}]},
+ head:"Early bone death: try pentoxifylline with vitamin E",
+ take:"For established bone death in an irradiated jaw, pentoxifylline with vitamin E, sometimes with clodronate, has healed or shrunk lesions over months in several series. It is cheap, oral and well tolerated. Severe cases with a fracture, fistula or exposed plate still need resection and a bone flap such as fibula.",
+ rib:"Early ORN: pentoxifylline + vitamin E; advanced ORN: resect and flap",more:"See the evidence",u:pm('pentoxifylline tocopherol osteoradionecrosis mandible'),likes:780},
+
+{id:'compart',tr:'a',cat:'Tongue cancer',ev:'Cohort studies',
+ scene:{bg:'pink',cap:['TAKE THE WHOLE','TONGUE COMPARTMENT'],ch:[{k:'tongue',m:'worried',x:.3,l:'TONGUE'},{k:'doc',m:'calm',x:.7,l:'EN BLOC'}]},
+ head:"For deeper tongue cancers, remove the compartment, not just the lump",
+ take:"Tongue cancer spreads along muscles and lymph channels toward the floor of mouth and neck. Compartmental surgery removes the half-tongue with its outside muscles and the tissue between tongue and neck in one block. Series from Italy and India report better local control for deeper tumours. It needs good reconstruction, usually a free flap.",
+ rib:"Deep tongue cancer: remove the compartment in one block",more:"See the evidence",u:pm('compartmental surgery tongue cancer local control'),likes:910},
+
+{id:'nutrition',tr:'g',cat:'Postoperative care',ev:'Guideline · ESPEN',
+ scene:{bg:'butter',cap:['FEED BEFORE','YOU OPERATE'],ch:[{k:'blob',m:'worried',x:.3,l:'WEIGHT LOSS'},{k:'vial',m:'happy',x:.7,l:'SUPPLEMENT',s:1.05}]},
+ head:"Screen weight loss and feed patients before surgery",
+ take:"Many mouth cancer patients arrive underweight because eating hurts. Malnutrition raises wound breakdown, fistula and flap problems. Check weight loss at the first visit, start high-protein supplements or tube feeding before surgery when needed, and restart feeding within a day after surgery. Good nutrition is cheap insurance for a flap.",
+ rib:"Check weight loss at first visit; feed before and soon after surgery",more:"See the guideline",u:pm('ESPEN guideline clinical nutrition surgery head and neck cancer'),likes:720},
+
+{id:'quit',tr:'g',cat:'Early detection',ev:'Cohort studies',
+ scene:{bg:'mint',cap:['QUIT TOBACCO,','EVEN NOW'],ch:[{k:'blob',m:'happy',x:.3,l:'PATIENT'},{k:'tumour',m:'sad',x:.7,s:.95}]},
+ head:"Quitting tobacco after diagnosis still improves outcomes",
+ take:"Patients who keep smoking or chewing during treatment have more complications, worse radiotherapy results, more second cancers and lower survival. Stopping at diagnosis reverses part of this. Ask about tobacco at every visit, advise quitting clearly, and offer nicotine replacement or a cessation clinic referral. It costs little and helps a lot.",
+ rib:"It is never too late: stopping tobacco at diagnosis improves survival",more:"See the evidence",u:pm('smoking cessation after diagnosis head and neck cancer survival'),likes:820},
+
+{id:'fibharvest',tr:'r',cat:'Fibula flap',ev:'Expert view',
+ scene:{bg:'lilac',cap:['LEAVE 6 CM','AT EACH END'],ch:[{k:'bone',m:'happy',x:.32,l:'FIBULA'},{k:'doc',m:'calm',x:.7}]},
+ head:"Fibula harvest: leave 6 cm at the knee and ankle",
+ take:"To keep the leg stable and the peroneal nerve safe, leave about 6 cm of fibula below the knee and above the ankle. Up to about 25 cm of straight bone can still be taken, enough for an angle-to-angle jaw. Check the leg's blood supply first, because some legs depend on the peroneal artery.",
+ rib:"Keep 6 cm of fibula at both ends; image leg vessels first",more:"See the evidence",u:pm('fibula free flap harvest technique donor site morbidity'),likes:870},
+
+{id:'ijv',tr:'r',cat:'Anastomosis',ev:'Expert view · cohort studies',
+ scene:{bg:'butter',cap:['JOIN THE VEIN TO','THE JUGULAR SIDE'],ch:[{k:'vessel',c:'vein',m:'happy',x:.5,y:-20,s:1.1},{k:'vessel',c:'artery',m:'calm',x:.5,y:30,s:.9}]},
+ head:"End-to-side to the internal jugular gives a reliable outflow",
+ take:"When neck veins are small or damaged, joining the flap vein end-to-side into the internal jugular vein gives a large, steady outflow that is hard to kink. Many series report very low venous thrombosis with this technique. Keep the jugular vein during neck dissection when the cancer allows, so it is there for the flap.",
+ rib:"Save the internal jugular vein; it makes an excellent flap outflow",more:"See the evidence",u:pm('end-to-side internal jugular vein anastomosis free flap'),likes:700},
+
+{id:'trismus',tr:'a',cat:'Buccal cancer',ev:'Cohort studies',
+ scene:{bg:'pink',cap:["CAN'T OPEN","THE MOUTH?"],ch:[{k:'blob',m:'worried',x:.3,l:'TRISMUS'},{k:'screen',t:'MRI',x:.7}]},
+ head:"Trismus in cheek cancer: get an MRI before blaming fibrosis",
+ take:"In cheek cancer, a tight mouth can come from pain, submucous fibrosis or cancer in the chewing muscles behind the jaw. MRI tells them apart: invasion of the pterygoid or masseter muscles upstages the tumour and changes the operation. Never assume trismus is just fibrosis; image it before planning.",
+ rib:"Trismus in cheek cancer needs MRI; it may be muscle invasion",more:"See the evidence",u:pm('trismus buccal mucosa carcinoma masticator space MRI'),likes:760}
+];
+const CHAR_FOR={'Early detection':'lens','Genetics simplified':'dna','Tongue cancer':'tongue','Buccal cancer':'blob','Neck':'node','Immunotherapy':'vial','Systemic therapy':'vial','Adjuvant therapy':'vial','Anastomosis':'vessel','Flap failure':'flap','Flap monitoring':'flap','ALT flap':'flap','Radial forearm flap':'flap','Pectoralis major flap':'flap','Fibula flap':'bone','Scapula flap':'bone','Mandible':'bone','Dental rehab':'bone','Osteoradionecrosis':'bone','Maxillectomy':'bone','Oncology news':'lens','HPV and oropharynx':'tumour','Margins':'tongue','ITF clearance':'tumour','Vessel-depleted neck':'vessel','Postoperative care':'blob'};
+
+/* ---------- drawing ---------- */
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const GR={tumour:['#CDB8F7','#8A69CF'],tongue:['#FFC4BC','#E2736A'],artery:['#FF9C9C','#D2423F'],vein:['#9CBDF6','#4471CB'],bone:['#FFFBEF','#E6D3A6'],flap:['#FFD3BD','#EC8D66'],flapBad:['#C3B3E6','#7560A8'],node:['#C3EFCF','#67B582'],blob:['#FFE6D2','#EFAE84'],vial:['#F4FAFF','#B3D4F0'],doc:['#B4E8E3','#55AAA3'],lens:['#F7FCFF','#BBDDF5'],white:['#FFFFFF','#E4E9F0'],teal:['#62D9C2','#14907B'],grey:['#ECEAF2','#BDB9CD'],screen:['#3D4458','#232838']};
+const PB={pink:['#FFF3F5','#FAD6DD'],lilac:['#F7F3FF','#E1D5FA'],butter:['#FFFAEA','#FBE8B0'],mint:['#F0FBF5','#CDEFD9']};
+function defs(){return '';}
+function defsMarkup(){
+  let s='<defs><filter id="fsh" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="2.5" stdDeviation="2" flood-color="#2B2440" flood-opacity=".22"/></filter>';
+  for(const [k,[a,b]] of Object.entries(GR)) s+=`<radialGradient id="g-${k}" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></radialGradient>`;
+  for(const [k,[a,b]] of Object.entries(PB)) s+=`<linearGradient id="p-${k}" x1="0" y1="0" x2="0.3" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+  return s+'<pattern id="dots" width="11" height="11" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.1" fill="#2B2440" opacity=".07"/></pattern></defs>';
+}
+function face(x,y,m){
+  let s='';
+  if(m==='happy'||m==='calm') s+=`<ellipse cx="${x-15}" cy="${y+8}" rx="4.5" ry="2.8" fill="#FF7F98" opacity=".45"/><ellipse cx="${x+15}" cy="${y+8}" rx="4.5" ry="2.8" fill="#FF7F98" opacity=".45"/>`;
+  [-8.5,8.5].forEach(dx=>{
+    const px=x+dx+(m==='worried'?0:.6);
+    if(m==='happy'){s+=`<path d="M${x+dx-4.5} ${y+1} Q${x+dx} ${y-6} ${x+dx+4.5} ${y+1}" fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>`;return;}
+    s+=`<g class="eye"><ellipse cx="${x+dx}" cy="${y}" rx="4.6" ry="5.4" fill="#fff" stroke="${INK}" stroke-width="1.4"/><circle cx="${px}" cy="${y+1}" r="2.9" fill="${INK}"/><circle cx="${px+1.3}" cy="${y-.4}" r="1.1" fill="#fff"/></g>`;
+  });
+  const br=`fill="none" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"`;
+  if(m==='happy') s+=`<path d="M${x-8} ${y+8} Q${x} ${y+20} ${x+8} ${y+8} Z" fill="#8A2E3F" stroke="${INK}" stroke-width="1.4" stroke-linejoin="round"/><path d="M${x-4} ${y+13.6} Q${x} ${y+17.6} ${x+4} ${y+13.6} Q${x} ${y+11.8} ${x-4} ${y+13.6}Z" fill="#F48C9C"/>`;
+  else if(m==='sad') s+=`<path d="M${x-6} ${y+15} Q${x} ${y+9} ${x+6} ${y+15}" ${br}/><path d="M${x+14} ${y+3} q3 5 0 7.5 q-3 -2.5 0 -7.5z" fill="#8CC6F5" stroke="${INK}" stroke-width=".9"/>`;
+  else if(m==='angry') s+=`<path d="M${x-14} ${y-10} L${x-4} ${y-5} M${x+14} ${y-10} L${x+4} ${y-5}" ${br} stroke-width="2.8"/><rect x="${x-7}" y="${y+10}" width="14" height="5.5" rx="2" fill="#fff" stroke="${INK}" stroke-width="1.4"/><path d="M${x-2.3} ${y+10} v5.5 M${x+2.3} ${y+10} v5.5" stroke="${INK}" stroke-width="1"/>`;
+  else if(m==='worried') s+=`<path d="M${x-14} ${y-7} L${x-4} ${y-10} M${x+14} ${y-7} L${x+4} ${y-10}" ${br}/><ellipse cx="${x}" cy="${y+13}" rx="3.6" ry="4.4" fill="#8A2E3F" stroke="${INK}" stroke-width="1.2"/>`;
+  else s+=`<path d="M${x-6} ${y+10} Q${x} ${y+15} ${x+6} ${y+10}" ${br}/>`;
+  return s;
+}
+function limbs(m,w,bottom,fill){
+  const ends={happy:[w+13,-20],sad:[w+7,17],angry:[w+13,4],worried:[w+11,-8],calm:[w+9,15]}[m]||[w+9,15];
+  let arms='',legs='';
+  [-1,1].forEach(sx=>{
+    const d=`M${sx*(w-3)} 4 Q${sx*(w+10)} ${m==='angry'?14:4} ${sx*ends[0]} ${ends[1]}`;
+    arms+=`<path d="${d}" fill="none" stroke="${INK}" stroke-width="6.5" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${fill}" stroke-width="3.6" stroke-linecap="round"/><circle cx="${sx*ends[0]}" cy="${ends[1]}" r="4.6" fill="${fill}" stroke="${INK}" stroke-width="1.5"/>`;
+    legs+=`<rect x="${sx>0?3:-11}" y="${bottom-4}" width="8" height="12" rx="3" fill="${fill}" stroke="${INK}" stroke-width="1.5"/><ellipse cx="${sx*8}" cy="${bottom+9}" rx="6.5" ry="3.4" fill="${INK}"/>`;
+  });
+  return {arms,legs};
+}
+function charSVG(o,cx,cy){
+  const s=o.s||1, k=o.k, m=o.m||'calm', sw=`stroke="${INK}" stroke-width="${(2.2/Math.max(s,.7)).toFixed(2)}" stroke-linejoin="round"`;
+  let g='', w=0, bottom=0, fill='', faceY=0, noLimbs=false, shadowY=40;
+  if(k==='blob'){g=`<ellipse rx="27" ry="29" fill="url(#g-blob)" ${sw}/>`;w=26;bottom=26;fill=GR.blob[1];faceY=-3;}
+  else if(k==='tongue'){g=`<path d="M-24 -26 Q-24 -32 -16 -32 L16 -32 Q24 -32 24 -26 L24 6 Q24 32 0 32 Q-24 32 -24 6 Z" fill="url(#g-tongue)" ${sw}/><path d="M0 -24 L0 20" stroke="${INK}" stroke-width="1.5" opacity=".25"/><circle cx="-12" cy="16" r="1.4" fill="${INK}" opacity=".2"/><circle cx="12" cy="20" r="1.4" fill="${INK}" opacity=".2"/>`;w=23;bottom=29;fill=GR.tongue[1];faceY=-8;}
+  else if(k==='tumour'){let p=[];for(let i=0;i<22;i++){const r=i%2?23:32,a=i*Math.PI/11;p.push((r*Math.cos(a)).toFixed(1)+','+(r*Math.sin(a)).toFixed(1));}g=`<polygon points="${p.join(' ')}" fill="url(#g-tumour)" ${sw}/>`;w=22;bottom=24;fill=GR.tumour[1];faceY=-2;}
+  else if(k==='node'){g=`<path d="M-26 -4 Q-26 -24 0 -22 Q26 -24 24 0 Q24 22 0 20 Q-8 19 -10 12 Q-26 14 -26 -4Z" fill="url(#g-node)" ${sw}/>`;w=23;bottom=18;fill=GR.node[1];faceY=-4;}
+  else if(k==='vessel'){const gid=o.c==='vein'?'vein':'artery';g=`<rect x="-44" y="-17" width="88" height="34" rx="17" fill="url(#g-${gid})" ${sw}/><ellipse cx="-44" rx="7" ry="17" fill="#7A2030" ${sw}/><ellipse cx="-44" rx="3.5" ry="10" fill="#3A0E18"/><path d="M-30 -10 Q0 -16 30 -10" stroke="#fff" stroke-width="3" opacity=".35" fill="none" stroke-linecap="round"/>`+(o.ring?`<rect x="30" y="-21" width="11" height="42" rx="4" fill="url(#g-white)" ${sw}/><circle cx="35.5" cy="-12" r="1.6" fill="${INK}"/><circle cx="35.5" cy="0" r="1.6" fill="${INK}"/><circle cx="35.5" cy="12" r="1.6" fill="${INK}"/>`:'');noLimbs=true;faceY=-3;shadowY=24;}
+  else if(k==='bone'){g=`<path d="M-11 -24 Q-24 -38 -11 -42 Q0 -45 0 -33 Q0 -45 11 -42 Q24 -38 11 -24 L11 24 Q24 38 11 42 Q0 45 0 33 Q0 45 -11 42 Q-24 38 -11 24 Z" fill="url(#g-bone)" ${sw}/>`;w=11;bottom=38;fill=GR.bone[1];faceY=-4;noLimbs=true;shadowY=46;
+    g+=`<g transform="translate(0 ${faceY}) scale(.72) translate(0 ${-faceY})">${face(0,faceY,m)}</g>`;faceY=null;
+    const L=limbs(m,12,0,fill);g=L.arms.replace(/<path d="M(-?)9 4/g,'<path d="M$19 4')+g;}
+  else if(k==='flap'){const gid=o.bad?'flapBad':'flap';g=`<path d="M30 8 Q50 14 46 34" fill="none" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M30 8 Q50 14 46 34" fill="none" stroke="${GR.artery[1]}" stroke-width="4" stroke-linecap="round"/><path d="M34 4 Q56 6 57 28" fill="none" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M34 4 Q56 6 57 28" fill="none" stroke="${GR.vein[1]}" stroke-width="4" stroke-linecap="round"/><ellipse rx="37" ry="27" fill="url(#g-${gid})" ${sw} transform="rotate(-12)"/><path d="M-22 -14 Q-6 -24 14 -20" stroke="#fff" stroke-width="3" opacity=".4" fill="none" stroke-linecap="round"/>`+(o.bad?`<path d="M-24 6 l5 3 l-2 5 M20 10 l4 -4 l4 3" stroke="#4A3878" stroke-width="1.6" fill="none"/>`:'');noLimbs=true;faceY=-3;shadowY=32;}
+  else if(k==='doc'){g=`<path d="M-28 42 Q-28 14 0 14 Q28 14 28 42 Z" fill="url(#g-doc)" ${sw}/><path d="M-8 15 L0 28 L8 15" fill="#fff" ${sw}/><circle cy="-8" r="21" fill="url(#g-blob)" ${sw}/><path d="M-22 -12 Q-22 -36 0 -36 Q22 -36 22 -12 Q0 -18 -22 -12Z" fill="url(#g-doc)" ${sw}/><circle cx="-8" cy="-26" r="1.6" fill="#fff" opacity=".7"/><circle cx="4" cy="-29" r="1.6" fill="#fff" opacity=".7"/>`;noLimbs=true;faceY=-4;shadowY=44;}
+  else if(k==='vial'){g=`<rect x="-13" y="-40" width="26" height="12" rx="3" fill="url(#g-grey)" ${sw}/><rect x="-23" y="-29" width="46" height="64" rx="11" fill="url(#g-vial)" ${sw}/><rect x="-22" y="4" width="44" height="17" fill="#fff" opacity=".85"/><path d="M-22 4 H22 M-22 21 H22" stroke="${INK}" stroke-width="1" opacity=".4"/><path d="M-15 -22 V-6" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".8"/>`;w=22;bottom=35;fill=GR.vial[1];faceY=-14;}
+  else if(k==='clock'){g=`<path d="M-24 -26 l-9 -8 M24 -26 l9 -8" stroke="${INK}" stroke-width="4" stroke-linecap="round"/><circle cx="-31" cy="-33" r="6" fill="url(#g-artery)" ${sw}/><circle cx="31" cy="-33" r="6" fill="url(#g-artery)" ${sw}/><circle r="30" fill="url(#g-white)" ${sw}/><circle r="24" fill="none" stroke="${INK}" stroke-width="1" opacity=".25"/><path d="M0 0 L0 -17 M0 0 L12 7" stroke="${INK}" stroke-width="3" stroke-linecap="round"/><circle r="3" fill="${GR.artery[1]}" stroke="${INK}" stroke-width="1"/>`;w=27;bottom=26;fill=GR.white[1];faceY=null;}
+  else if(k==='lens'){g=`<path d="M17 17 L35 35" stroke="${INK}" stroke-width="10" stroke-linecap="round"/><path d="M17 17 L35 35" stroke="#B5874F" stroke-width="6" stroke-linecap="round"/><circle r="27" fill="url(#g-grey)" ${sw}/><circle r="21" fill="url(#g-lens)" ${sw}/><path d="M-12 -12 Q-4 -18 6 -16" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>`;noLimbs=true;faceY=0;shadowY=40;}
+  else if(k==='dna'){let a='',b='',r='';for(let y=-40;y<=40;y+=4){const x=15*Math.sin(y/40*Math.PI*1.5);a+=(y===-40?'M':'L')+x.toFixed(1)+' '+y;b+=(y===-40?'M':'L')+(-x).toFixed(1)+' '+y;if((y+40)%8===0&&Math.abs(y)>18)r+=`M${x.toFixed(1)} ${y}L${(-x).toFixed(1)} ${y}`;}
+    g=`<path d="${r}" stroke="${INK}" stroke-width="2.2" opacity=".45"/><path d="${a}" fill="none" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="${a}" fill="none" stroke="#E86A9C" stroke-width="5" stroke-linecap="round"/><path d="${b}" fill="none" stroke="${INK}" stroke-width="8" stroke-linecap="round"/><path d="${b}" fill="none" stroke="#5C88DE" stroke-width="5" stroke-linecap="round"/><circle r="18" fill="url(#g-white)" ${sw}/>`;
+    g+=`<g transform="scale(.78)">${face(0,-2,m)}</g>`;faceY=null;noLimbs=true;shadowY=46;}
+  else if(k==='screen'){const W=62*(o.w||1);g=`<rect x="${-W/2}" y="-28" width="${W}" height="48" rx="8" fill="url(#g-screen)" ${sw}/><rect x="${-W/2+5}" y="-23" width="${W-10}" height="38" rx="5" fill="#141824"/><text y="4" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="${o.t.length>6?15:21}" fill="#8EF5B4">${esc(o.t)}</text><path d="M-6 20 L-12 32 M6 20 L12 32" stroke="${INK}" stroke-width="3" stroke-linecap="round"/><rect x="-16" y="30" width="32" height="5" rx="2.5" fill="${INK}"/>`;noLimbs=true;faceY=null;shadowY=38;}
+  let out=`<ellipse cy="${shadowY}" rx="${k==='vessel'?40:26}" ry="4.5" fill="${INK}" opacity=".12"/>`;
+  if(!noLimbs&&w){const L=limbs(m,w,bottom,fill);out+=L.legs+`<g filter="url(#fsh)">${g}${faceY!==null?face(0,faceY,m):''}</g>`+L.arms;}
+  else out+=`<g filter="url(#fsh)">${g}${faceY!==null&&faceY!==undefined?face(k==='vessel'?-4:0,faceY,m):''}</g>`;
+  const ly=k==='dna'?56:k==='bone'?60:k==='vessel'?36:50;
+  const lab=o.l?`<text y="${ly}" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="${(13.5/s).toFixed(1)}" fill="${INK}" stroke="#fff" stroke-width="3" paint-order="stroke">${esc(o.l)}</text>`:'';
+  return `<g transform="translate(${cx} ${cy}) scale(${s})"><g class="cb" style="animation-delay:-${((cx*7+cy*3)%28)/10}s">${out}${lab}</g></g>`;
+}
+const SIG=`<text x="394" y="306" text-anchor="end" font-family="Figtree, sans-serif" font-size="7" fill="#9A9AAE">manish &amp; moni · surgical illustration collective</text>`;
+function capChip(x,y,pw,lines){
+  const n=Math.max(...lines.map(t=>t.length)), fs=n>17?13.5:15, w=Math.min(pw-14,n*fs*.56+26), h=lines.length*16+12;
+  let s=`<rect x="${x+(pw-w)/2}" y="${y+8}" width="${w}" height="${h}" rx="11" fill="#fff" opacity=".88" stroke="${INK}" stroke-opacity=".12"/>`;
+  lines.forEach((t,j)=>{s+=`<text x="${x+pw/2}" y="${y+25+j*16}" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="${fs}" fill="${INK}">${esc(t)}</text>`;});
+  return s;
+}
+function panelsArt(c){
+  const pw=190,ph=146,xs=[6,204],ys=[6,158];
+  let s=`<svg viewBox="0 0 400 310" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc('Cartoon: '+c.panels.map(p=>p.cap.join(' ')).join(' '))}">`+defs();
+  c.panels.forEach((p,i)=>{
+    const x=xs[i%2],y=ys[i>1?1:0];
+    s+=`<rect x="${x}" y="${y}" width="${pw}" height="${ph}" rx="16" fill="url(#p-${p.bg})"/><rect x="${x}" y="${y}" width="${pw}" height="${ph}" rx="16" fill="url(#dots)" stroke="#CFC4E0" stroke-width="1.2" stroke-dasharray="6 5"/>`;
+    s+=capChip(x,y,pw,p.cap);
+    p.ch.forEach(o=>{s+=charSVG(o,x+pw*o.x,y+92+(o.y||0));});
+  });
+  return s+SIG+`</svg>`;
+}
+function figArt(c){
+  const f=c.fig; if(f.type==='table') return tableArt(c);
+  let s=`<svg viewBox="0 0 400 310" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc('Key result: '+(f.title||'')+' '+(f.bars||[]).map(b=>b.l+' '+b.v+(f.unit||'')).join(', ')+(f.big?f.big+' '+f.lines.join(' '):''))}">`+defs();
+  s+=`<rect x="6" y="6" width="388" height="298" rx="16" fill="url(#p-mint)"/><rect x="6" y="6" width="388" height="298" rx="16" fill="url(#dots)" stroke="#BFE0CC"/>`;
+  if(f.type==='bars'){
+    wrapWords(f.title,f.title.length>34?40:34).slice(0,2).forEach((t,j,arr)=>{s+=`<text x="24" y="${(arr.length>1?30:38)+j*19}" font-family="Figtree, sans-serif" font-weight="800" font-size="${arr.length>1?16:18}" fill="${INK}">${esc(t)}</text>`;});
+    const max=Math.max(...f.bars.map(b=>b.v));
+    f.bars.forEach((b,i)=>{
+      const y=(f.title.length>34?84:74)+i*72, w=Math.max(10,b.v/max*248);
+      s+=`<text x="24" y="${y}" font-family="Figtree, sans-serif" font-weight="600" font-size="13.5" fill="#4A4A5E">${esc(b.l)}</text>`;
+      s+=`<g class="bar" style="animation-delay:${i*.25}s"><rect x="24" y="${y+10}" width="${w.toFixed(1)}" height="36" rx="10" fill="url(#g-${b.hi?'teal':'grey'})" stroke="${INK}" stroke-width="1.6" filter="url(#fsh)"/><path d="M34 ${y+18} H${(14+w).toFixed(1)}" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".35"/></g>`;
+      s+=`<text x="${(34+w).toFixed(1)}" y="${y+38}" font-family="Gaegu, cursive" font-weight="700" font-size="27" fill="${b.hi?'#0E7A67':INK}">${esc(b.v+(f.unit||''))}</text>`;
+    });
+    s+=charSVG({k:f.ch||'doc',m:'happy',s:.72},350,236);
+  } else {
+    s+=`<text class="statn" x="150" y="152" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="108" fill="#0E7A67" stroke="#fff" stroke-width="6" paint-order="stroke">${esc(f.big)}</text>`;
+    f.lines.forEach((t,i)=>{s+=`<text x="150" y="${194+i*22}" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="700" font-size="16" fill="${INK}">${esc(t)}</text>`;});
+    s+=charSVG({k:f.ch||'doc',m:'happy',s:1.05},322,150);
+  }
+  s+=`<text x="24" y="292" font-family="Figtree, sans-serif" font-size="10.5" fill="#5E6E66">Key result redrawn from ${esc(f.from)}</text>`;
+  return s+SIG+`</svg>`;
+}
+function autoArt(c){
+  const k=CHAR_FOR[c.cat]||'doc';
+  let s=`<svg viewBox="0 0 400 310" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc('Cartoon: new paper on '+c.cat)}">`+defs();
+  s+=`<rect x="6" y="6" width="388" height="298" rx="16" fill="url(#p-butter)"/><rect x="6" y="6" width="388" height="298" rx="16" fill="url(#dots)" stroke="#E8D9A8" stroke-dasharray="6 5"/>`;
+  s+=capChip(6,4,388,['FRESH FROM THE JOURNALS',String(c.cat).toUpperCase()]);
+  s+=charSVG({k:'screen',t:String(c.journal||'NEW PAPER').slice(0,12),w:2.1},118,176);
+  s+=charSVG({k,m:'happy',c:'artery',s:1.1},292,168);
+  return s+SIG+`</svg>`;
+}
+function wrapWords(t,max){const w=String(t).split(' '),out=[];let l='';w.forEach(x=>{if((l+' '+x).trim().length>max&&l){out.push(l);l=x;}else l=(l+' '+x).trim();});if(l)out.push(l);return out;}
+/* one big animated scene: caption chip on top, two or three characters acting it out */
+function sceneArt(c){
+  const sc=c.scene;
+  let s=`<svg viewBox="0 0 400 310" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc('Cartoon: '+sc.cap.join(' '))}">`;
+  s+=`<rect x="6" y="6" width="388" height="298" rx="16" fill="url(#p-${sc.bg||'mint'})"/><rect x="6" y="6" width="388" height="298" rx="16" fill="url(#dots)" stroke="#CFC4E0" stroke-width="1.2" stroke-dasharray="6 5"/>`;
+  s+=`<ellipse cx="200" cy="262" rx="170" ry="14" fill="#2B2440" opacity=".05"/>`;
+  s+=capChip(6,6,388,sc.cap);
+  sc.ch.forEach(o=>{s+=charSVG({...o,s:o.s||1.3},6+388*o.x,178+(o.y||0));});
+  return s+SIG+`</svg>`;
+}
+/* a key table from the paper or guideline, redrawn */
+function tableArt(c){
+  const f=c.fig, W=[...(f.w||f.cols.map(()=>1))], tw=W.reduce((a,b)=>a+b,0), X0=20, TW=360;
+  const xs=[];let acc=X0;W.forEach(w=>{xs.push(acc);acc+=w/tw*TW;});
+  const chars=W.map(w=>Math.max(8,Math.floor(w/tw*TW/6.6)));
+  let y=56, rows='';
+  const head=f.cols.map((h,i)=>`<text x="${xs[i]+8}" y="${y-8}" font-family="Figtree, sans-serif" font-weight="800" font-size="12.5" fill="#fff">${esc(h)}</text>`).join('');
+  f.rows.forEach((r,ri)=>{
+    const cells=r.map((t,i)=>wrapWords(t,chars[i])), lines=Math.max(...cells.map(x=>x.length)), h=lines*15+12;
+    rows+=`<g class="trow" style="animation-delay:${.15+ri*.18}s"><rect x="${X0}" y="${y}" width="${TW}" height="${h}" fill="${ri===f.hi?'#FFE3DA':ri%2?'#FFFFFF':'#F6F2FF'}"/>`;
+    cells.forEach((ls,i)=>ls.forEach((l,j)=>{rows+=`<text x="${xs[i]+8}" y="${y+18+j*15}" font-family="Figtree, sans-serif" font-weight="${i===0?700:500}" font-size="12.5" fill="#2B2440">${esc(l)}</text>`;}));
+    rows+=`</g>`; y+=h;
+  });
+  let s=`<svg viewBox="0 0 400 ${Math.max(310,y+34)}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc('Table: '+f.title+'. '+f.rows.map(r=>r.join(', ')).join('; '))}">`;
+  s+=`<rect x="6" y="6" width="388" height="${Math.max(298,y+22)}" rx="16" fill="url(#p-lilac)"/><text x="20" y="28" font-family="Figtree, sans-serif" font-weight="800" font-size="15.5" fill="#2B2440">${esc(f.title)}</text>`;
+  s+=`<rect x="${X0}" y="${56-26}" width="${TW}" height="26" rx="6" fill="#2B2440"/>${head}<g>${rows}</g><rect x="${X0}" y="30" width="${TW}" height="${y-30}" rx="6" fill="none" stroke="#2B2440" stroke-opacity=".25"/>`;
+  s+=`<text x="20" y="${y+18}" font-family="Figtree, sans-serif" font-size="10.5" fill="#5E5A70">Redrawn from ${esc(f.from)}</text>`;
+  return s+`</svg>`;
+}
+const art=c=>c.fig?figArt(c):c.scene?sceneArt(c):c.panels?panelsArt(c):autoArt(c);
+
+/* ---------- state ---------- */
+const H4=4*3600e3, slotNow=()=>Math.floor(Date.now()/H4);
+const DEFAULTS=()=>({seen:[],liked:{},saved:{},lastN:0,profile:null,guest:false,interests:[],goal:10,days:{},theme:'system',textSize:'m',hidden:{},reports:[]});
+let S=DEFAULTS();
+try{Object.assign(S,JSON.parse(localStorage.getItem('flapshots2')||'{}'));}catch(e){}
+const persist=()=>{try{localStorage.setItem('flapshots2',JSON.stringify(S));}catch(e){}};
+let tab='feed', topic=null, liveCards=[], liveStatus='Connecting…', pendingLive=0, renderedLive=0;
+const $=id=>document.getElementById(id), feed=$('feed');
+
+const inTrack=c=>true;
+function libReleased(){return LIB;}
+function allReleased(){return [...liveCards.filter(inTrack),...libReleased()];}
+const byId=id=>liveCards.find(c=>c.id===id)||LIB.find(c=>c.id===id);
+const topicOk=c=>!topic||c.cat===topic;
+
+function feedList(){
+  const rel=allReleased(), ids=new Set((topic?[...liveCards,...LIB]:rel).map(c=>c.id)), seen=new Set(S.seen);
+  const old=S.seen.filter(id=>ids.has(id)).map(byId).filter(c=>c&&topicOk(c)&&!S.hidden[c.id]);
+  const pool=topic?[...liveCards.filter(inTrack),...LIB.filter(inTrack)]:rel;
+  const pri=c=>(c.live?0:2)-(S.interests.includes(c.cat)?1:0);
+  const fresh=pool.filter(c=>!seen.has(c.id)&&topicOk(c)&&!S.hidden[c.id]).map((c,i)=>[c,i]).sort((a,b)=>pri(a[0])-pri(b[0])||a[1]-b[1]).map(x=>x[0]);
+  return {old,fresh};
+}
+/* the paper pipeline runs at 6 minutes past every 4th hour, India time (00:06, 04:06 ... 20:06 IST) */
+function nextDrop(){const off=5.5*3600e3,ist=Date.now()+off,d=new Date(ist),h=d.getUTCHours(),t=new Date(ist);t.setUTCHours(h-h%4,6,0,0);if(t.getTime()<=ist)t.setUTCHours(h-h%4+4,6,0,0);const ms=t.getTime()-ist,hh=Math.floor(ms/3600e3),mm=Math.floor(ms%3600e3/60e3);return hh?`${hh} h ${mm} min`:`${mm} min`;}
+const CAT_ORDER=['Oncology news','Early detection','Genetics simplified','Tongue cancer','Buccal cancer','ITF clearance','Neck','Margins','Mandible','Maxillectomy','Adjuvant therapy','Immunotherapy','Systemic therapy','HPV and oropharynx','Anastomosis','ALT flap','Radial forearm flap','Fibula flap','Scapula flap','Pectoralis major flap','Flap monitoring','Flap failure','Vessel-depleted neck','Postoperative care','Dental rehab','Osteoradionecrosis'];
+function renderChips(){
+  const all=[...liveCards,...LIB], n={};all.forEach(c=>n[c.cat]=(n[c.cat]||0)+1);
+  const cats=[...CAT_ORDER.filter(c=>n[c]),...Object.keys(n).filter(c=>!CAT_ORDER.includes(c)).sort()];
+  $('chips').innerHTML=`<button class="chip" data-cat="" aria-pressed="${!topic}">All<i>${all.length}</i></button>`+cats.map(c=>`<button class="chip" data-cat="${esc(c)}" aria-pressed="${c===topic}">${esc(c)}<i>${n[c]}</i></button>`).join('');
+  const on=$('chips').querySelector('[aria-pressed="true"]');on&&on.scrollIntoView({inline:'center',block:'nearest'});
+}
+
+function pillLabel(c){return 'Read';}
+function cardHTML(c){
+  const L=!!S.liked[c.id], SV=!!S.saved[c.id];
+  return `<article class="card" data-id="${esc(c.id)}">
+  <div class="img">${art(c)}<svg class="burst" viewBox="0 0 24 24"><use href="#i-heart" fill="#E2475B"/></svg></div>
+  <a class="ribbon" href="${esc(c.u)}" target="_blank" rel="noopener"><b>${esc(c.rib)}</b><span>${esc(pillLabel(c))} ↗</span></a>
+  <div class="body"><p class="take">${esc(c.take)}</p></div>
+  <div class="foot"><div class="meta">${c.live?'<span class="fresh">New · </span>':''}${esc(c.cat)} · ${esc(c.ev)}</div>
+    <button class="tool like" data-a="like" aria-pressed="${L}" aria-label="Like"><svg><use href="#i-heart"/></svg></button>
+    <button class="tool" data-a="save" aria-pressed="${SV}" aria-label="Save"><svg><use href="#i-save"/></svg></button>
+    <button class="tool" data-a="share" aria-label="Share"><svg><use href="#i-share"/></svg></button>
+    <button class="tool" data-a="more" aria-label="More options"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg></button></div>
+  </article>`;
+}
+function doneHTML(n){
+  const s=`<svg viewBox="0 0 400 310" role="img" aria-label="Cartoon: surgeon and patient celebrating">`+defs()+`<rect x="6" y="6" width="388" height="298" rx="16" fill="url(#p-mint)"/><rect x="6" y="6" width="388" height="298" rx="16" fill="url(#dots)" stroke="#BFE0CC"/>`+
+   `<text x="200" y="52" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="30" fill="${INK}">RITUAL COMPLETE!</text>`+
+   charSVG({k:'doc',m:'happy',s:1.2},130,170)+charSVG({k:'flap',m:'happy'},270,150)+charSVG({k:'screen',t:'✓ '+n,w:1.2,s:.9},280,236)+`</svg>`;
+  return `<article class="card done" id="done-card"><div class="img">${s}</div>
+   <div class="ribbon"><b>Done for today's knowledge ritual</b><span>${n} shots</span></div>
+   <div class="body"><h2>You're up to date</h2>
+   <p class="take">${topic?'You have seen every shot in '+esc(topic)+'.':'You have seen every shot.'} New papers and oncology news are added regularly. Swipe back up to relook, or pick another category above.</p>
+   <div class="cd" id="cd"></div>
+   <div class="row"><button class="btn ghost" id="relook">Relook earlier shots</button><button class="btn primary" id="checknew">Check for new</button></div></div></article>`;
+}
+let io, seenTimer={};
+/* Cards are rendered in batches as you swipe, not all at once: with 250+ cards the full feed froze phones after the intro. */
+const BATCH=20, OLD_KEEP=20;
+let items=[], itemPos=0, doneN=0;
+function itemHTML(it){return it.k==='card'?cardHTML(it.c):it.k==='tip'?tipHTML(it.t):joinHTML();}
+function renderMore(n=BATCH){
+  if(itemPos>=items.length)return false;
+  const chunk=items.slice(itemPos,itemPos+n); itemPos+=chunk.length;
+  let html=chunk.map(itemHTML).join(''); if(itemPos>=items.length&&tab==='feed') html+=doneHTML(doneN);
+  feed.insertAdjacentHTML('beforeend',html); wireTips(); observe(); wireDone();
+  return true;
+}
+function wireDone(){const r=$('relook'), cn=$('checknew'); if(r) r.onclick=()=>feed.scrollTo({top:0,behavior:'smooth'}); if(cn) cn.onclick=checkNew;}
+function render(scrollToFresh=true){
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===tab));
+  renderChips();
+  pendingLive=0; renderedLive=liveCards.length;
+  let start=0; items=[]; itemPos=0; feed.innerHTML='';
+  if(tab==='saved'){
+    const list=[...liveCards,...LIB].filter(c=>S.saved[c.id]&&topicOk(c));
+    if(!list.length) feed.innerHTML=`<div class="empty"><div><b>Nothing saved yet.</b><br>Tap the bookmark on any card to keep it here.</div></div>`;
+    items=list.map(c=>({k:'card',c}));
+  } else {
+    let {old,fresh}=feedList();
+    doneN=old.length+fresh.length;
+    old=old.slice(-OLD_KEEP);
+    const fh=fresh.map(c=>({k:'card',c})); if(!S.profile&&fh.length>6) fh.splice(6,0,{k:'join'});
+    { // a calm Daily tips stop after every 10 swipes, in every feed
+      const at=[];for(let p=10;p<fh.length;p+=10)at.push(p);
+      const tp=tipsForFeed(at.length); for(let j=at.length-1;j>=0;j--) fh.splice(at[j],0,{k:'tip',t:tp[j]});
+    }
+    items=[...old.map(c=>({k:'card',c})),...fh];
+    start=old.length;
+  }
+  renderMore(start+BATCH);
+  if(tab==='feed'&&!items.length) feed.insertAdjacentHTML('beforeend',doneHTML(doneN)),wireDone();
+  requestAnimationFrame(()=>{feed.scrollTop=scrollToFresh?start*feed.clientHeight:0;});
+  updatePill();
+}
+/* shrink text to fit, one card at a time as it comes into view (doing every card at once was slow on phones) */
+function fitCard(card){
+  const r=card.querySelector('.ribbon b'); if(r){r.style.fontSize='';let fs=parseFloat(getComputedStyle(r).fontSize);while(r.scrollHeight>r.clientHeight+1&&fs>12.5){fs-=.5;r.style.fontSize=fs+'px';}}
+  const b=card.matches('.card[data-id]')&&card.querySelector('.body'), t=b&&b.querySelector('.take');
+  if(t){t.style.fontSize='';let fs=parseFloat(getComputedStyle(t).fontSize);while(b.scrollHeight>b.clientHeight+1&&fs>12.5){fs-=.5;t.style.fontSize=fs+'px';}}
+  card.dataset.fit='1';
+}
+function fitText(){
+  feed.querySelectorAll('.card[data-fit]').forEach(c=>delete c.dataset.fit);
+  const fr=feed.getBoundingClientRect();
+  feed.querySelectorAll('.card').forEach(c=>{const r=c.getBoundingClientRect();if(r.bottom>fr.top-fr.height&&r.top<fr.bottom+fr.height)fitCard(c);});
+}
+addEventListener('resize',()=>requestAnimationFrame(fitText));
+document.fonts&&document.fonts.ready.then(()=>fitText());
+function unseenCount(){if(tab!=='feed')return 0;const seen=new Set(S.seen);return allReleased().filter(c=>!seen.has(c.id)&&topicOk(c)).length;}
+function updatePill(){
+  const p=$('pill');
+  if(pendingLive>0){p.className='pill live';p.textContent=`${pendingLive} new paper${pendingLive>1?'s':''} ↻`;p.tabIndex=0;return;}
+  p.className='pill';p.tabIndex=-1;const u=unseenCount();p.textContent=tab==='saved'?`${Object.keys(S.saved).length} saved`:(u?`${u} new`:'All caught up');
+}
+function observe(){
+  if(!io) io=new IntersectionObserver(es=>es.forEach(e=>{
+    const el=e.target, id=el.dataset.id; el.classList.toggle('vis',e.isIntersecting);
+    if(e.isIntersecting){
+      if(!el.dataset.fit) fitCard(el);
+      const nx=el.nextElementSibling; if(nx&&!nx.dataset.fit) fitCard(nx);
+      const cards=feed.children; if(itemPos<items.length&&[...cards].indexOf(el)>=cards.length-6) renderMore();
+    }
+    if(!id)return;
+    if(e.isIntersecting){seenTimer[id]=setTimeout(()=>{if(!S.seen.includes(id)){S.seen.push(id);persist();updatePill();onSeen();}},1200);}
+    else clearTimeout(seenTimer[id]);
+  }),{root:feed,threshold:.6});
+  feed.querySelectorAll('.card:not([data-obs])').forEach(el=>{el.dataset.obs='1';io.observe(el);});
+}
+function checkNew(){
+  if(liveCards.length!==renderedLive||unseenCount()>0){render();return;}
+  refreshLive().then(()=>{if(liveCards.length!==renderedLive)render();else toast('No new shots yet. Check back later.');});
+}
+
+
+function toggle(kind,card){
+  const id=card.dataset.id; S[kind][id]=!S[kind][id]; if(!S[kind][id]) delete S[kind][id]; persist(); syncSoon();
+  card.querySelector(`[data-a="${kind==='liked'?'like':'save'}"]`).setAttribute('aria-pressed',!!S[kind][id]);
+  if(kind==='saved'){toast(S.saved[id]?'Saved':'Removed from Saved');updatePill();}
+}
+function toast(t){const el=$('toast');el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2200);}
+function openSheet(html){const sh=$('sheet');sh.innerHTML=`<div class="sheet-wrap" data-close="1"><div class="sheet" role="dialog">${html}<button class="close" data-close="1">Close</button></div></div>`;sh.hidden=false;return sh;}
+function closeSheet(){const sh=$('sheet');sh.hidden=true;sh.innerHTML='';}
+$('sheet').addEventListener('click',e=>{if(e.target.dataset.close)closeSheet();});
+
+function share(c){
+  const app=location.origin+location.pathname+'?c='+encodeURIComponent(c.id), text=`${c.head}. ${c.rib}. Source: ${c.u} — via FlapShots ${app}`, u=encodeURIComponent(app), t=encodeURIComponent(text);
+  const sh=openSheet(`<h3>Share</h3><div class="grid">
+    <a href="https://wa.me/?text=${t}" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${u}" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://twitter.com/intent/tweet?text=${t}" target="_blank" rel="noopener">X</a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=${u}" target="_blank" rel="noopener">Facebook</a>
+    <a href="https://t.me/share/url?url=${u}&text=${encodeURIComponent(c.head)}" target="_blank" rel="noopener">Telegram</a>
+    <button id="copy-btn">Copy text</button></div>`);
+  sh.querySelector('#copy-btn').onclick=()=>navigator.clipboard.writeText(text).then(()=>{closeSheet();toast('Copied');},()=>toast('Copy blocked here'));
+}
+function topics(){
+  const cats=[...new Set([...liveCards,...LIB].filter(inTrack).map(c=>c.cat))];
+  const sh=openSheet(`<h3>Topics</h3><div class="grid"><button data-topic="" aria-pressed="${!topic}">All topics</button>${cats.map(c=>`<button data-topic="${esc(c)}" aria-pressed="${c===topic}">${esc(c)}</button>`).join('')}</div>`);
+  sh.querySelector('.grid').onclick=e=>{const b=e.target.closest('[data-topic]');if(!b)return;topic=b.dataset.topic||null;tab='feed';closeSheet();render();};
+}
+$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;topic=b.dataset.cat||null;tab='feed';render();});
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(!b)return;tab=b.dataset.tab;render(tab==='feed');});
+$('pill').onclick=()=>{if(pendingLive>0)render();};
+$('nb-topics').onclick=searchSheet; $('nb-me').onclick=profile; $('nb-home').onclick=()=>{tab='feed';topic=null;render();};
+feed.addEventListener('click',e=>{
+  const card=e.target.closest('.card[data-id]'), a=e.target.closest('[data-a]'); if(!card||!a)return;
+  if(a.dataset.a==='like') toggle('liked',card); else if(a.dataset.a==='save') toggle('saved',card); else if(a.dataset.a==='more') moreSheet(byId(card.dataset.id)); else share(byId(card.dataset.id));
+});
+feed.addEventListener('dblclick',e=>{
+  const img=e.target.closest('.img'), card=e.target.closest('.card[data-id]'); if(!img||!card)return;
+  if(!S.liked[card.dataset.id]) toggle('liked',card);
+  const b=img.querySelector('.burst'); b.classList.remove('go'); void b.offsetWidth; b.classList.add('go');
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeSheet();
+  if((e.key==='ArrowDown'||e.key==='ArrowUp')&&$('sheet').hidden&&$('acct').hidden){e.preventDefault();feed.scrollBy({top:(e.key==='ArrowDown'?1:-1)*feed.clientHeight,behavior:'smooth'});}
+});
+
+/* ---------- Daily tips: a calm, framed tip card every 10-15 swipes; swipe sideways for the why and how ---------- */
+const TIPS=[
+ {id:'t-alt',icon:'wave',cat:'ALT flap',tip:'Mark ALT perforators with a handheld Doppler before you prep the thigh.',slides:[
+  ['Why it matters','Skin perforators of the anterolateral thigh vary in number and position, and occasionally none is usable. Knowing where they are before the incision lets you centre the skin paddle and avoid a wasted dissection.'],
+  ['How to do it','Draw a line from the anterior superior iliac spine to the outer edge of the kneecap. Most perforators lie within a few centimetres of its midpoint. Mark every clear signal before scrubbing.'],
+  ['Watch out','A Doppler can pick up deeper vessels that are not true skin perforators. Make the medial incision first, find the perforator, then commit the paddle around it.'],
+  ['Have a plan B','If no good perforator appears, move to an anteromedial thigh flap, a muscle-carrying flap or the other thigh. Mention this backup when you take consent.']]},
+ {id:'t-ink',icon:'drop',cat:'Margins',tip:'Ink and orient the specimen yourself before it leaves the theatre.',slides:[
+  ['Why it matters','Tissue shrinks after removal, and an unoriented specimen makes it hard for the pathologist to say which margin is close. Your orientation decides whether a close margin can be re-cut accurately.'],
+  ['How to do it','Mark anterior, superior and deep surfaces with sutures or coloured ink, and add a labelled sketch or photo for the pathologist.'],
+  ['Frozen sections','Take frozen sections from the specimen edge itself, labelled by site, rather than scraps from the wound bed.'],
+  ['Team habit','A two-minute specimen huddle with the pathologist on complex cases saves days of confusion later.']]},
+ {id:'t-pedicle',icon:'loop',cat:'Anastomosis',tip:'Recheck the lie of the pedicle after you turn the head and close the neck.',slides:[
+  ['Why it matters','Many early flap failures come from a kink, twist or pressure on the pedicle rather than a poor anastomosis.'],
+  ['How to do it','Lay the pedicle in a gentle curve, return the head to its resting position and confirm flow. Check again after skin closure.'],
+  ['Watch out','Drains, a tight closure, a haematoma and tracheostomy ties can all squeeze the pedicle. Keep drains away from the vessels.'],
+  ['On the ward','Nurse the head in neutral, avoid tight ties around the neck, and tell the nurses which side the pedicle lies.']]},
+ {id:'t-pinprick',icon:'drop',cat:'Flap monitoring',tip:'A pinprick tells you more than a glance: bright red blood within seconds is reassuring.',slides:[
+  ['Healthy flap','Pink and warm, refills briskly after gentle pressure, and bleeds bright red after a fine needle prick.'],
+  ['Vein in trouble','Dark, swollen skin that refills very fast and oozes dark blood points to a venous problem, the commonest cause of early failure.'],
+  ['Artery in trouble','Pale, cool skin with slow refill and no bleeding after a pinprick suggests the inflow has stopped.'],
+  ['Act fast','Either pattern means call the surgeon and prepare for theatre. Hours, not days, decide whether the flap can be saved.']]},
+ {id:'t-dental',icon:'tooth',cat:'Osteoradionecrosis',tip:'Send every patient for a dental check before radiotherapy starts.',slides:[
+  ['Why it matters','Infected or hopeless teeth inside the radiation field are the main trigger for jaw bone death years later.'],
+  ['Timing','Remove teeth with a poor outlook early, ideally allowing about two weeks of healing before radiotherapy, without delaying cancer treatment.'],
+  ['Protect the rest','Daily fluoride, good oral hygiene and regular dental reviews protect the remaining teeth for life.'],
+  ['After radiotherapy','If an extraction is needed later, do it gently, with antibiotic cover and close follow-up.']]},
+ {id:'t-feed',icon:'leaf',cat:'Postoperative care',tip:'Start feeding within a day of major head and neck surgery.',slides:[
+  ['Why it matters','Many patients arrive undernourished, and keeping them starved after surgery slows healing and raises fistula and infection risk.'],
+  ['How to do it','Start tube feeds on day one and build up to target over a few days with a dietitian guiding the plan.'],
+  ['Watch out','In very malnourished patients, check sugar, potassium and phosphate as feeds restart, to catch refeeding problems early.'],
+  ['Back to the mouth','Begin swallowing therapy as soon as the surgeon allows, to avoid long-term tube dependence.']]},
+ {id:'t-allen',icon:'heart',cat:'Radial forearm flap',tip:'Do an Allen test before you raise a radial forearm flap.',slides:[
+  ['Why it matters','The hand is fed by both the radial and ulnar arteries. Taking the radial artery is safe only if the ulnar side can supply the whole hand.'],
+  ['How to do it','Press both arteries at the wrist, let the patient clench and open the fist, then release the ulnar artery. Colour should return to the whole palm within a few seconds.'],
+  ['In doubt?','If refill is slow or unclear, confirm with a Doppler or a pulse oximeter on the thumb, or choose another flap.'],
+  ['Donor site','Protect the thin tendon covering during harvest so the skin graft takes well.']]},
+ {id:'t-nodes',icon:'leaf',cat:'Neck',tip:'Aim for a thorough neck dissection: a yield of 18 or more nodes is linked to better survival.',slides:[
+  ['The evidence','Large database studies found that examining 18 or more lymph nodes in a neck dissection is linked with better survival, probably because fewer deposits are left behind.'],
+  ['How to do it','Clear each level fully, send the levels separately labelled, and ask pathology to report total and positive node counts.'],
+  ['A quality marker','Node yield reflects both surgical and pathology quality; audit your own numbers once a year.'],
+  ['Keep the balance','Thoroughness must still protect the marginal mandibular, accessory and hypoglossal nerves.']]}
+];
+const BULB_ICON={
+ wave:'<path d="M42 52 q4.5 -11 9 0 t9 0 t9 0 t9 0" fill="none" stroke="var(--tp-ink2)" stroke-width="3" stroke-linecap="round"/>',
+ drop:'<path d="M60 35 C67 45 71 51 71 57 a11 11 0 0 1 -22 0 C49 51 53 45 60 35z" fill="var(--tp-rose)" stroke="var(--tp-ink2)" stroke-width="2.4"/>',
+ loop:'<path d="M42 60 C42 38 78 38 78 52 C78 66 52 66 52 52 C52 45 61 43 66 48" fill="none" stroke="var(--tp-ink2)" stroke-width="3" stroke-linecap="round"/>',
+ tooth:'<path d="M49 40 c4 -3 8 -1 11 1 c3 -2 7 -4 11 -1 c5 4 3 12 1 18 c-1 5 -2 13 -6 13 c-3 0 -3 -8 -6 -8 c-3 0 -3 8 -6 8 c-4 0 -5 -8 -6 -13 c-2 -6 -4 -14 1 -18z" fill="#fff" stroke="var(--tp-ink2)" stroke-width="2.4" stroke-linejoin="round"/>',
+ leaf:'<path d="M60 36 C74 44 75 60 60 70 C45 60 46 44 60 36Z" fill="var(--tp-sage)" stroke="var(--tp-ink2)" stroke-width="2.4"/><path d="M60 42 V66 M60 52 L66 47 M60 59 L54 54" stroke="var(--tp-ink2)" stroke-width="1.8" stroke-linecap="round" fill="none"/>',
+ heart:'<path d="M60 68 C44 57 44 44 52 42 C56 41 59 44 60 47 C61 44 64 41 68 42 C76 44 76 57 60 68Z" fill="var(--tp-rose)" stroke="var(--tp-ink2)" stroke-width="2.4" stroke-linejoin="round"/>'
+};
+function bulbSVG(icon){
+  return `<svg class="bulb" viewBox="0 0 120 134" role="img" aria-label="Light bulb">
+   <circle class="glow" cx="60" cy="52" r="50" fill="url(#tp-glow)"/>
+   <g class="rays" stroke="var(--tp-gold)" stroke-width="3" stroke-linecap="round">${[0,45,90,135,180,225,270,315].map(a=>`<path d="M60 4 v8" transform="rotate(${a} 60 52)"/>`).join('')}</g>
+   <path d="M60 18 a34 34 0 0 1 20 61.5 V88 H40 v-8.5 A34 34 0 0 1 60 18z" fill="var(--tp-glass)" stroke="var(--tp-ink2)" stroke-width="2.4"/>
+   <path d="M44 34 q6 -8 15 -9" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".8"/>
+   ${BULB_ICON[icon]||BULB_ICON.leaf}
+   <rect x="40" y="88" width="40" height="8" rx="3" fill="var(--tp-metal)" stroke="var(--tp-ink2)" stroke-width="2"/>
+   <rect x="43" y="96" width="34" height="8" rx="3" fill="var(--tp-metal)" stroke="var(--tp-ink2)" stroke-width="2"/>
+   <path d="M52 104 h16 l-3 7 h-10z" fill="var(--tp-ink2)"/></svg>`;
+}
+const tipDay=()=>Math.floor((Date.now()+5.5*3600e3)/864e5);
+function tipHTML(t,k){
+  const n=t.slides.length+1;
+  return `<article class="card tipcard" data-tip="${t.id}">
+   <div class="tp-amb" aria-hidden="true"><i></i><i></i></div>
+   <div class="tp-head"><span class="tp-lbl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Daily tips</span><span class="tp-n"><b>1</b> / ${n}</span></div>
+   <div class="tp-rail">
+    <section class="tp-slide"><div class="tp-frame tp-first">
+      ${bulbSVG(t.icon)}
+      <span class="tp-cat">${esc(t.cat)}</span>
+      <p class="tp-tip">${esc(t.tip)}</p>
+      <span class="tp-hint">Swipe to learn why <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </div></section>
+    ${t.slides.map(([h,b],i)=>`<section class="tp-slide"><div class="tp-frame">
+      <span class="tp-step">${i+1}</span><h3>${esc(h)}</h3><p>${esc(b)}</p>
+      ${i===t.slides.length-1?`<span class="tp-end">That's today's tip. Swipe up to continue.</span>`:''}
+      <svg class="tp-sprig" viewBox="0 0 60 30" aria-hidden="true"><path d="M2 28 C20 26 34 18 46 4" fill="none" stroke="var(--tp-sage-d)" stroke-width="1.6" stroke-linecap="round"/><path d="M18 24 c-2 -7 3 -11 8 -10 c0 6 -3 9 -8 10z M30 17 c-1 -7 4 -10 9 -9 c-1 6 -4 9 -9 9z M41 9 c0 -6 4 -8 8 -7 c-1 5 -4 7 -8 7z" fill="var(--tp-sage)"/></svg>
+    </div></section>`).join('')}
+   </div>
+   <div class="tp-dots">${Array.from({length:n},(_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>
+  </article>`;
+}
+function wireTips(){
+  feed.querySelectorAll('.tipcard:not([data-wired])').forEach(card=>{
+    card.dataset.wired='1';
+    const rail=card.querySelector('.tp-rail'), dots=[...card.querySelectorAll('.tp-dots i')], num=card.querySelector('.tp-n b');
+    rail.addEventListener('scroll',()=>{const i=Math.min(dots.length-1,Math.max(0,Math.round(rail.scrollLeft/rail.clientWidth)));dots.forEach((d,j)=>d.classList.toggle('on',j===i));num.textContent=i+1;},{passive:true});
+  });
+}
+function tipsForFeed(count){
+  const d=tipDay(); return Array.from({length:count},(_,k)=>TIPS[(d+k)%TIPS.length]);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+  const c=feed.querySelector('.tipcard.vis .tp-rail');if(!c)return;e.preventDefault();
+  c.scrollBy({left:(e.key==='ArrowRight'?1:-1)*c.clientWidth,behavior:'smooth'});
+});
+
+/* ---------- boot ---------- */
+$('gdefs').insertAdjacentHTML('afterbegin',defsMarkup());
+let booted=false;
+function boot(){
+  booted=true; applyPrefs(); render(); updateGoal();
+  if(!S.profile&&!S.guest) showWelcome();
+  const n=allReleased().length, d=n-(S.lastN||0);
+  if(S.lastN&&d>0) toast(`${d} new shots since your last visit`);
+  S.lastN=n; persist();
+}
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function buildSplash(){
+  $('word').innerHTML=[...'flap'].map((c,i)=>`<span style="animation-delay:${(2.2+i*.07).toFixed(2)}s">${c}</span>`).join('')+'<b>'+[...'shots'].map((c,i)=>`<span style="animation-delay:${(2.2+(i+4)*.07).toFixed(2)}s">${c}</span>`).join('')+'</b>';
+})();
+let splashT, splashDone=false, started=false;
+const SPLASH_MS=5200;
+/* The intro waits on a "Tap to start" screen (logo breathing, leaf swaying). The tap starts the full animation and the
+   jingle together; phones only allow sound after a tap. With no tap it moves on by itself after 12 seconds. */
+function startIntro(withSound){
+  if(splashDone)return;
+  if(started){endSplash();return;} /* a second tap skips the rest of the intro */
+  started=true;
+  clearTimeout(splashT);splashT=setTimeout(endSplash,SPLASH_MS); /* set the exit timer first, so sound problems can never block the app */
+  const sp=$('splash');sp.classList.remove('run');void sp.offsetWidth;sp.classList.add('run');
+  if(withSound){try{playIntroSound();}catch(e){}}
+}
+function replaySplash(){const sp=$('splash');splashDone=false;started=false;sp.hidden=false;sp.classList.remove('out','run');startIntro(true);}
+function endSplash(){if(splashDone)return;splashDone=true;window.__fsBooted=1;clearTimeout(splashT);$('splash').classList.add('out');setTimeout(()=>$('splash').hidden=true,600);try{boot();}catch(e){setTimeout(()=>{throw e;});}}
+window.__fsEnd=endSplash;
+splashT=setTimeout(()=>{if(!started)endSplash();},12000);
+let lastTap=0;
+['click','touchend'].forEach(ev=>$('splash').addEventListener(ev,e=>{e.preventDefault();const t=Date.now();if(t-lastTap<400)return;lastTap=t;startIntro(true);},{passive:false}));
+document.addEventListener('keydown',e=>{if(!started&&!splashDone&&(e.key==='Enter'||e.key===' '))startIntro(true);});
+/* desktop browsers that allow sound start straight away */
+setTimeout(()=>{try{const au=introAudio();if(!au)return;const pr=au.play();if(pr&&pr.then)pr.then(()=>{if(!started)startIntro(false);}).catch(()=>{});}catch(e){}},300);
+/* brand jingle, synthesised in the browser: whoosh, rising bell arpeggio, sparkle chord */
+let AC=null;
+function ac(){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;AC=AC||new A();if(AC.state==='suspended')AC.resume();return AC;}
+function bell(a,out,f,t,dur,vol){
+  [[f,'sine',1],[f*2,'triangle',.25],[f*3.01,'sine',.08]].forEach(([fr,type,v])=>{
+    const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(fr,t);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol*v,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g).connect(out);o.start(t);o.stop(t+dur+.05);});
+}
+function pad(a,out,fs,t,dur,vol){fs.forEach(f=>{const o=a.createOscillator(),g=a.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.5);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g).connect(out);o.start(t);o.stop(t+dur+.1);});}
+function mar(a,out,f,t,dur,vol){[[1,1],[4,.12],[10,.03]].forEach(([m,v])=>{const o=a.createOscillator(),g=a.createGain();o.frequency.setValueAtTime(f*m,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol*v,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur*(m>1?.35:1));o.connect(g).connect(out);o.start(t);o.stop(t+dur+.05);});}
+/* brand jingle (logo B): warm marimba melody timed to the leaf growing, then a soft chord as the wordmark lands.
+   It is rendered once into a WAV and played through an <audio> element, which iPhones play even in silent mode. */
+function jingleInto(a,out,t){
+  [523.3,587.3,659.3,784,880,1046.5].forEach((f,i)=>mar(a,out,f,t+1.0+i*.18,.6,.34));
+  [784,1046.5,1318.5].forEach((f,i)=>mar(a,out,f,t+2.25+i*.12,1,.28));
+  pad(a,out,[261.6,329.6,392,493.9],t+2.2,3,.07);
+}
+function playJingle(){const a=ac();if(!a)return;const m=a.createGain();m.gain.value=.5;m.connect(a.destination);jingleInto(a,m,a.currentTime+.05);}
+let AUDIO=null, AUDIO_READY=null;
+function toWav(buf){
+  const ch=buf.getChannelData(0),n=ch.length,sr=buf.sampleRate,dv=new DataView(new ArrayBuffer(44+n*2));
+  const w=(o,s)=>{for(let i=0;i<s.length;i++)dv.setUint8(o+i,s.charCodeAt(i));};
+  w(0,'RIFF');dv.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);
+  dv.setUint32(24,sr,true);dv.setUint32(28,sr*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);w(36,'data');dv.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++){const v=Math.max(-1,Math.min(1,ch[i]));dv.setInt16(44+i*2,v<0?v*32768:v*32767,true);}
+  return new Blob([dv],{type:'audio/wav'});
+}
+function prepareIntroAudio(){
+  try{
+    const O=window.OfflineAudioContext||window.webkitOfflineAudioContext;if(!O)return;
+    const sr=22050,off=new O(1,Math.ceil(sr*5.6),sr),m=off.createGain();m.gain.value=.55;m.connect(off.destination);
+    jingleInto(off,m,.05);
+    const done=b=>{try{AUDIO=new Audio();AUDIO.preload='auto';AUDIO.src=URL.createObjectURL(toWav(b));AUDIO.addEventListener('error',()=>{AUDIO=null;},{once:true});}catch(e){AUDIO=null;}};
+    const p=off.startRendering(); if(p&&p.then)p.then(done).catch(()=>{}); else off.oncomplete=e=>done(e.renderedBuffer);
+  }catch(e){}
+}
+function introAudio(){return AUDIO;}
+function playIntroSound(){
+  try{if(navigator.audioSession)navigator.audioSession.type='playback';}catch(e){}
+  const au=AUDIO;
+  if(au){try{au.currentTime=0;const pr=au.play();if(pr&&pr.catch)pr.catch(()=>{try{playJingle();}catch(e){}});}catch(e){try{playJingle();}catch(e2){}}}else playJingle();
+}
+prepareIntroAudio();
+function playChime(){const a=ac();if(!a)return;const t0=a.currentTime+.02,m=a.createGain();m.gain.value=.45;m.connect(a.destination);[784,1046.5,1318.5].forEach((f,i)=>mar(a,m,f,t0+i*.09,.8,.3));}
+
+/* ---------- account, personalisation, engagement ---------- */
+const ROLES=['Consultant surgeon','Surgical fellow','Resident / trainee','Medical oncologist','Radiation oncologist','Dental / OMFS surgeon','Nurse / allied health','Medical student','Other'];
+const FOCUS=[['ablative','Ablative'],['recon','Reconstructive'],['both','Both']];
+const TERMS_V='2026-10';
+let USER=null, UID=null, ME=null, DBH=null, isOwner=false, verified=false;
+const allCards=()=>[...liveCards,...LIB];
+const todayKey=(back=0)=>new Date(Date.now()+5.5*3600e3-back*864e5).toISOString().slice(0,10);
+const readToday=()=>S.days[todayKey()]||0;
+function streak(){let i=readToday()>=S.goal?0:1,n=0;while((S.days[todayKey(i)]||0)>=S.goal){n++;i++;}return n;}
+function onSeen(){
+  const k=todayKey();S.days[k]=(S.days[k]||0)+1;persist();updateGoal();
+  if(S.days[k]===S.goal){const n=streak();toast(`Daily goal done! ${n}-day streak`);playChime();}
+  syncSoon();
+}
+function updateGoal(){
+  const g=$('goal');if(!g)return;const p=Math.min(1,readToday()/S.goal),C=2*Math.PI*11;
+  g.querySelector('.ring-fg').style.strokeDashoffset=(C*(1-p)).toFixed(1);
+  g.querySelector('.sn').textContent=streak();
+  g.setAttribute('aria-label',`Today ${readToday()} of ${S.goal} cards. Streak ${streak()} days.`);
+}
+function applyPrefs(){const r=document.documentElement;if(S.theme==='system')delete r.dataset.theme;else r.dataset.theme=S.theme;r.dataset.ts=S.textSize||'m';requestAnimationFrame(fitText);}
+const initials=n=>String(n||'G').trim().split(/\s+/).filter(w=>!/^dr\.?$/i.test(w)).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'G';
+
+/* ---- sync: your reading state follows you across devices when signed in on claude.ai ---- */
+let syncT=null;
+function syncSoon(){if(!DBH||!UID)return;clearTimeout(syncT);syncT=setTimeout(pushState,2500);}
+async function pushState(){
+  if(!DBH||!UID)return;
+  const {seen,liked,saved,days,goal,interests,theme,textSize,hidden,profile,guest}=S;
+  try{await DBH.doc(`data/users/${UID}/state`).set({seen:seen.slice(-3000),liked,saved,days,goal,interests,theme,textSize,hidden,profile,guest,updatedAt:new Date().toISOString()});}catch(e){}
+}
+async function pullState(){
+  try{
+    const snap=await DBH.doc(`data/users/${UID}/state`).get();
+    if(!snap.exists)return false;
+    const r=snap.data();
+    S.seen=[...new Set([...(r.seen||[]),...S.seen])];
+    S.liked={...(r.liked||{}),...S.liked};S.saved={...(r.saved||{}),...S.saved};S.hidden={...(r.hidden||{}),...S.hidden};
+    for(const [k,v] of Object.entries(r.days||{}))S.days[k]=Math.max(S.days[k]||0,v);
+    if(!S.profile&&r.profile)S.profile=r.profile;
+    if(r.goal)S.goal=r.goal; if(r.interests&&!S.interests.length)S.interests=r.interests;
+    if(r.theme)S.theme=r.theme; if(r.textSize)S.textSize=r.textSize;
+    persist();return true;
+  }catch(e){return false;}
+}
+async function saveMember(){
+  if(!DBH||!UID||!S.profile)return false;
+  try{await DBH.doc('members/'+UID).set({...S.profile,uid:UID,interests:S.interests,updatedAt:new Date().toISOString()});return true;}catch(e){return false;}
+}
+async function loadVerified(){if(!DBH||!UID)return;try{const v=await DBH.doc('verified/'+UID).get();verified=!!(v.exists&&v.data().verified);}catch(e){}}
+
+/* ---- welcome and registration ---- */
+function showWelcome(){
+  const o=$('acct');o.hidden=false;
+  o.innerHTML=`<div class="ob">
+    <div class="obrand"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><span>flap<b>shots</b></span></div>
+    <h1>Head and neck evidence in three minutes a day</h1>
+    <ul class="vp">
+      <li><b>Swipe, don't search.</b> One plain-language takeaway per card.</li>
+      <li><b>Every card has its source.</b> Trials, guidelines and news, one tap away.</li>
+      <li><b>Always fresh.</b> New papers and oncology news added regularly.</li>
+      <li><b>Made by a head and neck surgeon,</b> for surgeons, oncologists and trainees.</li>
+    </ul>
+    <button class="start" id="w-guest">Start reading</button>
+    <button class="ghostbtn" id="w-join">Personalise (stays on this phone)</button>
+    <div class="obcopy">For healthcare professionals. By continuing you accept the <button class="lnk" data-legal="terms">Terms</button> and <button class="lnk" data-legal="privacy">Privacy policy</button>.<br>© 2026 Dr Manish S. Tiwari</div></div>`;
+  $('w-join').onclick=()=>showReg(1);
+  $('w-guest').onclick=()=>{S.guest=true;persist();o.hidden=true;o.innerHTML='';render();};
+}
+let regDraft={};
+function showReg(step,edit=false){
+  const o=$('acct');o.hidden=false;
+  const p={name:ME?.name||'',role:'',focus:'both',institution:'',city:'',country:'India',regNo:'',email:'',hcp:false,terms:false,digest:true,...(S.profile||{}),...regDraft};
+  if(step===1){
+    o.innerHTML=`<form class="ob f" id="regf" novalidate>
+      <div class="steps"><b>Step 1 of 2</b> · About you</div>
+      <h1>${edit?'Edit your profile':'Personalise FlapShots'}</h1>
+      <label for="r-name">Full name</label><input id="r-name" required autocomplete="name" value="${esc(p.name)}" placeholder="Dr A. Sharma">
+      <label for="r-role">I am a</label><select id="r-role" required><option value="">Choose your role</option>${ROLES.map(r=>`<option ${r===p.role?'selected':''}>${esc(r)}</option>`).join('')}</select>
+      <label>My focus</label><div class="seg" id="r-focus">${FOCUS.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${p.focus===k}">${l}</button>`).join('')}</div>
+      <label for="r-inst">Hospital or institution</label><input id="r-inst" autocomplete="organization" value="${esc(p.institution)}" placeholder="e.g. Tata Memorial Hospital">
+      <div class="two"><div><label for="r-city">City</label><input id="r-city" autocomplete="address-level2" value="${esc(p.city)}"></div><div><label for="r-country">Country</label><input id="r-country" autocomplete="country-name" value="${esc(p.country)}"></div></div>
+      <label for="r-reg">Medical or dental council registration no. <span class="opt-l">optional, for the verified badge</span></label><input id="r-reg" value="${esc(p.regNo)}" placeholder="e.g. NMC / state council number">
+      <label for="r-email">Email <span class="opt-l">optional, for the weekly digest</span></label><input id="r-email" type="email" autocomplete="email" value="${esc(p.email)}">
+      <label class="chk"><input type="checkbox" id="r-hcp" ${p.hcp?'checked':''}> I am a healthcare professional or trainee</label>
+      <label class="chk"><input type="checkbox" id="r-terms" ${p.terms?'checked':''}> I agree to the <button type="button" class="lnk" data-legal="terms">Terms</button>, <button type="button" class="lnk" data-legal="privacy">Privacy policy</button> and <button type="button" class="lnk" data-legal="disclaimer">Medical disclaimer</button></label>
+      <label class="chk"><input type="checkbox" id="r-digest" ${p.digest?'checked':''}> Send me a weekly digest of the best cards</label>
+      <p class="err" id="r-err" role="alert"></p>
+      <button class="start" type="submit">Next: choose your topics</button>
+      <button class="ghostbtn" type="button" id="r-back">${edit?'Cancel':'Back'}</button>
+    </form>`;
+    $('r-focus').onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;$('r-focus').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));};
+    $('r-back').onclick=()=>{regDraft={};if(edit||S.profile||S.guest){o.hidden=true;o.innerHTML='';}else showWelcome();};
+    $('regf').onsubmit=e=>{
+      e.preventDefault();
+      const v=id=>$(id).value.trim();
+      const d={name:v('r-name'),role:$('r-role').value,focus:$('r-focus').querySelector('[aria-pressed="true"]')?.dataset.k||'both',institution:v('r-inst'),city:v('r-city'),country:v('r-country'),regNo:v('r-reg'),email:v('r-email'),hcp:$('r-hcp').checked,terms:$('r-terms').checked,digest:$('r-digest').checked};
+      const err=!d.name?'Please enter your name.':!d.role?'Please choose your role.':(d.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email))?'That email address does not look right.':!d.hcp?'FlapShots is for healthcare professionals and trainees.':!d.terms?'Please accept the Terms and Privacy policy to continue.':'';
+      if(err){$('r-err').textContent=err;return;}
+      regDraft=d;showReg(2,edit);
+    };
+  } else {
+    const cats=[...new Set([...CAT_ORDER,...allCards().map(c=>c.cat)])];
+    const pre=S.interests.length?S.interests:(regDraft.focus==='ablative'?cats.filter(c=>LIB.some(x=>x.cat===c&&x.tr!=='r')):regDraft.focus==='recon'?cats.filter(c=>LIB.some(x=>x.cat===c&&x.tr!=='a')):[]);
+    o.innerHTML=`<div class="ob f">
+      <div class="steps"><b>Step 2 of 2</b> · Your feed</div>
+      <h1>Pick the topics you care about most</h1>
+      <p>They come first in your feed. You still see everything else.</p>
+      <div class="pick" id="r-int">${cats.map(c=>`<button type="button" data-c="${esc(c)}" aria-pressed="${pre.includes(c)}">${esc(c)}</button>`).join('')}</div>
+      <label>Daily goal</label><div class="seg" id="r-goal">${[5,10,20].map(g=>`<button type="button" data-g="${g}" aria-pressed="${S.goal===g}">${g} cards</button>`).join('')}</div>
+      <button class="start" id="r-done">${edit?'Save changes':'Start my feed'}</button>
+      <button class="ghostbtn" id="r-back2">Back</button></div>`;
+    $('r-int').onclick=e=>{const b=e.target.closest('[data-c]');if(b)b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');};
+    $('r-goal').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;$('r-goal').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));};
+    $('r-back2').onclick=()=>showReg(1,edit);
+    $('r-done').onclick=async()=>{
+      S.interests=[...$('r-int').querySelectorAll('[aria-pressed="true"]')].map(b=>b.dataset.c);
+      S.goal=+($('r-goal').querySelector('[aria-pressed="true"]')?.dataset.g||10);
+      const first=!S.profile;
+      S.profile={...regDraft,termsVersion:TERMS_V,consentAt:new Date().toISOString(),joinedAt:S.profile?.joinedAt||new Date().toISOString()};
+      S.guest=false;regDraft={};persist();
+      o.hidden=true;o.innerHTML='';render();updateGoal();playChime();
+      const ok=await saveMember();syncSoon();
+      toast(first?`Welcome to FlapShots, ${S.profile.name.split(' ')[0]}`:(ok||!DBH?'Profile updated':'Saved on this device'));
+    };
+  }
+}
+
+/* ---- legal ---- */
+const LEGAL={
+ terms:['Terms of use',`<p>FlapShots is an educational service for healthcare professionals and trainees, created by Dr Manish S. Tiwari, head and neck surgical oncologist.</p>
+ <p><b>Not medical advice.</b> Cards summarise published research, guidelines and news in simplified words. Summaries can be incomplete or out of date. Always check the original source and use your own clinical judgement; no card replaces individual patient assessment.</p>
+ <p><b>Your use.</b> Give accurate details. Do not post patient-identifiable information in reports or comments. Accounts misusing the service may be removed.</p>
+ <p><b>Content.</b> Text, illustrations (manish &amp; moni surgical illustration collective), graphs redrawn from published data and the FlapShots name and logo are © 2026 Dr Manish S. Tiwari. You may share cards with attribution for non-commercial education. Linked papers belong to their publishers.</p>
+ <p><b>Automated content.</b> Some cards are prepared automatically from new papers and news and may not yet be reviewed by an editor; they are marked "New".</p>
+ <p>These terms are governed by the laws of India. Version ${TERMS_V}.</p>`],
+ privacy:['Privacy policy',`<p>Written to follow India's Digital Personal Data Protection Act, 2023.</p>
+ <p><b>What we collect.</b> Nothing is collected by FlapShots itself. If you personalise the app, the details you enter (name, role, focus, institution, city, optional registration number and email), your topics, goal and reading activity (cards read, liked, saved, hidden) are kept only in this browser on this device. Like any website, the web host keeps standard server logs (such as IP address and time of visit).</p>
+ <p><b>Why.</b> To personalise your feed on this device. No account, cookies for advertising or third-party tracking are used.</p>
+ <p><b>Where and who.</b> Your data stays in your browser on this device and is not sent to Dr Manish S. Tiwari or anyone else. Share buttons open the app you choose (for example WhatsApp or LinkedIn), whose own privacy policy then applies. Data is never sold or used for advertising.</p>
+ <p><b>Your rights.</b> You can view and correct your profile anytime, withdraw consent, and delete everything from Profile → Delete my data, or by clearing this site's data in your browser. Requests, corrections and grievances: Profile → Report a problem, or email <a href="mailto:drmanishstiwari@gmail.com">drmanishstiwari@gmail.com</a>.</p>`],
+ disclaimer:['Medical disclaimer',`<p>FlapShots provides general educational summaries for qualified healthcare professionals. It is not a substitute for clinical judgement, multidisciplinary tumour board discussion, institutional protocols or the full text of the cited sources. Drug doses, indications and approvals vary by country; check local regulations. The author and contributors accept no liability for decisions made using this content.</p>`]
+};
+function legal(k){const [t,b]=LEGAL[k];const sh=openSheet(`<h3>${t}</h3><div class="legal">${b}</div>`);sh.querySelector('.sheet-wrap').style.zIndex=60;}
+document.addEventListener('click',e=>{const l=e.target.closest('[data-legal]');if(l){e.preventDefault();legal(l.dataset.legal);}});
+
+/* ---- guest prompt card inside the feed ---- */
+function joinHTML(){
+  return `<article class="card done join" id="join-card"><div class="img">${sceneArt({scene:{bg:'butter',cap:['MAKE IT YOURS','KEEP YOUR STREAK'],ch:[{k:'doc',m:'happy',x:.3},{k:'flap',m:'happy',x:.7}]}})}</div>
+   <div class="ribbon"><b>Pick your topics and a daily goal</b></div>
+   <div class="body"><h2>Make FlapShots yours</h2><p class="take">Tell FlapShots what you do and what you want to read. It stays on this phone and takes 30 seconds. Tip: add FlapShots to your home screen to open it like an app.</p>
+   <div class="row"><button class="btn primary" data-join="1">Personalise</button></div></div></article>`;
+}
+feed.addEventListener('click',e=>{if(e.target.closest('[data-join]'))showReg(1);});
+
+/* ---- search ---- */
+function searchSheet(){
+  const n={};allCards().forEach(c=>n[c.cat]=(n[c.cat]||0)+1);
+  const cats=[...CAT_ORDER.filter(c=>n[c]),...Object.keys(n).filter(c=>!CAT_ORDER.includes(c))];
+  const sh=openSheet(`<h3>Search</h3><input class="sinput" id="sq" type="search" placeholder="Search trials, drugs, flaps, topics" autocomplete="off">
+    <div id="sres" class="sres"></div><h3>Browse topics</h3><div class="grid" id="scats">${cats.map(c=>`<button data-topic="${esc(c)}" aria-pressed="${c===topic}">${esc(c)} <span class="cnt">${n[c]}</span></button>`).join('')}</div>`);
+  const q=sh.querySelector('#sq'), out=sh.querySelector('#sres');
+  q.oninput=()=>{
+    const v=q.value.trim().toLowerCase(), words=v.split(/\s+/).filter(Boolean);
+    const res=words.length?allCards().filter(c=>{const t=(c.head+' '+c.rib+' '+c.take+' '+c.cat+' '+c.ev).toLowerCase();return words.every(w=>t.includes(w));}).slice(0,30):[];
+    out.innerHTML=res.map(c=>`<button class="sr" data-id="${esc(c.id)}"><b>${esc(c.rib)}</b><span>${esc(c.cat)} · ${esc(c.ev)}</span></button>`).join('')||(words.length?'<p>No cards match yet. New papers arrive regularly.</p>':'');
+  };
+  setTimeout(()=>q.focus(),60);
+  out.onclick=e=>{const b=e.target.closest('.sr');if(!b)return;closeSheet();openCard(b.dataset.id);};
+  sh.querySelector('#scats').onclick=e=>{const b=e.target.closest('[data-topic]');if(!b)return;topic=b.dataset.topic;tab='feed';closeSheet();render();};
+}
+function openCard(id){
+  const c=byId(id);tab='feed';topic=c?c.cat:null;render(false);
+  while(!feed.querySelector(`.card[data-id="${CSS.escape(id)}"]`)&&renderMore(BATCH));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const els=[...feed.children];const i=els.findIndex(x=>x.dataset.id===id);if(i>=0)feed.scrollTop=i*feed.clientHeight;}));
+}
+
+/* ---- card menu: report an error, hide ---- */
+function moreSheet(c){
+  const sh=openSheet(`<h3>${esc(c.rib)}</h3><div class="grid"><button id="m-report">Report an error</button><button id="m-hide">Hide this card</button><a href="${esc(c.u)}" target="_blank" rel="noopener">Open the source</a></div>`);
+  sh.querySelector('#m-report').onclick=()=>reportSheet(c);
+  sh.querySelector('#m-hide').onclick=()=>{S.hidden[c.id]=1;persist();syncSoon();closeSheet();render();toast('Card hidden');};
+}
+function reportSheet(c){
+  const R=['Wrong number or fact','Outdated','Unclear wording','Broken link','Other'];
+  const sh=openSheet(`<h3>Report a problem</h3><p>${c?esc(c.rib):'Tell us what is wrong or what you need.'}</p>
+    <div class="grid" id="rr">${R.map((r,i)=>`<button data-r="${esc(r)}" aria-pressed="${i===0}">${r}</button>`).join('')}</div>
+    <textarea class="sinput" id="rnote" rows="3" placeholder="What should it say? (please no patient details)"></textarea>
+    <button class="btn primary" id="rsend">Send report</button>`);
+  sh.querySelector('#rr').onclick=e=>{const b=e.target.closest('[data-r]');if(!b)return;sh.querySelectorAll('#rr button').forEach(x=>x.setAttribute('aria-pressed',x===b));};
+  sh.querySelector('#rsend').onclick=async()=>{
+    const r={card:c?.id||'',rib:c?.rib||'General',reason:sh.querySelector('#rr [aria-pressed="true"]').dataset.r,note:sh.querySelector('#rnote').value.trim().slice(0,800),at:new Date().toISOString(),by:S.profile?.name||'Guest'};
+    S.reports=[...(S.reports||[]),r].slice(-50);persist();closeSheet();
+    let sent=false;
+    if(DBH&&UID){try{const ref=DBH.doc('feedback/'+UID),snap=await ref.get(),prev=snap.exists?(snap.data().reports||[]):[];await ref.set({uid:UID,name:S.profile?.name||'',reports:[...prev,r].slice(-100),updatedAt:r.at});sent=true;}catch(e){}}
+    if(!sent&&REPORT_EMAIL){location.href='mailto:'+REPORT_EMAIL+'?subject='+encodeURIComponent('FlapShots report: '+r.rib)+'&body='+encodeURIComponent(`Card: ${r.card}\nReason: ${r.reason}\n\n${r.note}`);sent=true;}
+    toast(sent?'Thank you. The editor will check this.':'Thank you. Noted.');
+  };
+}
+
+/* ---- profile and settings ---- */
+function profile(){
+  const p=S.profile, nl=Object.keys(S.liked).length, ns=Object.keys(S.saved).length, total=allCards().length;
+  const seg=(id,opts,cur)=>`<div class="grid" id="${id}">${opts.map(([v,l])=>`<button data-v="${v}" aria-pressed="${String(cur)===String(v)}">${l}</button>`).join('')}</div>`;
+  const sh=openSheet(`<div class="prof"><div class="av">${esc(initials(p?.name))}</div><div class="pn"><b>${esc(p?.name||'Guest')}</b><span>${p?esc([p.role,p.city].filter(Boolean).join(' · ')):'Not signed up'}</span>${p?(verified?'<em class="vb ok">Verified professional</em>':(p.regNo?'<em class="vb">Verification pending</em>':'')):''}</div></div>
+   <div class="stats"><div><b>${streak()}</b><span>day streak</span></div><div><b>${readToday()}/${S.goal}</b><span>today</span></div><div><b>${S.seen.length}</b><span>of ${total} read</span></div><div><b>${ns}</b><span>saved</span></div></div>
+   ${p?'':'<button class="btn primary" id="p-join">Create free account</button>'}
+   <h3>Daily goal</h3>${seg('p-goal',[[5,'5 cards'],[10,'10 cards'],[20,'20 cards']],S.goal)}
+   <h3>Your topics</h3><p>${S.interests.length?esc(S.interests.join(', ')):'All topics, in the default order.'}</p><div class="grid"><button id="p-int">Edit topics</button></div>
+   <h3>Appearance</h3>${seg('p-theme',[['system','Automatic'],['light','Light'],['dark','Dark']],S.theme)}${seg('p-ts',[['s','Small text'],['m','Medium'],['l','Large']],S.textSize)}
+   <h3>Live papers and news</h3><p>${esc(liveStatus)} Your likes, saves and streak stay on this device.</p>
+   <h3>Account</h3><div class="grid">${p?'<button id="p-edit">Edit profile</button>':''}<button id="p-report">Report a problem</button><button id="unread">Mark all as unread</button><button id="replay">Replay intro</button><button id="p-del" class="danger">Delete my data</button></div>
+   ${isOwner?'<h3>Admin</h3><div class="grid"><button id="p-admin">Members and reports</button></div>':''}
+   <h3>About</h3><div class="grid"><button data-legal="terms">Terms of use</button><button data-legal="privacy">Privacy policy</button><button data-legal="disclaimer">Medical disclaimer</button></div>
+   <p style="font-size:12px">© 2026 Dr Manish S. Tiwari. All rights reserved. Content is for professional education and does not replace clinical judgement.</p>`);
+  const q=s=>sh.querySelector(s);
+  q('#p-join')&&(q('#p-join').onclick=()=>{closeSheet();showReg(1);});
+  q('#p-edit')&&(q('#p-edit').onclick=()=>{closeSheet();showReg(1,true);});
+  q('#p-goal').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;S.goal=+b.dataset.v;persist();syncSoon();updateGoal();profile();};
+  q('#p-theme').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;S.theme=b.dataset.v;persist();syncSoon();applyPrefs();profile();};
+  q('#p-ts').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;S.textSize=b.dataset.v;persist();syncSoon();applyPrefs();profile();};
+  q('#p-int').onclick=()=>{closeSheet();regDraft={...(S.profile||{})};showReg(2,true);};
+  q('#p-report').onclick=()=>reportSheet(null);
+  q('#unread').onclick=()=>{S.seen=[];persist();syncSoon();closeSheet();topic=null;render();toast('All shots marked unread');};
+  q('#replay').onclick=()=>{closeSheet();replaySplash();};
+  q('#p-admin')&&(q('#p-admin').onclick=adminSheet);
+  q('#p-del').onclick=()=>{
+    const b=q('#p-del');
+    if(b.dataset.arm!=='1'){b.dataset.arm='1';b.textContent='Tap again to delete everything';return;}
+    deleteMyData();
+  };
+}
+async function deleteMyData(){
+  closeSheet();
+  if(DBH&&UID){for(const p of ['members/'+UID,'feedback/'+UID,`data/users/${UID}/state`]){try{await DBH.doc(p).delete();}catch(e){}}}
+  const keep={theme:S.theme};
+  S={...DEFAULTS(),...keep};persist();applyPrefs();render();updateGoal();showWelcome();
+  toast('Your account and data have been deleted');
+}
+
+/* ---- admin (owner only) ---- */
+async function adminSheet(){
+  const sh=openSheet(`<h3>Members and reports</h3><p id="ad-st">Loading…</p><div id="ad"></div>`);
+  if(!DBH){sh.querySelector('#ad-st').textContent='Admin data is available when opened on claude.ai.';return;}
+  try{
+    const [ms,vs,fs]=await Promise.all([DBH.collection('members').get(),DBH.collection('verified').get(),DBH.collection('feedback').get()]);
+    const ver={};vs.docs.forEach(d=>ver[d.id]=!!d.data().verified);
+    const mem=ms.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.joinedAt).localeCompare(String(a.joinedAt)));
+    const reps=fs.docs.flatMap(d=>(d.data().reports||[]).map(r=>({...r,uid:d.id}))).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+    const roles={};mem.forEach(m=>roles[m.role]=(roles[m.role]||0)+1);
+    sh.querySelector('#ad-st').textContent=`${mem.length} registered · ${mem.filter(m=>ver[m.id]).length} verified · ${mem.filter(m=>m.digest&&m.email).length} want the digest · ${reps.length} reports`;
+    const fmt=s=>s?new Date(s).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'';
+    sh.querySelector('#ad').innerHTML=`<p>${Object.entries(roles).map(([r,n])=>`${esc(r)}: ${n}`).join(' · ')}</p>
+      <h3>Members</h3><div class="alist">${mem.map(m=>`<div class="arow"><div><b>${esc(m.name)}</b><span>${esc([m.role,m.institution,m.city].filter(Boolean).join(' · '))}</span><span>${m.regNo?'Reg. '+esc(m.regNo):'No registration no.'}${m.email?' · '+esc(m.email):''} · joined ${fmt(m.joinedAt)}</span></div><button data-ver="${esc(m.id)}" aria-pressed="${!!ver[m.id]}">${ver[m.id]?'Verified':'Verify'}</button></div>`).join('')||'<p>No members yet.</p>'}</div>
+      <h3>Error reports</h3><div class="alist">${reps.map(r=>`<div class="arow"><div><b>${esc(r.reason)}</b><span>${esc(r.rib)}</span>${r.note?`<span>"${esc(r.note)}"</span>`:''}<span>${esc(r.by)} · ${fmt(r.at)}</span></div></div>`).join('')||'<p>No reports yet.</p>'}</div>`;
+    sh.querySelector('#ad').onclick=async e=>{
+      const b=e.target.closest('[data-ver]');if(!b)return;const on=b.getAttribute('aria-pressed')!=='true';
+      try{await DBH.doc('verified/'+b.dataset.ver).set({verified:on,at:new Date().toISOString()});b.setAttribute('aria-pressed',on);b.textContent=on?'Verified':'Verify';}catch(err){toast('Could not update verification');}
+    };
+  }catch(e){sh.querySelector('#ad-st').textContent='Could not load admin data right now.';}
+}
+
+/* ---- connect: identity, sync, verification, then the live card feed ---- */
+async function connect(){
+  /* public website build: no sign-in and no shared database; everything stays on this device */
+  if(DBH&&UID){
+    const had=!!S.profile, got=await pullState();
+    await loadVerified();
+    if(got&&booted){applyPrefs();render();updateGoal();if(!had&&S.profile&&!$('acct').hidden){$('acct').hidden=true;$('acct').innerHTML='';}}
+    if(S.profile)saveMember();
+  }
+}
+
+/* ---------- live paper feed (cards added by the 4-hourly PubMed pipeline) ---------- */
+function valid(d){return d&&typeof d.head==='string'&&typeof d.take==='string'&&typeof d.u==='string'&&/^https:\/\//.test(d.u)&&typeof d.cat==='string';}
+/* Public build: cards come from cards.json, refreshed by the scheduled pipeline (GitHub copy first, the copy on this site as fallback). */
+const CARDS_URLS=['cards.json'];
+const REPORT_EMAIL='drmanishstiwari@gmail.com';
+async function loadCards(){
+  for(const u of CARDS_URLS){
+    try{
+      const r=await fetch(u+(u.includes('?')?'&':'?')+'t='+Math.floor(Date.now()/3e5),{cache:'no-store'});
+      if(!r.ok)continue;
+      const j=await r.json(), arr=Array.isArray(j)?j:(j.cards||[]);
+      const next=arr.map(d=>({...d,id:'db-'+d.id,live:true})).filter(valid).map(c=>({...c,tr:['a','r','g'].includes(c.tr)?c.tr:'g',rib:c.rib||'New evidence',ev:c.ev||'New paper',likes:+c.likes||0})).sort((a,b)=>String(b.addedAt||'').localeCompare(String(a.addedAt||'')));
+      if(!next.length)continue;
+      return next;
+    }catch(e){}
+  }
+  return null;
+}
+async function refreshLive(){
+  const next=await loadCards();
+  if(!next){if(!liveCards.length)liveStatus='Could not reach the live library just now; showing the built-in cards.';return;}
+  const grew=next.length!==liveCards.length;
+  liveCards=next; if(booted) renderChips();
+  const last=next[0]?.addedAt?new Date(next[0].addedAt).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}):null;
+  liveStatus=`${next.length} cards added automatically from papers and news; latest ${last||'recently'}.`;
+  if(!booted||!grew) return;
+  const nNew=next.length-renderedLive;
+  const onDone=(()=>{const d=$('done-card');if(!d)return false;const r=d.getBoundingClientRect(),f=feed.getBoundingClientRect();return Math.abs(r.top-f.top)<40;})();
+  if(nNew>0){ if(onDone||!feed.querySelector('.card[data-id]')) render(); else {pendingLive=nNew;updatePill();} }
+}
+(async()=>{
+  await refreshLive();
+  const want=new URLSearchParams(location.search).get('c');
+  if(want){const go=()=>{if(byId(want))openCard(want);};if(booted)go();else{const t=setInterval(()=>{if(booted){clearInterval(t);go();}},200);setTimeout(()=>clearInterval(t),15000);}}
+  setInterval(refreshLive,30*60e3);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshLive();});
+})();
+if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+</script>
+
+</body></html>
