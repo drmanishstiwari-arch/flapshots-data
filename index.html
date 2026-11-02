@@ -1693,7 +1693,8 @@ document.addEventListener('click',e=>{if(e.target.closest('#p-a2hs')){closeSheet
 if(new URLSearchParams(location.search).has('install')&&!isStandalone()){
   history.replaceState(null,'',location.pathname);
   track('install-link');
-  const t0=Date.now(),wait=setInterval(()=>{if(deferredInstall||isIOS()||Date.now()-t0>4000){clearInterval(wait);a2hsSheet();}},250);
+  /* iPhone: let them read first; the picture guide appears after 5 swipes (see maybeA2HS). Android: offer one-tap install straight away. */
+  if(!isIOS()){const t0=Date.now(),wait=setInterval(()=>{if(deferredInstall||Date.now()-t0>4000){clearInterval(wait);a2hsSheet();}},250);}
 }
 async function loadCards(){
   for(const u of CARDS_URLS){
