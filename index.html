@@ -152,6 +152,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 @keyframes tappulse{0%,100%{transform:scale(1);box-shadow:0 10px 30px rgb(240 71 110 / .45)}50%{transform:scale(1.06);box-shadow:0 10px 44px rgb(240 71 110 / .75)}}
 .run .tapgo{display:none}
 .a2hs{display:flex;gap:14px;align-items:center}.a2hs svg{width:58px;height:58px;flex:0 0 auto;border-radius:14px}.a2hs div{display:flex;flex-direction:column;gap:4px}.a2steps{color:var(--ink)!important}.obnote{margin:6px 0 0;font-size:13px;opacity:.75;text-align:center}
+.pickbar{display:flex;justify-content:flex-end;margin:4px 0 -2px}.selall{border:1px solid rgb(255 255 255 / .35);background:transparent;color:#FFB9A8;font:700 13.5px var(--f-body);padding:7px 14px;border-radius:999px;cursor:pointer}
 .fserr{position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#300;color:#fdd;font:12px/1.4 monospace;padding:8px;border-radius:8px;white-space:pre-wrap}
 .sound{position:absolute;bottom:calc(52px + env(safe-area-inset-bottom,0px));background:rgb(255 255 255 / .1);color:#FFE9E2;border:1px solid rgb(255 255 255 / .25);border-radius:999px;padding:9px 16px;font:600 13px var(--f-body);cursor:pointer;backdrop-filter:blur(6px)}
 .sound svg{width:15px;height:15px;vertical-align:-3px;margin-right:6px;fill:currentColor}
@@ -1361,10 +1362,12 @@ function showReg(step,edit=false){
       <label for="r-inst">Hospital or institution</label><input id="r-inst" autocomplete="organization" value="${esc(p.institution)}" placeholder="e.g. Tata Memorial Hospital">
       <div class="two"><div><label for="r-city">City</label><input id="r-city" autocomplete="address-level2" value="${esc(p.city)}"></div><div><label for="r-country">Country</label><input id="r-country" autocomplete="country-name" value="${esc(p.country)}"></div></div>
       <label for="r-reg">Medical or dental council registration no. <span class="opt-l">optional, for the verified badge</span></label><input id="r-reg" value="${esc(p.regNo)}" placeholder="e.g. NMC / state council number">
-      <label for="r-email">Email <span class="opt-l">optional, for the weekly digest</span></label><input id="r-email" type="email" autocomplete="email" value="${esc(p.email)}">
+      <label for="r-mob">Mobile number (WhatsApp) <span class="opt-l">for FlapShots updates; never shared</span></label><input id="r-mob" type="tel" inputmode="tel" autocomplete="tel" value="${esc(p.mobile||'')}" placeholder="e.g. 98xxxxxxxx">
+      <label for="r-email">Email <span class="opt-l">optional, for the weekly news digest</span></label><input id="r-email" type="email" autocomplete="email" value="${esc(p.email)}">
       <label class="chk"><input type="checkbox" id="r-hcp" ${p.hcp?'checked':''}> I am a healthcare professional or trainee</label>
       <label class="chk"><input type="checkbox" id="r-terms" ${p.terms?'checked':''}> I agree to the <button type="button" class="lnk" data-legal="terms">Terms</button>, <button type="button" class="lnk" data-legal="privacy">Privacy policy</button> and <button type="button" class="lnk" data-legal="disclaimer">Medical disclaimer</button></label>
-      <label class="chk"><input type="checkbox" id="r-digest" ${p.digest?'checked':''}> Send me a weekly digest of the best cards</label>
+      <label class="chk"><input type="checkbox" id="r-wa" ${p.wa!==false?'checked':''}> Send me FlapShots updates on WhatsApp</label>
+      <label class="chk"><input type="checkbox" id="r-digest" ${p.digest?'checked':''}> Email me a weekly digest of the best cards</label>
       <p class="err" id="r-err" role="alert"></p>
       <button class="start" type="submit">Next: choose your topics</button>
       <button class="ghostbtn" type="button" id="r-back">${edit?'Cancel':'Back'}</button>
@@ -1374,8 +1377,8 @@ function showReg(step,edit=false){
     $('regf').onsubmit=e=>{
       e.preventDefault();
       const v=id=>$(id).value.trim();
-      const d={name:v('r-name'),role:$('r-role').value,focus:$('r-focus').querySelector('[aria-pressed="true"]')?.dataset.k||'both',institution:v('r-inst'),city:v('r-city'),country:v('r-country'),regNo:v('r-reg'),email:v('r-email'),hcp:$('r-hcp').checked,terms:$('r-terms').checked,digest:$('r-digest').checked};
-      const err=!d.name?'Please enter your name.':!d.role?'Please choose your role.':(d.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email))?'That email address does not look right.':!d.hcp?'FlapShots is for healthcare professionals and trainees.':!d.terms?'Please accept the Terms and Privacy policy to continue.':'';
+      const d={name:v('r-name'),role:$('r-role').value,focus:$('r-focus').querySelector('[aria-pressed="true"]')?.dataset.k||'both',institution:v('r-inst'),city:v('r-city'),country:v('r-country'),regNo:v('r-reg'),mobile:normMob(v('r-mob'),v('r-country')),wa:$('r-wa').checked,email:v('r-email'),hcp:$('r-hcp').checked,terms:$('r-terms').checked,digest:$('r-digest').checked};
+      const err=!d.name?'Please enter your name.':!d.role?'Please choose your role.':!d.mobile?'Please enter a valid mobile number (with country code if outside India).':(d.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email))?'That email address does not look right.':!d.hcp?'FlapShots is for healthcare professionals and trainees.':!d.terms?'Please accept the Terms and Privacy policy to continue.':'';
       if(err){$('r-err').textContent=err;return;}
       regDraft=d;showReg(2,edit);
     };
@@ -1386,11 +1389,15 @@ function showReg(step,edit=false){
       <div class="steps"><b>Step 2 of 2</b> · Your feed</div>
       <h1>Pick the topics you care about most</h1>
       <p>They come first in your feed. You still see everything else.</p>
+      <div class="pickbar"><button type="button" class="selall" id="r-all"></button></div>
       <div class="pick" id="r-int">${cats.map(c=>`<button type="button" data-c="${esc(c)}" aria-pressed="${pre.includes(c)}">${esc(c)}</button>`).join('')}</div>
       <label>Daily goal</label><div class="seg" id="r-goal">${[5,10,20].map(g=>`<button type="button" data-g="${g}" aria-pressed="${S.goal===g}">${g} cards</button>`).join('')}</div>
       <button class="start" id="r-done">${edit?'Save changes':'Start my feed'}</button>
       <button class="ghostbtn" id="r-back2">Back</button></div>`;
-    $('r-int').onclick=e=>{const b=e.target.closest('[data-c]');if(b)b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');};
+    const syncAll=()=>{const bs=[...$('r-int').querySelectorAll('[data-c]')],all=bs.every(b=>b.getAttribute('aria-pressed')==='true');$('r-all').textContent=all?'Clear all':'Select all';$('r-all').dataset.all=all?'1':'';};
+    $('r-int').onclick=e=>{const b=e.target.closest('[data-c]');if(b)b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');syncAll();};
+    $('r-all').onclick=()=>{const on=!$('r-all').dataset.all;$('r-int').querySelectorAll('[data-c]').forEach(b=>b.setAttribute('aria-pressed',on));syncAll();};
+    syncAll();
     $('r-goal').onclick=e=>{const b=e.target.closest('[data-g]');if(!b)return;$('r-goal').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));};
     $('r-back2').onclick=()=>showReg(1,edit);
     $('r-done').onclick=async()=>{
@@ -1416,9 +1423,9 @@ const LEGAL={
  <p>These terms are governed by the laws of India. Version ${TERMS_V}.</p>`],
  privacy:['Privacy policy',`<p>Written to follow India's Digital Personal Data Protection Act, 2023. Data fiduciary: Dr Manish S. Tiwari.</p>
  <p><b>Joining is optional.</b> Guests can read and share everything without giving any personal details.</p>
- <p><b>If you join.</b> The details you enter (name, role, focus, hospital, city, country, optional council registration number and email, weekly-digest choice), your chosen topics, the date you joined and a random app number are sent to Dr Manish S. Tiwari and kept in a private Google Sheet that only he can open (Google stores it on his behalf).</p>
+ <p><b>If you join.</b> The details you enter (name, role, focus, hospital, city, country, mobile number and WhatsApp choice, optional council registration number and email, weekly-digest choice), your chosen topics, the date you joined and a random app number are sent to Dr Manish S. Tiwari and kept in a private Google Sheet that only he can open (Google stores it on his behalf).</p>
  <p><b>Everyone, including guests.</b> Anonymous usage counts (visits, approximate country, device and browser type, which features are used, such as sharing or installing) are measured with GoatCounter, a privacy-focused counter that uses no cookies and stores no names or full IP addresses. Your reading activity (cards read, liked, saved, hidden), streak and settings stay only on your device. Like any website, the web host keeps standard server logs.</p>
- <p><b>Why.</b> To know how many people use FlapShots and which content helps them, to verify healthcare professionals, to send the weekly digest if you opt in, to contact members about FlapShots, and to plan how to keep the service running. If the service changes, for example a paid option, members will be told in advance. Data is never sold or used for third-party advertising.</p>
+ <p><b>Why.</b> To know how many people use FlapShots and which content helps them, to verify healthcare professionals, to send FlapShots updates on WhatsApp and the weekly email digest if you opt in, to contact members about FlapShots, and to plan how to keep the service running. If the service changes, for example a paid option, members will be told in advance. Data is never sold or used for third-party advertising.</p>
  <p><b>How long.</b> Member details are kept while FlapShots runs, or until you ask for them to be deleted.</p>
  <p><b>Your rights.</b> View and correct your profile anytime in Profile. To withdraw consent, or to have your member details deleted, email <a href="mailto:drmanishstiwari@gmail.com">drmanishstiwari@gmail.com</a>; Profile → Delete my data clears this device. Grievances: the same email; we reply within 30 days.</p>`],
  disclaimer:['Medical disclaimer',`<p>FlapShots provides general educational summaries for qualified healthcare professionals. It is not a substitute for clinical judgement, multidisciplinary tumour board discussion, institutional protocols or the full text of the cited sources. Drug doses, indications and approvals vary by country; check local regulations. The author and contributors accept no liability for decisions made using this content.</p>`]
@@ -1561,15 +1568,25 @@ const REPORT_EMAIL='drmanishstiwari@gmail.com';
 /* Visitor counts: GoatCounter site code (e.g. 'flapshots' for flapshots.goatcounter.com). Empty = off. */
 const GC_CODE='flapshots';
 /* Member sign-ups: Google Form "formResponse" URL and the entry ids of its questions. Empty url = off. */
-const SIGNUP={url:'https://docs.google.com/forms/d/e/1FAIpQLSeNUS0Yur2I_wTp35opbpNI3T2oNjo7xJsfrBWQW5K0iNpNhQ/formResponse',f:{name:'entry.1745553417',role:'entry.348116155',focus:'entry.2135813957',institution:'entry.1376213516',city:'entry.31515118',country:'entry.834806224',regNo:'entry.1691522250',email:'entry.938354676',digest:'entry.974416394',topics:'entry.2123935416',vid:'entry.1999298312',kind:'entry.1885583431'}};
+const SIGNUP={url:'https://docs.google.com/forms/d/e/1FAIpQLSeNUS0Yur2I_wTp35opbpNI3T2oNjo7xJsfrBWQW5K0iNpNhQ/formResponse',f:{name:'entry.1745553417',role:'entry.348116155',focus:'entry.2135813957',institution:'entry.1376213516',city:'entry.31515118',country:'entry.834806224',regNo:'entry.1691522250',email:'entry.938354676',digest:'entry.974416394',topics:'entry.2123935416',vid:'entry.1999298312',kind:'entry.1885583431',mobile:'entry.608241224',wa:'entry.1435784399'}};
 if(GC_CODE){const g=document.createElement('script');g.async=true;g.src='https://gc.zgo.at/count.js';g.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;g.onload=()=>track(S.profile?'open-member':S.guest?'open-guest':'open-new');document.head.appendChild(g);}
 function track(ev){try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'event-'+ev,title:ev,event:true});}catch(e){}}
+function normMob(raw,country){
+  const t=String(raw||'').trim(), dg=t.replace(/\D/g,'');
+  if(dg.length<10||dg.length>15)return '';
+  if(t.startsWith('+'))return '+'+dg;
+  if(dg.length===10&&(!country||/india/i.test(country)))return '+91'+dg;
+  if(dg.length===11&&dg[0]==='0')return '+91'+dg.slice(1);
+  if(dg.length===12&&dg.startsWith('91'))return '+'+dg;
+  return '+'+dg;
+}
 async function sendSignup(kind){
   if(!SIGNUP.url||!S.profile)return false;
   const p=S.profile,f=SIGNUP.f,d=new URLSearchParams();
   const put=(k,v)=>{if(f[k])d.append(f[k],String(v??''));};
   put('name',p.name);put('role',p.role);put('focus',p.focus);put('institution',p.institution);put('city',p.city);put('country',p.country);
-  put('regNo',p.regNo);put('email',p.email);put('digest',p.digest?'Yes':'No');put('topics',(S.interests||[]).join(', '));put('vid',S.vid);put('kind',kind);
+  put('regNo',p.regNo);put('email',p.email);put('digest',p.digest?'Yes':'No');put('topics',(S.interests||[]).join(', '));put('vid',S.vid);put('mobile',p.mobile);put('wa',p.wa?'Yes':'No');
+  put('kind',f.mobile?kind:`${kind} | mobile: ${p.mobile||''}${p.wa?' (WhatsApp OK)':' (no WhatsApp)'}`);
   try{await fetch(SIGNUP.url,{method:'POST',mode:'no-cors',body:d});return true;}catch(e){return false;}
 }
 /* Add to home screen: offered once the reader has swiped 8 cards in a visit; at most 3 times, 5 days apart. */
