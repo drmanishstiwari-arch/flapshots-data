@@ -175,6 +175,14 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .ib-how{border:0;border-radius:999px;background:linear-gradient(135deg,#FF9B6B,#F0476E);color:#fff;font:700 13.5px var(--f-body);padding:8px 14px;cursor:pointer}
 .ib-x{border:0;background:none;color:#B8B8BE;font-size:22px;line-height:1;padding:4px 6px;cursor:pointer}
 .obback{display:block;margin:10px auto 0;background:none;border:0;color:#FFB9A8;font:600 14px var(--f-body);text-decoration:underline;cursor:pointer}
+.inst{position:fixed;inset:0;z-index:45;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:radial-gradient(120% 85% at 50% 38%,#6A2340 0%,#2A0E1B 55%,#12060C 100%);color:#FFE9E2;transition:opacity .45s}
+.inst.out{opacity:0;pointer-events:none}
+.inst-logo{width:120px;height:120px;filter:drop-shadow(0 18px 30px rgb(0 0 0 / .5))}
+.inst-word{font:800 44px "Plus Jakarta Sans",var(--f-body);letter-spacing:-.025em}.inst-word b{color:#FF7A6B}
+.inst-tag{margin:0 0 18px;font:600 15px var(--f-body);color:#FFD9CF}
+.inst-btn{width:min(320px,100%);border:0;border-radius:999px;padding:17px 24px;font:800 18px var(--f-body);color:#fff;background:linear-gradient(135deg,#FF9B6B,#F0476E);box-shadow:0 10px 30px rgb(240 71 110 / .45);cursor:pointer;animation:tappulse 1.6s ease-in-out infinite}
+.inst-note{margin:0;max-width:320px;font:500 14px/1.5 var(--f-body);color:#FFD9CF}
+.inst-skip{margin-top:18px;background:none;border:0;color:#FFB9A8;font:600 14px var(--f-body);text-decoration:underline;cursor:pointer}
 .fserr{position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#300;color:#fdd;font:12px/1.4 monospace;padding:8px;border-radius:8px;white-space:pre-wrap}
 .sound{position:absolute;bottom:calc(52px + env(safe-area-inset-bottom,0px));background:rgb(255 255 255 / .1);color:#FFE9E2;border:1px solid rgb(255 255 255 / .25);border-radius:999px;padding:9px 16px;font:600 13px var(--f-body);cursor:pointer;backdrop-filter:blur(6px)}
 .sound svg{width:15px;height:15px;vertical-align:-3px;margin-right:6px;fill:currentColor}
@@ -1723,6 +1731,32 @@ function showIosBanner(){
   $('ib-x').onclick=()=>{hideIosBanner();track('ios-banner-close');};
 }
 if(isIOS()&&isStandalone()&&!(S.a2hs||{}).done){S.a2hs={...(S.a2hs||{}),done:1};persist();track('open-installed-ios');}
+/* Android, opened from the install link: a one-tap install screen before anything else */
+function androidInstallScreen(){
+  const o=document.createElement('div');o.className='inst';o.id='inst';
+  o.innerHTML=`<svg class="inst-logo" viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg>
+   <div class="inst-word">flap<b>shots</b></div>
+   <p class="inst-tag">Head and neck evidence in three minutes a day</p>
+   <button class="inst-btn" id="inst-go">Install app</button>
+   <p class="inst-note" id="inst-note">Free · no app store · takes 2 seconds</p>
+   <button class="inst-skip" id="inst-skip">Continue in browser</button>`;
+  document.body.appendChild(o);
+  const done=()=>{o.classList.add('out');setTimeout(()=>o.remove(),450);};
+  const fallback=()=>{$('inst-note').innerHTML='Tap the browser menu <b>⋮</b> (top right), then <b>Install app</b> or <b>Add to Home screen</b>.';$('inst-go').textContent='Got it';$('inst-go').onclick=()=>{done();track('install-manual');};};
+  $('inst-skip').onclick=()=>{done();track('install-skip');};
+  $('inst-go').onclick=async()=>{
+    if(!deferredInstall){ // the browser may still be getting ready: wait up to 3 s
+      $('inst-go').textContent='Preparing…';
+      for(let i=0;i<12&&!deferredInstall;i++) await new Promise(r=>setTimeout(r,250));
+      if(!deferredInstall){fallback();return;}
+    }
+    const ev=deferredInstall;deferredInstall=null;ev.prompt();
+    try{const r=await ev.userChoice;
+      if(r.outcome==='accepted'){S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');$('inst-go').textContent='Installed ✓';$('inst-note').textContent='Open FlapShots from your home screen.';setTimeout(done,1600);}
+      else{$('inst-go').textContent='Install app';track('install-dismissed');}
+    }catch(e){}
+  };
+}
 function a2hsSheet(){
   const how=deferredInstall?'prompt':isIOS()?'ios':'other';
   const sh=openSheet(`<div class="a2hs"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div><h3>Add FlapShots to your home screen</h3><p>Open it in one tap, full screen, like an app. Free, no app store needed.</p></div></div>
@@ -1742,7 +1776,7 @@ if(new URLSearchParams(location.search).has('install')&&!isStandalone()){
   history.replaceState(null,'',location.pathname);
   track('install-link');
   /* iPhone: let them read first; the picture guide appears after 5 swipes (see maybeA2HS). Android: offer one-tap install straight away. */
-  if(!isIOS()){const t0=Date.now(),wait=setInterval(()=>{if(deferredInstall||Date.now()-t0>4000){clearInterval(wait);a2hsSheet();}},250);}
+  if(!isIOS())androidInstallScreen();
 }
 async function loadCards(){
   for(const u of CARDS_URLS){
