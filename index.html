@@ -174,6 +174,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .ib-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}.ib-t b{font-size:14px}.ib-t span{font-size:12.5px;color:#B8B8BE}
 .ib-how{border:0;border-radius:999px;background:linear-gradient(135deg,#FF9B6B,#F0476E);color:#fff;font:700 13.5px var(--f-body);padding:8px 14px;cursor:pointer}
 .ib-x{border:0;background:none;color:#B8B8BE;font-size:22px;line-height:1;padding:4px 6px;cursor:pointer}
+.obback{display:block;margin:10px auto 0;background:none;border:0;color:#FFB9A8;font:600 14px var(--f-body);text-decoration:underline;cursor:pointer}
 .fserr{position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#300;color:#fdd;font:12px/1.4 monospace;padding:8px;border-radius:8px;white-space:pre-wrap}
 .sound{position:absolute;bottom:calc(52px + env(safe-area-inset-bottom,0px));background:rgb(255 255 255 / .1);color:#FFE9E2;border:1px solid rgb(255 255 255 / .25);border-radius:999px;padding:9px 16px;font:600 13px var(--f-body);cursor:pointer;backdrop-filter:blur(6px)}
 .sound svg{width:15px;height:15px;vertical-align:-3px;margin-right:6px;fill:currentColor}
@@ -941,6 +942,14 @@ let S=DEFAULTS();
 try{Object.assign(S,JSON.parse(localStorage.getItem('flapshots2')||'{}'));}catch(e){}
 const persist=()=>{try{localStorage.setItem('flapshots2',JSON.stringify(S));}catch(e){}};
 if(!S.vid){S.vid='v'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);persist();}
+/* ?r= carries name, role, topics, goal, likes, saves and streak (never mobile, email or registration no.) into a newly added home-screen app */
+(function(){
+  const q=new URLSearchParams(location.search), r=q.get('r'); if(!r)return;
+  try{const d=JSON.parse(decodeURIComponent(escape(atob(r.replace(/-/g,'+').replace(/_/g,'/')))));
+    if(!S.profile&&!S.guest&&d&&typeof d==='object'){['profile','guest','interests','goal','liked','saved','days','vid','theme','textSize','a2hs'].forEach(k=>{if(d[k]!==undefined)S[k]=d[k];});persist();}
+  }catch(e){}
+  q.delete('r'); history.replaceState(null,'',location.pathname+(q.toString()?'?'+q:''));
+})();
 let tab='feed', topic=null, liveCards=[], liveStatus='Connecting…', pendingLive=0, renderedLive=0;
 const $=id=>document.getElementById(id), feed=$('feed');
 
@@ -1365,9 +1374,29 @@ function showWelcome(){
     <button class="start" id="w-join">Join free</button>
     <button class="ghostbtn" id="w-guest">Continue as guest</button>
     <p class="obnote">Joining takes 30 seconds and helps keep FlapShots free. Guests can read everything.</p>
+    <button class="lnk obback" id="w-back">Already joined? Continue with your mobile number</button>
     <div class="obcopy">For healthcare professionals. By continuing you accept the <button class="lnk" data-legal="terms">Terms</button> and <button class="lnk" data-legal="privacy">Privacy policy</button>.<br>© 2026 Dr Manish S. Tiwari</div></div>`;
   $('w-join').onclick=()=>showReg(1);
+  $('w-back').onclick=()=>showReturn();
   $('w-guest').onclick=()=>{S.guest=true;persist();o.hidden=true;o.innerHTML='';render();track('guest');};
+}
+function showReturn(){
+  const o=$('acct');o.hidden=false;
+  o.innerHTML=`<form class="ob f" id="retf" novalidate>
+    <h1>Welcome back</h1>
+    <p>Enter the name and mobile number you joined with. Your topics can be picked again on the next screen.</p>
+    <label for="b-name">Full name</label><input id="b-name" autocomplete="name" placeholder="Dr A. Sharma">
+    <label for="b-mob">Mobile number (WhatsApp)</label><input id="b-mob" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 98xxxxxxxx">
+    <p class="err" id="b-err" role="alert"></p>
+    <button class="start" type="submit">Continue</button>
+    <button class="ghostbtn" type="button" id="b-cancel">Back</button></form>`;
+  $('b-cancel').onclick=showWelcome;
+  $('retf').onsubmit=e=>{e.preventDefault();
+    const name=$('b-name').value.trim(), mobile=normMob($('b-mob').value,'India');
+    if(!name||!mobile){$('b-err').textContent='Please enter your name and a valid mobile number.';return;}
+    regDraft={name,mobile,role:'',focus:'both',country:'India',hcp:true,terms:true,wa:true,digest:false,returning:true};
+    track('return');showReg(2);
+  };
 }
 let regDraft={};
 function showReg(step,edit=false){
@@ -1428,7 +1457,7 @@ function showReg(step,edit=false){
       S.profile={...regDraft,termsVersion:TERMS_V,consentAt:new Date().toISOString(),joinedAt:S.profile?.joinedAt||new Date().toISOString()};
       S.guest=false;regDraft={};persist();
       o.hidden=true;o.innerHTML='';render();updateGoal();playChime();
-      const ok=DBH?await saveMember():await sendSignup(first?'join':'update');syncSoon();if(first)track('join');
+      const ok=DBH?await saveMember():await sendSignup(S.profile.returning&&first?'return':first?'join':'update');syncSoon();if(first)track('join');
       toast(first?`Welcome to FlapShots, ${S.profile.name.split(' ')[0]}`:(ok?'Profile updated':'Saved on this device'));
     };
   }
@@ -1619,7 +1648,7 @@ const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
 function maybeA2HS(){
   sessionSeen++;
   const a=S.a2hs||{}, ios=isIOS();
-  if(sessionSeen<(ios?5:8)||isStandalone()||a.done)return;
+  if(sessionSeen<2||isStandalone()||a.done)return;
   if(!$('sheet').hidden||!$('acct').hidden||$('ios-banner'))return;
   if(ios&&(a.n||0)>=1){showIosBanner();return;}   /* iPhone: full picture guide once, then a small banner on later visits */
   if((a.n||0)>=3)return;
@@ -1630,7 +1659,8 @@ function maybeA2HS(){
 }
 /* ---- iPhone: picture guide, "open in Safari" helper, gentle reminder banner ---- */
 const INSTALL_URL='https://flapshots.drmanishtiwari.com/install';
-const iosInApp=()=>isIOS()&&(/(FBAN|FBAV|Instagram|LinkedInApp|Line\/|Snapchat|Twitter|GSA\/|CriOS|FxiOS|EdgiOS)/.test(navigator.userAgent)||navigator.standalone===undefined);
+const iosOtherBrowser=()=>/(CriOS|FxiOS|EdgiOS)/.test(navigator.userAgent);
+const iosInApp=()=>isIOS()&&!iosOtherBrowser()&&(/(FBAN|FBAV|Instagram|LinkedInApp|Line\/|Snapchat|Twitter|GSA\/)/.test(navigator.userAgent)||navigator.standalone===undefined);
 const IC={
  share:'<svg viewBox="0 0 24 24" class="ic"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5" fill="none" stroke="#0A84FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10H6.5A1.5 1.5 0 0 0 5 11.5v8A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 17.5 10H16" fill="none" stroke="#0A84FF" stroke-width="2" stroke-linecap="round"/></svg>',
  dots:'<svg viewBox="0 0 24 24" class="ic"><circle cx="12" cy="12" r="10" fill="none" stroke="#0A84FF" stroke-width="1.8"/><circle cx="7.5" cy="12" r="1.4" fill="#0A84FF"/><circle cx="12" cy="12" r="1.4" fill="#0A84FF"/><circle cx="16.5" cy="12" r="1.4" fill="#0A84FF"/></svg>',
@@ -1648,14 +1678,32 @@ function iosGuideHTML(){
    <p class="ig-small">Then follow the 3 steps shown in Safari.</p></div>`;
   return `<div class="ios-guide">
    <ol class="ig-steps">
-    <li><span class="ig-n">1</span><div>Tap <b>Share</b> ${IC.share} at the bottom of Safari.<span class="ig-sub">On newer iPhones, tap ${IC.dots} first, then <b>Share</b>.</span></div></li>
+    <li><span class="ig-n">1</span><div>${iosOtherBrowser()?`Tap <b>Share</b> ${IC.share} in the address bar at the top.`:`Tap <b>Share</b> ${IC.share} at the bottom of Safari.<span class="ig-sub">On newer iPhones, tap ${IC.dots} first, then <b>Share</b>.</span>`}</div></li>
     <li><span class="ig-n">2</span><div>Scroll down and tap <span class="ig-pill">${IC.plus} Add to Home Screen</span></div></li>
     <li><span class="ig-n">3</span><div>Tap <span class="ig-pill ig-add">Add</span> at the top right. Done: FlapShots is on your home screen.</div></li>
    </ol>
    <button class="ig-done" id="ig-done">I've added it</button></div>
    <div class="ig-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
 }
+function restoreToken(){
+  const p=S.profile?{name:S.profile.name,role:S.profile.role,focus:S.profile.focus,country:S.profile.country,hcp:true,terms:true,termsVersion:S.profile.termsVersion,consentAt:S.profile.consentAt,joinedAt:S.profile.joinedAt,restored:true}:null;
+  const d={profile:p,guest:!!S.guest,interests:S.interests,goal:S.goal,liked:S.liked,saved:S.saved,days:S.days,vid:S.vid,theme:S.theme,textSize:S.textSize,a2hs:{done:1}};
+  let tok=btoa(unescape(encodeURIComponent(JSON.stringify(d))));
+  if(tok.length>6000){d.liked={};d.saved={};tok=btoa(unescape(encodeURIComponent(JSON.stringify(d))));}
+  return tok.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+let stampT=null;
+async function stampInstallUrl(){
+  if(!isIOS()||isStandalone()||(!S.profile&&!S.guest))return;
+  const u=location.origin+location.pathname+'?r='+restoreToken();
+  history.replaceState(null,'',u);
+  try{const m=await (await fetch('manifest.webmanifest')).json();m.start_url=u;m.scope=location.origin+location.pathname.replace(/[^/]*$/,'');
+    m.icons=(m.icons||[]).map(i=>({...i,src:new URL(i.src,location.href).href}));
+    const l=document.querySelector('link[rel=manifest]');if(l)l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));}catch(e){}
+  clearTimeout(stampT);stampT=setTimeout(()=>history.replaceState(null,'',location.pathname),10*60e3);
+}
 function wireIosGuide(sh){
+  stampInstallUrl();
   const c=sh.querySelector('#ig-copy'), d=sh.querySelector('#ig-done');
   if(c)c.onclick=()=>{const done=()=>{c.textContent='Link copied. Now open Safari and paste';track('ios-copy-link');};
     (navigator.clipboard?navigator.clipboard.writeText(INSTALL_URL):Promise.reject()).then(done,()=>{const t=document.createElement('textarea');t.value=INSTALL_URL;document.body.appendChild(t);t.select();try{document.execCommand('copy');done();}catch(e){c.textContent=INSTALL_URL;}t.remove();});};
