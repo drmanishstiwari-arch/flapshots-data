@@ -9,7 +9,7 @@
 <meta property="og:image" content="https://flapshots.drmanishtiwari.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#000000">
-<link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png" sizes="192x192"><link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="shortcut icon" href="icon-192.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;1,500&family=Figtree:wght@400;500;600;700;800&family=Gaegu:wght@700&family=Plus+Jakarta+Sans:wght@700;800&display=swap">
@@ -1742,12 +1742,13 @@ function androidInstallScreen(){
    <button class="inst-skip" id="inst-skip">Continue in browser</button>`;
   document.body.appendChild(o);
   const done=()=>{o.classList.add('out');setTimeout(()=>o.remove(),450);};
-  const fallback=()=>{$('inst-note').innerHTML='Tap the browser menu <b>⋮</b> (top right), then <b>Install app</b> or <b>Add to Home screen</b>.';$('inst-go').textContent='Got it';$('inst-go').onclick=()=>{done();track('install-manual');};};
+  const fallback=()=>{$('inst-note').innerHTML='Tap the browser menu <b>⋮</b> (top right) and choose <b>Install app</b>. If you only see “Add to Home screen”, wait a few seconds and tap <b>Try again</b>.';$('inst-go').textContent='Try again';track('install-fallback');};
+  addEventListener('beforeinstallprompt',()=>{const b=$('inst-go');if(b&&b.textContent!=='Install app'){b.textContent='Install app';$('inst-note').textContent='Free · no app store · takes 2 seconds';}});
   $('inst-skip').onclick=()=>{done();track('install-skip');};
   $('inst-go').onclick=async()=>{
     if(!deferredInstall){ // the browser may still be getting ready: wait up to 3 s
-      $('inst-go').textContent='Preparing…';
-      for(let i=0;i<12&&!deferredInstall;i++) await new Promise(r=>setTimeout(r,250));
+      $('inst-go').textContent='Getting ready…';
+      for(let i=0;i<40&&!deferredInstall;i++) await new Promise(r=>setTimeout(r,250));
       if(!deferredInstall){fallback();return;}
     }
     const ev=deferredInstall;deferredInstall=null;ev.prompt();
