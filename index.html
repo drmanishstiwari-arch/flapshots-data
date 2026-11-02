@@ -151,6 +151,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .tapgo svg{width:18px;height:18px;fill:currentColor}
 @keyframes tappulse{0%,100%{transform:scale(1);box-shadow:0 10px 30px rgb(240 71 110 / .45)}50%{transform:scale(1.06);box-shadow:0 10px 44px rgb(240 71 110 / .75)}}
 .run .tapgo{display:none}
+.a2hs{display:flex;gap:14px;align-items:center}.a2hs svg{width:58px;height:58px;flex:0 0 auto;border-radius:14px}.a2hs div{display:flex;flex-direction:column;gap:4px}.a2steps{color:var(--ink)!important}.obnote{margin:6px 0 0;font-size:13px;opacity:.75;text-align:center}
 .fserr{position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#300;color:#fdd;font:12px/1.4 monospace;padding:8px;border-radius:8px;white-space:pre-wrap}
 .sound{position:absolute;bottom:calc(52px + env(safe-area-inset-bottom,0px));background:rgb(255 255 255 / .1);color:#FFE9E2;border:1px solid rgb(255 255 255 / .25);border-radius:999px;padding:9px 16px;font:600 13px var(--f-body);cursor:pointer;backdrop-filter:blur(6px)}
 .sound svg{width:15px;height:15px;vertical-align:-3px;margin-right:6px;fill:currentColor}
@@ -917,6 +918,7 @@ const DEFAULTS=()=>({seen:[],liked:{},saved:{},lastN:0,profile:null,guest:false,
 let S=DEFAULTS();
 try{Object.assign(S,JSON.parse(localStorage.getItem('flapshots2')||'{}'));}catch(e){}
 const persist=()=>{try{localStorage.setItem('flapshots2',JSON.stringify(S));}catch(e){}};
+if(!S.vid){S.vid='v'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);persist();}
 let tab='feed', topic=null, liveCards=[], liveStatus='Connecting…', pendingLive=0, renderedLive=0;
 const $=id=>document.getElementById(id), feed=$('feed');
 
@@ -1060,6 +1062,7 @@ $('sheet').addEventListener('click',e=>{if(e.target.dataset.close)closeSheet();}
 
 function share(c){
   const app=location.origin+location.pathname+'?c='+encodeURIComponent(c.id), text=`${c.head}. ${c.rib}. Source: ${c.u} — via FlapShots ${app}`, u=encodeURIComponent(app), t=encodeURIComponent(text);
+  track('share');
   const sh=openSheet(`<h3>Share</h3><div class="grid">
     <a href="https://wa.me/?text=${t}" target="_blank" rel="noopener">WhatsApp</a>
     <a href="https://www.linkedin.com/sharing/share-offsite/?url=${u}" target="_blank" rel="noopener">LinkedIn</a>
@@ -1276,7 +1279,7 @@ function playChime(){const a=ac();if(!a)return;const t0=a.currentTime+.02,m=a.cr
 /* ---------- account, personalisation, engagement ---------- */
 const ROLES=['Consultant surgeon','Surgical fellow','Resident / trainee','Medical oncologist','Radiation oncologist','Dental / OMFS surgeon','Nurse / allied health','Medical student','Other'];
 const FOCUS=[['ablative','Ablative'],['recon','Reconstructive'],['both','Both']];
-const TERMS_V='2026-10';
+const TERMS_V='2026-11';
 let USER=null, UID=null, ME=null, DBH=null, isOwner=false, verified=false;
 const allCards=()=>[...liveCards,...LIB];
 const todayKey=(back=0)=>new Date(Date.now()+5.5*3600e3-back*864e5).toISOString().slice(0,10);
@@ -1286,6 +1289,7 @@ function onSeen(){
   const k=todayKey();S.days[k]=(S.days[k]||0)+1;persist();updateGoal();
   if(S.days[k]===S.goal){const n=streak();toast(`Daily goal done! ${n}-day streak`);playChime();}
   syncSoon();
+  setTimeout(maybeA2HS,600);
 }
 function updateGoal(){
   const g=$('goal');if(!g)return;const p=Math.min(1,readToday()/S.goal),C=2*Math.PI*11;
@@ -1336,11 +1340,12 @@ function showWelcome(){
       <li><b>Always fresh.</b> New papers and oncology news added regularly.</li>
       <li><b>Made by a head and neck surgeon,</b> for surgeons, oncologists and trainees.</li>
     </ul>
-    <button class="start" id="w-guest">Start reading</button>
-    <button class="ghostbtn" id="w-join">Personalise (stays on this phone)</button>
+    <button class="start" id="w-join">Join free</button>
+    <button class="ghostbtn" id="w-guest">Continue as guest</button>
+    <p class="obnote">Joining takes 30 seconds and helps keep FlapShots free. Guests can read everything.</p>
     <div class="obcopy">For healthcare professionals. By continuing you accept the <button class="lnk" data-legal="terms">Terms</button> and <button class="lnk" data-legal="privacy">Privacy policy</button>.<br>© 2026 Dr Manish S. Tiwari</div></div>`;
   $('w-join').onclick=()=>showReg(1);
-  $('w-guest').onclick=()=>{S.guest=true;persist();o.hidden=true;o.innerHTML='';render();};
+  $('w-guest').onclick=()=>{S.guest=true;persist();o.hidden=true;o.innerHTML='';render();track('guest');};
 }
 let regDraft={};
 function showReg(step,edit=false){
@@ -1349,7 +1354,7 @@ function showReg(step,edit=false){
   if(step===1){
     o.innerHTML=`<form class="ob f" id="regf" novalidate>
       <div class="steps"><b>Step 1 of 2</b> · About you</div>
-      <h1>${edit?'Edit your profile':'Personalise FlapShots'}</h1>
+      <h1>${edit?'Edit your profile':'Join FlapShots, free'}</h1>
       <label for="r-name">Full name</label><input id="r-name" required autocomplete="name" value="${esc(p.name)}" placeholder="Dr A. Sharma">
       <label for="r-role">I am a</label><select id="r-role" required><option value="">Choose your role</option>${ROLES.map(r=>`<option ${r===p.role?'selected':''}>${esc(r)}</option>`).join('')}</select>
       <label>My focus</label><div class="seg" id="r-focus">${FOCUS.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${p.focus===k}">${l}</button>`).join('')}</div>
@@ -1395,8 +1400,8 @@ function showReg(step,edit=false){
       S.profile={...regDraft,termsVersion:TERMS_V,consentAt:new Date().toISOString(),joinedAt:S.profile?.joinedAt||new Date().toISOString()};
       S.guest=false;regDraft={};persist();
       o.hidden=true;o.innerHTML='';render();updateGoal();playChime();
-      const ok=await saveMember();syncSoon();
-      toast(first?`Welcome to FlapShots, ${S.profile.name.split(' ')[0]}`:(ok||!DBH?'Profile updated':'Saved on this device'));
+      const ok=DBH?await saveMember():await sendSignup(first?'join':'update');syncSoon();if(first)track('join');
+      toast(first?`Welcome to FlapShots, ${S.profile.name.split(' ')[0]}`:(ok?'Profile updated':'Saved on this device'));
     };
   }
 }
@@ -1409,11 +1414,13 @@ const LEGAL={
  <p><b>Content.</b> Text, illustrations (manish &amp; moni surgical illustration collective), graphs redrawn from published data and the FlapShots name and logo are © 2026 Dr Manish S. Tiwari. You may share cards with attribution for non-commercial education. Linked papers belong to their publishers.</p>
  <p><b>Automated content.</b> Some cards are prepared automatically from new papers and news and may not yet be reviewed by an editor; they are marked "New".</p>
  <p>These terms are governed by the laws of India. Version ${TERMS_V}.</p>`],
- privacy:['Privacy policy',`<p>Written to follow India's Digital Personal Data Protection Act, 2023.</p>
- <p><b>What we collect.</b> Nothing is collected by FlapShots itself. If you personalise the app, the details you enter (name, role, focus, institution, city, optional registration number and email), your topics, goal and reading activity (cards read, liked, saved, hidden) are kept only in this browser on this device. Like any website, the web host keeps standard server logs (such as IP address and time of visit).</p>
- <p><b>Why.</b> To personalise your feed on this device. No account, cookies for advertising or third-party tracking are used.</p>
- <p><b>Where and who.</b> Your data stays in your browser on this device and is not sent to Dr Manish S. Tiwari or anyone else. Share buttons open the app you choose (for example WhatsApp or LinkedIn), whose own privacy policy then applies. Data is never sold or used for advertising.</p>
- <p><b>Your rights.</b> You can view and correct your profile anytime, withdraw consent, and delete everything from Profile → Delete my data, or by clearing this site's data in your browser. Requests, corrections and grievances: Profile → Report a problem, or email <a href="mailto:drmanishstiwari@gmail.com">drmanishstiwari@gmail.com</a>.</p>`],
+ privacy:['Privacy policy',`<p>Written to follow India's Digital Personal Data Protection Act, 2023. Data fiduciary: Dr Manish S. Tiwari.</p>
+ <p><b>Joining is optional.</b> Guests can read and share everything without giving any personal details.</p>
+ <p><b>If you join.</b> The details you enter (name, role, focus, hospital, city, country, optional council registration number and email, weekly-digest choice), your chosen topics, the date you joined and a random app number are sent to Dr Manish S. Tiwari and kept in a private Google Sheet that only he can open (Google stores it on his behalf).</p>
+ <p><b>Everyone, including guests.</b> Anonymous usage counts (visits, approximate country, device and browser type, which features are used, such as sharing or installing) are measured with GoatCounter, a privacy-focused counter that uses no cookies and stores no names or full IP addresses. Your reading activity (cards read, liked, saved, hidden), streak and settings stay only on your device. Like any website, the web host keeps standard server logs.</p>
+ <p><b>Why.</b> To know how many people use FlapShots and which content helps them, to verify healthcare professionals, to send the weekly digest if you opt in, to contact members about FlapShots, and to plan how to keep the service running. If the service changes, for example a paid option, members will be told in advance. Data is never sold or used for third-party advertising.</p>
+ <p><b>How long.</b> Member details are kept while FlapShots runs, or until you ask for them to be deleted.</p>
+ <p><b>Your rights.</b> View and correct your profile anytime in Profile. To withdraw consent, or to have your member details deleted, email <a href="mailto:drmanishstiwari@gmail.com">drmanishstiwari@gmail.com</a>; Profile → Delete my data clears this device. Grievances: the same email; we reply within 30 days.</p>`],
  disclaimer:['Medical disclaimer',`<p>FlapShots provides general educational summaries for qualified healthcare professionals. It is not a substitute for clinical judgement, multidisciplinary tumour board discussion, institutional protocols or the full text of the cited sources. Drug doses, indications and approvals vary by country; check local regulations. The author and contributors accept no liability for decisions made using this content.</p>`]
 };
 function legal(k){const [t,b]=LEGAL[k];const sh=openSheet(`<h3>${t}</h3><div class="legal">${b}</div>`);sh.querySelector('.sheet-wrap').style.zIndex=60;}
@@ -1421,10 +1428,10 @@ document.addEventListener('click',e=>{const l=e.target.closest('[data-legal]');i
 
 /* ---- guest prompt card inside the feed ---- */
 function joinHTML(){
-  return `<article class="card done join" id="join-card"><div class="img">${sceneArt({scene:{bg:'butter',cap:['MAKE IT YOURS','KEEP YOUR STREAK'],ch:[{k:'doc',m:'happy',x:.3},{k:'flap',m:'happy',x:.7}]}})}</div>
-   <div class="ribbon"><b>Pick your topics and a daily goal</b></div>
-   <div class="body"><h2>Make FlapShots yours</h2><p class="take">Tell FlapShots what you do and what you want to read. It stays on this phone and takes 30 seconds. Tip: add FlapShots to your home screen to open it like an app.</p>
-   <div class="row"><button class="btn primary" data-join="1">Personalise</button></div></div></article>`;
+  return `<article class="card done join" id="join-card"><div class="img">${sceneArt({scene:{bg:'butter',cap:['JOIN FREE','KEEP YOUR STREAK'],ch:[{k:'doc',m:'happy',x:.3},{k:'flap',m:'happy',x:.7}]}})}</div>
+   <div class="ribbon"><b>Join free: keep your streak and get the weekly digest</b></div>
+   <div class="body"><h2>Make FlapShots yours</h2><p class="take">Tell us who you are and what you want to read. Your feed puts your topics first, and members help keep FlapShots free and growing. It takes 30 seconds; guests can keep reading.</p>
+   <div class="row"><button class="btn primary" data-join="1">Join free</button></div></div></article>`;
 }
 feed.addEventListener('click',e=>{if(e.target.closest('[data-join]'))showReg(1);});
 
@@ -1484,7 +1491,7 @@ function profile(){
    <h3>Your topics</h3><p>${S.interests.length?esc(S.interests.join(', ')):'All topics, in the default order.'}</p><div class="grid"><button id="p-int">Edit topics</button></div>
    <h3>Appearance</h3>${seg('p-theme',[['system','Automatic'],['light','Light'],['dark','Dark']],S.theme)}${seg('p-ts',[['s','Small text'],['m','Medium'],['l','Large']],S.textSize)}
    <h3>Live papers and news</h3><p>${esc(liveStatus)} Your likes, saves and streak stay on this device.</p>
-   <h3>Account</h3><div class="grid">${p?'<button id="p-edit">Edit profile</button>':''}<button id="p-report">Report a problem</button><button id="unread">Mark all as unread</button><button id="replay">Replay intro</button><button id="p-del" class="danger">Delete my data</button></div>
+   <h3>Account</h3><div class="grid">${p?'<button id="p-edit">Edit profile</button>':''}<button id="p-report">Report a problem</button><button id="unread">Mark all as unread</button><button id="replay">Replay intro</button>${isStandalone()?'':'<button id="p-a2hs">Add to home screen</button>'}<button id="p-del" class="danger">Delete my data</button></div>
    ${isOwner?'<h3>Admin</h3><div class="grid"><button id="p-admin">Members and reports</button></div>':''}
    <h3>About</h3><div class="grid"><button data-legal="terms">Terms of use</button><button data-legal="privacy">Privacy policy</button><button data-legal="disclaimer">Medical disclaimer</button></div>
    <p style="font-size:12px">© 2026 Dr Manish S. Tiwari. All rights reserved. Content is for professional education and does not replace clinical judgement.</p>`);
@@ -1551,6 +1558,48 @@ function valid(d){return d&&typeof d.head==='string'&&typeof d.take==='string'&&
 /* Public build: cards come from cards.json, refreshed by the scheduled pipeline (GitHub copy first, the copy on this site as fallback). */
 const CARDS_URLS=['cards.json'];
 const REPORT_EMAIL='drmanishstiwari@gmail.com';
+/* Visitor counts: GoatCounter site code (e.g. 'flapshots' for flapshots.goatcounter.com). Empty = off. */
+const GC_CODE='';
+/* Member sign-ups: Google Form "formResponse" URL and the entry ids of its questions. Empty url = off. */
+const SIGNUP={url:'',f:{name:'',role:'',focus:'',institution:'',city:'',country:'',regNo:'',email:'',digest:'',topics:'',vid:'',kind:''}};
+if(GC_CODE){const g=document.createElement('script');g.async=true;g.src='https://gc.zgo.at/count.js';g.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;g.onload=()=>track(S.profile?'open-member':S.guest?'open-guest':'open-new');document.head.appendChild(g);}
+function track(ev){try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'event-'+ev,title:ev,event:true});}catch(e){}}
+async function sendSignup(kind){
+  if(!SIGNUP.url||!S.profile)return false;
+  const p=S.profile,f=SIGNUP.f,d=new URLSearchParams();
+  const put=(k,v)=>{if(f[k])d.append(f[k],String(v??''));};
+  put('name',p.name);put('role',p.role);put('focus',p.focus);put('institution',p.institution);put('city',p.city);put('country',p.country);
+  put('regNo',p.regNo);put('email',p.email);put('digest',p.digest?'Yes':'No');put('topics',(S.interests||[]).join(', '));put('vid',S.vid);put('kind',kind);
+  try{await fetch(SIGNUP.url,{method:'POST',mode:'no-cors',body:d});return true;}catch(e){return false;}
+}
+/* Add to home screen: offered once the reader has swiped 8 cards in a visit; at most 3 times, 5 days apart. */
+let deferredInstall=null, sessionSeen=0;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});
+addEventListener('appinstalled',()=>{S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');});
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
+function maybeA2HS(){
+  sessionSeen++;
+  const a=S.a2hs||{};
+  if(sessionSeen<8||isStandalone()||a.done||(a.n||0)>=3)return;
+  if(a.last&&Date.now()-a.last<5*864e5)return;
+  if(!deferredInstall&&!isIOS())return;
+  if(!$('sheet').hidden||!$('acct').hidden)return;
+  S.a2hs={...a,n:(a.n||0)+1,last:Date.now()};persist();
+  a2hsSheet();
+}
+function a2hsSheet(){
+  const how=deferredInstall?'prompt':isIOS()?'ios':'other';
+  const sh=openSheet(`<div class="a2hs"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div><h3>Add FlapShots to your home screen</h3><p>Open it in one tap, full screen, like an app. Free, no app store needed.</p></div></div>
+   ${how==='prompt'?'<div class="row"><button class="btn primary" id="a2-yes">Add to home screen</button><button class="btn ghost" id="a2-no">Not now</button></div>'
+    :how==='ios'?'<p class="a2steps">In Safari, tap the <b>Share</b> button <span aria-hidden="true">⎙</span> at the bottom of the screen, scroll down and tap <b>Add to Home Screen</b>.</p>'
+    :'<p class="a2steps">Open your browser menu (⋮) and choose <b>Install app</b> or <b>Add to Home screen</b>.</p>'}`);
+  track('a2hs-shown');
+  const y=sh.querySelector('#a2-yes'),no=sh.querySelector('#a2-no');
+  if(y)y.onclick=async()=>{const ev=deferredInstall;deferredInstall=null;closeSheet();if(!ev)return;ev.prompt();try{const r=await ev.userChoice;if(r.outcome==='accepted'){S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');}}catch(e){}};
+  if(no)no.onclick=()=>{closeSheet();track('a2hs-later');};
+}
+document.addEventListener('click',e=>{if(e.target.closest('#p-a2hs')){closeSheet();setTimeout(a2hsSheet,250);}});
 async function loadCards(){
   for(const u of CARDS_URLS){
     try{
