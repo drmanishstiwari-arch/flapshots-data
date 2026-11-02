@@ -1593,6 +1593,7 @@ function a2hsSheet(){
   const sh=openSheet(`<div class="a2hs"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div><h3>Add FlapShots to your home screen</h3><p>Open it in one tap, full screen, like an app. Free, no app store needed.</p></div></div>
    ${how==='prompt'?'<div class="row"><button class="btn primary" id="a2-yes">Add to home screen</button><button class="btn ghost" id="a2-no">Not now</button></div>'
     :how==='ios'?'<p class="a2steps">In Safari, tap the <b>Share</b> button <span aria-hidden="true">⎙</span> at the bottom of the screen, scroll down and tap <b>Add to Home Screen</b>.</p>'
+    :/(FBAN|FBAV|Instagram|Line\/|LinkedInApp|wv\))/.test(navigator.userAgent)?'<p class="a2steps">This page opened inside another app. Tap the menu (⋮ or ⋯) and choose <b>Open in Chrome</b> (or <b>Open in browser</b>), then tap <b>Install</b>.</p>'
     :'<p class="a2steps">Open your browser menu (⋮) and choose <b>Install app</b> or <b>Add to Home screen</b>.</p>'}`);
   track('a2hs-shown');
   const y=sh.querySelector('#a2-yes'),no=sh.querySelector('#a2-no');
@@ -1600,6 +1601,12 @@ function a2hsSheet(){
   if(no)no.onclick=()=>{closeSheet();track('a2hs-later');};
 }
 document.addEventListener('click',e=>{if(e.target.closest('#p-a2hs')){closeSheet();setTimeout(a2hsSheet,250);}});
+/* Install link: https://flapshots.drmanishtiwari.com/install (or ?install=1) opens straight to the install prompt. */
+if(new URLSearchParams(location.search).has('install')&&!isStandalone()){
+  history.replaceState(null,'',location.pathname);
+  track('install-link');
+  const t0=Date.now(),wait=setInterval(()=>{if(deferredInstall||isIOS()||Date.now()-t0>4000){clearInterval(wait);a2hsSheet();}},250);
+}
 async function loadCards(){
   for(const u of CARDS_URLS){
     try{
