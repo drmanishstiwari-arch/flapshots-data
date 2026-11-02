@@ -1618,11 +1618,13 @@ const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigat
 const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
 function maybeA2HS(){
   sessionSeen++;
-  const a=S.a2hs||{};
-  if(sessionSeen<8||isStandalone()||a.done||(a.n||0)>=3)return;
+  const a=S.a2hs||{}, ios=isIOS();
+  if(sessionSeen<(ios?5:8)||isStandalone()||a.done)return;
+  if(!$('sheet').hidden||!$('acct').hidden||$('ios-banner'))return;
+  if(ios&&(a.n||0)>=1){showIosBanner();return;}   /* iPhone: full picture guide once, then a small banner on later visits */
+  if((a.n||0)>=3)return;
   if(a.last&&Date.now()-a.last<5*864e5)return;
-  if(!deferredInstall&&!isIOS())return;
-  if(!$('sheet').hidden||!$('acct').hidden)return;
+  if(!deferredInstall&&!ios)return;
   S.a2hs={...a,n:(a.n||0)+1,last:Date.now()};persist();
   a2hsSheet();
 }
@@ -1660,22 +1662,18 @@ function wireIosGuide(sh){
   if(d)d.onclick=()=>{S.a2hs={...(S.a2hs||{}),done:1};persist();closeSheet();hideIosBanner();track('install-ios');toast('Great. Open FlapShots from your home screen');};
 }
 function hideIosBanner(){const b=$('ios-banner');if(b)b.remove();}
-function maybeIosBanner(){
-  if(!isIOS()||isStandalone())return;
-  S.visits=(S.visits||0)+1;persist();
+let iosBannerShown=false;
+function showIosBanner(){
   const a=S.a2hs||{}, now=Date.now();
-  if(a.done||S.visits<2||(a.bn||0)>=3)return;
-  if(a.bl&&now-a.bl<3*864e5)return;
-  if(a.last&&now-a.last<2*864e5)return;
-  setTimeout(()=>{
-    if(!$('acct').hidden||!$('sheet').hidden)return;
-    S.a2hs={...(S.a2hs||{}),bn:(a.bn||0)+1,bl:now};persist();track('ios-banner');
-    document.body.insertAdjacentHTML('beforeend',`<div class="ios-banner" id="ios-banner" role="dialog" aria-label="Add FlapShots to your home screen"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div class="ib-t"><b>Add FlapShots to your home screen</b><span>Opens in one tap, like an app</span></div><button class="ib-how" id="ib-how">How?</button><button class="ib-x" id="ib-x" aria-label="Close">×</button></div>`);
-    $('ib-how').onclick=()=>{hideIosBanner();a2hsSheet();};
-    $('ib-x').onclick=()=>{hideIosBanner();track('ios-banner-close');};
-  },20000);
+  if(iosBannerShown||(a.bn||0)>=3)return;
+  if(a.bl&&now-a.bl<2*864e5)return;
+  if(a.last&&now-a.last<864e5)return;
+  iosBannerShown=true;
+  S.a2hs={...a,bn:(a.bn||0)+1,bl:now};persist();track('ios-banner');
+  document.body.insertAdjacentHTML('beforeend',`<div class="ios-banner" id="ios-banner" role="dialog" aria-label="Add FlapShots to your home screen"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div class="ib-t"><b>Add FlapShots to your home screen</b><span>Opens in one tap, like an app</span></div><button class="ib-how" id="ib-how">How?</button><button class="ib-x" id="ib-x" aria-label="Close">×</button></div>`);
+  $('ib-how').onclick=()=>{hideIosBanner();a2hsSheet();};
+  $('ib-x').onclick=()=>{hideIosBanner();track('ios-banner-close');};
 }
-maybeIosBanner();
 if(isIOS()&&isStandalone()&&!(S.a2hs||{}).done){S.a2hs={...(S.a2hs||{}),done:1};persist();track('open-installed-ios');}
 function a2hsSheet(){
   const how=deferredInstall?'prompt':isIOS()?'ios':'other';
