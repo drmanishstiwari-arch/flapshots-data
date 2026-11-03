@@ -262,6 +262,16 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .tp-frame.has-pic h3{margin:0;font-size:clamp(17px,4.6vw,20px);line-height:1.25}
 .tp-frame.has-pic p{font-size:clamp(14px,3.8vw,15.5px);line-height:1.5}
 .tp-cred{font-size:11px;opacity:.6}
+.tp-kicker{font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--tp-sage-d)}
+.tp-ev{font-family:Lora,Georgia,serif;font-size:clamp(19px,5vw,23px);font-weight:600;color:var(--tp-ink);margin:0}
+.tp-cite{font-size:12.5px;font-weight:600;opacity:.65}
+.tp-fig{flex:1 1 0;min-height:0;display:flex;align-items:center;justify-content:center}
+.tp-fig svg{width:100%;height:auto;max-height:100%}
+.tp-figcap{font-size:12.5px;opacity:.7;text-align:center}
+.tp-sum{margin:0;padding:0 0 0 2px;list-style:none;display:flex;flex-direction:column;gap:10px}
+.tp-sum li{position:relative;padding-left:24px;font-size:clamp(15px,4.1vw,17px);line-height:1.5;color:var(--tp-ink)}
+.tp-sum li::before{content:"";position:absolute;left:4px;top:.55em;width:9px;height:9px;border-radius:50%;background:var(--tp-sage)}
+.tp-more{align-self:flex-start;margin-top:6px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;position:relative;z-index:1}
 .note .take{font-family:Lora,Georgia,serif;font-style:italic}
 .note .sign{font-size:13px;font-weight:700;opacity:.8;margin-top:-4px}
 .fb-link{background:none;border:0;padding:4px;font:600 13px var(--f-body);color:inherit;text-decoration:underline;opacity:.75;cursor:pointer}
@@ -1256,6 +1266,50 @@ const BULB_ICON={
  leaf:'<path d="M60 36 C74 44 75 60 60 70 C45 60 46 44 60 36Z" fill="var(--tp-sage)" stroke="var(--tp-ink2)" stroke-width="2.4"/><path d="M60 42 V66 M60 52 L66 47 M60 59 L54 54" stroke="var(--tp-ink2)" stroke-width="1.8" stroke-linecap="round" fill="none"/>',
  heart:'<path d="M60 68 C44 57 44 44 52 42 C56 41 59 44 60 47 C61 44 64 41 68 42 C76 44 76 57 60 68Z" fill="var(--tp-rose)" stroke="var(--tp-ink2)" stroke-width="2.4" stroke-linejoin="round"/>'
 };
+/* Each Daily tip ends with: the landmark study, its key figure or diagram, a bottom line and a Read more link. */
+const TIP_EXTRA={
+ 't-alt':{ev:{name:'Wei et al.: 672 ALT flaps',line:'In 672 anterolateral thigh flaps, the skin vessels ran through muscle (musculocutaneous) in 87% and between muscles (septocutaneous) in 13%. Total flap failure was 1.8%.',cite:'Plast Reconstr Surg 2002'},
+  fig:{type:'bars',title:'How ALT skin perforators reach the skin',unit:'%',bars:[{l:'Through vastus lateralis',v:87.1,hi:1},{l:'Between the muscles',v:12.9}],from:'Wei et al., PRS 2002',ch:'flap'},
+  sum:['Most ALT perforators pass through vastus lateralis, so expect an intramuscular dissection.','Doppler marks guide the paddle; the medial incision confirms the vessel.','Have a backup flap ready before you commit.'],
+  u:'https://doi.org/10.1097/00006534-200206000-00007',more:'Read Wei 2002'},
+ 't-ink':{ev:{name:'Maxwell et al.: 280 early tongue cancers',line:'Across five centres, taking margins from the tumour bed instead of from the specimen lowered 3-year local recurrence-free survival from 90% to 80%.',cite:'JAMA Otolaryngol Head Neck Surg 2015'},
+  fig:{type:'bars',title:'3-year local recurrence-free survival',unit:'%',bars:[{l:'Margins judged on the specimen',v:90,hi:1},{l:'Margins taken from the tumour bed',v:80}],from:'Maxwell et al., JAMA Otolaryngol 2015',ch:'doc'},
+  sum:['Orient and ink the specimen yourself and send a labelled diagram with it.','Judge margins on the specimen, not on shavings from the defect.','Aim for at least 5 mm of clear tissue on final pathology.'],
+  u:'https://doi.org/10.1001/jamaoto.2015.1351',more:'Read Maxwell 2015'},
+ 't-pedicle':{ev:{name:'Bui et al.: 1,193 free flaps',line:'6% of free flaps returned to theatre. Three in four thromboses were venous. Venous problems were saved 71% of the time and arterial ones 40%, and saved flaps went back sooner (median 4 h vs 9 h).',cite:'Plast Reconstr Surg 2007'},
+  fig:{type:'bars',title:'Flaps saved after pedicle thrombosis',unit:'%',bars:[{l:'Venous thrombosis',v:71,hi:1},{l:'Arterial thrombosis',v:40}],from:'Bui et al., PRS 2007',ch:'doc'},
+  sum:['Venous kinks and twists are the commonest pedicle problem: recheck the lie after every change of head position.','Keep the vein gently curved, never stretched or pressed by a plate edge.','If the flap looks wrong, go back within hours, not the next morning.'],
+  u:'https://pubmed.ncbi.nlm.nih.gov/17519706/',more:'Read Bui 2007'},
+ 't-pinprick':{ev:{name:'Chen et al.: 1,142 free flaps',line:'Of 113 flaps that ran into trouble, 82% showed it within 24 hours and 96% within 72 hours. With intensive nurse-led monitoring, almost two in three were fully saved.',cite:'Plast Reconstr Surg 2007'},
+  fig:{type:'bars',title:'When failing flaps first showed trouble',unit:'%',bars:[{l:'Within 24 hours',v:82.3,hi:1},{l:'Within 72 hours',v:95.6}],from:'Chen et al., PRS 2007',ch:'doc'},
+  sum:['Check the flap hourly for the first day, then less often until day 3.','Colour, refill, turgor and a pinprick bleed together beat any single sign.','Dark brisk bleeding suggests venous trouble; no bleeding suggests arterial. Either way, call early.'],
+  u:'https://pubmed.ncbi.nlm.nih.gov/17572562/',more:'Read Chen 2007'},
+ 't-dental':{ev:{name:'HOPON randomised trial',line:'144 irradiated patients needing tooth extraction were randomised to hyperbaric oxygen or none. Osteoradionecrosis at 6 months was 6.4% with oxygen and 5.7% without: no benefit.',cite:'Int J Radiat Oncol Biol Phys 2019'},
+  fig:{type:'bars',title:'Osteoradionecrosis at 6 months',unit:'%',bars:[{l:'Hyperbaric oxygen',v:6.4},{l:'No hyperbaric oxygen',v:5.7,hi:1}],from:'Shaw et al. (HOPON), IJROBP 2019',ch:'doc'},
+  sum:['Prevention starts before radiotherapy: dental review, scaling and removal of doubtful teeth.','Leave healing time between extraction and the start of radiotherapy.','Do not count on hyperbaric oxygen to prevent ORN after later extractions.'],
+  u:'https://doi.org/10.1016/j.ijrobp.2019.02.044',more:'Read the HOPON trial'},
+ 't-feed':{ev:{name:'ERAS Society consensus',line:'A review of 215 publications produced the head and neck ERAS recommendations: no long fasting, carbohydrate loading, goal-directed fluids, opioid-sparing pain relief, regular flap checks and early mobilisation.',cite:'JAMA Otolaryngol Head Neck Surg 2017'},
+  fig:{type:'table',title:'ERAS essentials for free flap surgery',cols:['When','Do this'],rows:[['Before','Carbohydrate drink, no long fast'],['During','Antibiotics, goal-directed fluids, steroid and antiemetic'],['After','Opioid-sparing pain relief, clot prophylaxis'],['After','Frequent flap checks, early mobilisation']],from:'Dort et al., JAMA Otolaryngol 2017',w:[1,3]},
+  sum:['Start tube feeds within a day unless there is a clear reason not to.','Pair early feeding with early mobilisation and opioid-sparing analgesia.','Use a written ERAS pathway so every patient gets the same care.'],
+  u:'https://pubmed.ncbi.nlm.nih.gov/27737447/',more:'Read the ERAS guideline'},
+ 't-allen':{ev:{name:'Allen test (1929)',line:'Edgar Allen described compressing the wrist arteries to see whether one alone can fill the hand. The modified version remains the bedside check before taking the radial artery.',cite:'Am J Med Sci 1929'},
+  fig:{type:'table',title:'Reading the modified Allen test',cols:['Palm colour returns','What to do'],rows:[['Promptly, within a few seconds','Ulnar supply adequate: proceed'],['Slowly or patchily','Doubtful: check with oximetry or Doppler'],['Does not return','Do not use this forearm']],from:'standard bedside practice',hi:0,w:[2,3]},
+  sum:['Test both arms and note the time to colour return.','Confirm a doubtful test with pulse oximetry or Doppler.','If the test fails, use the other arm or a different flap.'],
+  u:'https://pubmed.ncbi.nlm.nih.gov/28825257/',more:'Read the systematic review'},
+ 't-nodes':{ev:{name:'Divi et al.: 63,978 patients',line:'In US national data, patients with fewer than 18 nodes removed had an 18% higher risk of death (HR 1.18), rising to 24% in clinically node-negative necks.',cite:'J Clin Oncol 2016'},
+  fig:{type:'stat',big:'18+',lines:['nodes: the yield linked','to better survival'],from:'Divi et al., JCO 2016',ch:'node'},
+  sum:['Clear every level you plan to remove completely.','Send levels separately and labelled to help the pathologist count.','A yield under 18 is a quality flag worth reviewing.'],
+  u:'https://doi.org/10.1200/JCO.2016.67.3863',more:'Read Divi 2016'},
+ 't-itf2':{ev:{name:'Liao et al.: T4b below the notch',line:'In 45 untreated T4b oral cancers, tumours below the sigmoid notch (38 patients) had significantly better 5-year local control and survival after radical surgery than those above it (7 patients).',cite:'Oral Oncol 2007'},
+  figImg:'art/itf/masticator-levels.jpg',figCap:'Low, intermediate and high masticator space spread (manish & moni)',
+  sum:['Place the tumour below or above the sigmoid notch on imaging before you plan.','Tie the maxillary artery early and take the fossa as one block up to the pterygoid plates.','Check the deep margins at the skull base and fill the cavity with a well-vascularised flap.'],
+  u:'https://doi.org/10.1016/j.oraloncology.2006.06.008',more:'Read Liao 2007'},
+ 't-itf1':{ev:{name:'Rao et al.: meta-analysis',line:'Pooling 7 studies (11,381 patients), resected infranotch T4b cancers had 5-year overall survival of 53% and disease-free survival of 48%, statistically similar to T4a.',cite:'Oncol Ther 2023'},
+  fig:{type:'table',title:'Infranotch T4b after surgery (pooled)',cols:['Outcome','2-yr','5-yr'],rows:[['Overall survival','59.3%','53.2%'],['Disease-free','57.9%','48.4%']],from:'Rao et al., Oncol Ther 2023',w:[2,1,1]},
+  sum:['Infranotch T4b behaves like T4a: offer curative surgery.','Keeping the mandible (Type 1) suits tumours that spare the bone.','Fix the angle osteotomy securely and fill the fossa with well-vascularised tissue.'],
+  u:'https://doi.org/10.1007/s40487-023-00246-3',more:'Read the meta-analysis'}
+};
+TIPS.forEach(t=>Object.assign(t,TIP_EXTRA[t.id]||{}));
 function bulbSVG(icon){
   return `<svg class="bulb" viewBox="0 0 120 134" role="img" aria-label="Light bulb">
    <circle class="glow" cx="60" cy="52" r="50" fill="url(#tp-glow)"/>
@@ -1269,7 +1323,16 @@ function bulbSVG(icon){
 }
 const tipDay=()=>Math.floor((Date.now()+5.5*3600e3)/864e5);
 function tipHTML(t,k){
-  const n=t.slides.length+1;
+  const sprig=`<svg class="tp-sprig" viewBox="0 0 60 30" aria-hidden="true"><path d="M2 28 C20 26 34 18 46 4" fill="none" stroke="var(--tp-sage-d)" stroke-width="1.6" stroke-linecap="round"/><path d="M18 24 c-2 -7 3 -11 8 -10 c0 6 -3 9 -8 10z M30 17 c-1 -7 4 -10 9 -9 c-1 6 -4 9 -9 9z M41 9 c0 -6 4 -8 8 -7 c-1 5 -4 7 -8 7z" fill="var(--tp-sage)"/></svg>`;
+  const S2=[];
+  t.slides.forEach(([h,b,img],i)=>S2.push(img?`<div class="tp-frame has-pic">
+      <img class="tp-pic" src="${esc(img)}" alt="${esc('Step '+(i+1)+': '+h)}" loading="lazy" decoding="async">
+      <div class="tp-srow"><span class="tp-step">${i+1}</span><h3>${esc(h)}</h3></div><p>${esc(b)}</p>`
+    :`<div class="tp-frame"><span class="tp-step">${i+1}</span><h3>${esc(h)}</h3><p>${esc(b)}</p>${sprig}`));
+  if(t.ev) S2.push(`<div class="tp-frame"><span class="tp-kicker">Landmark evidence</span><h3 class="tp-ev">${esc(t.ev.name)}</h3><p>${esc(t.ev.line)}</p><span class="tp-cite">${esc(t.ev.cite)}</span>${sprig}`);
+  if(t.fig||t.figImg) S2.push(`<div class="tp-frame has-pic"><span class="tp-kicker">Key figure</span>${t.figImg?`<img class="tp-pic" src="${esc(t.figImg)}" alt="${esc(t.figCap||'Diagram')}" loading="lazy" decoding="async"><span class="tp-figcap">${esc(t.figCap||'')}</span>`:`<div class="tp-fig">${figArt({fig:t.fig})}</div>`}`);
+  if(t.sum) S2.push(`<div class="tp-frame"><span class="tp-kicker">Bottom line</span><ul class="tp-sum">${t.sum.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${t.u?`<a class="btn primary tp-more" href="${esc(t.u)}" target="_blank" rel="noopener" data-tipmore="${t.id}">${esc(t.more||'Read more')} ↗</a>`:''}`);
+  const n=S2.length+1;
   return `<article class="card tipcard" data-tip="${t.id}">
    <div class="tp-amb" aria-hidden="true"><i></i><i></i></div>
    <div class="tp-head"><span class="tp-lbl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Daily tips</span><span class="tp-n"><b>1</b> / ${n}</span></div>
@@ -1278,22 +1341,15 @@ function tipHTML(t,k){
       ${t.img?`<img class="tp-pic" src="${esc(t.img)}" alt="" loading="lazy" decoding="async">`:bulbSVG(t.icon)}
       <span class="tp-cat">${esc(t.cat)}</span>
       <p class="tp-tip">${esc(t.tip)}</p>
-      <span class="tp-hint">Swipe for the ${t.slides.length>6?t.slides.length+' steps':'details'} <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="tp-hint">Swipe for ${t.slides.length>6?'the '+t.slides.length+' steps':'the why'}${t.ev?', evidence and bottom line':''} <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       ${t.cred?`<span class="tp-cred">${esc(t.cred)}</span>`:''}
     </div></section>
-    ${t.slides.map(([h,b,img],i)=>img?`<section class="tp-slide"><div class="tp-frame has-pic">
-      <img class="tp-pic" src="${esc(img)}" alt="${esc('Step '+(i+1)+': '+h)}" loading="lazy" decoding="async">
-      <div class="tp-srow"><span class="tp-step">${i+1}</span><h3>${esc(h)}</h3></div><p>${esc(b)}</p>
-      ${i===t.slides.length-1?`<span class="tp-end">That's today's tip. Swipe up to continue.</span>`:''}
-    </div></section>`:`<section class="tp-slide"><div class="tp-frame">
-      <span class="tp-step">${i+1}</span><h3>${esc(h)}</h3><p>${esc(b)}</p>
-      ${i===t.slides.length-1?`<span class="tp-end">That's today's tip. Swipe up to continue.</span>`:''}
-      <svg class="tp-sprig" viewBox="0 0 60 30" aria-hidden="true"><path d="M2 28 C20 26 34 18 46 4" fill="none" stroke="var(--tp-sage-d)" stroke-width="1.6" stroke-linecap="round"/><path d="M18 24 c-2 -7 3 -11 8 -10 c0 6 -3 9 -8 10z M30 17 c-1 -7 4 -10 9 -9 c-1 6 -4 9 -9 9z M41 9 c0 -6 4 -8 8 -7 c-1 5 -4 7 -8 7z" fill="var(--tp-sage)"/></svg>
-    </div></section>`).join('')}
+    ${S2.map((h,i)=>`<section class="tp-slide">${h}${i===S2.length-1?`<span class="tp-end">That's today's tip. Swipe up to continue.</span>`:''}</div></section>`).join('')}
    </div>
    <div class="tp-dots">${Array.from({length:n},(_,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>
   </article>`;
 }
+feed.addEventListener('click',e=>{const m=e.target.closest('[data-tipmore]');if(m)track('tip-more-'+m.dataset.tipmore);});
 function wireTips(){
   feed.querySelectorAll('.tipcard:not([data-wired])').forEach(card=>{
     card.dataset.wired='1';
