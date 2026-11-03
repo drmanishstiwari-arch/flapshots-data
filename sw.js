@@ -1,5 +1,5 @@
 /* FlapShots offline support: page and icons cached; cards.json always fetched fresh, cached copy used offline. */
-const V='flapshots-v15', CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','cards.json'];
+const V='flapshots-v16', CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','cards.json'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{

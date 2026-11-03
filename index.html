@@ -183,6 +183,16 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .inst-btn{width:min(320px,100%);border:0;border-radius:999px;padding:17px 24px;font:800 18px var(--f-body);color:#fff;background:linear-gradient(135deg,#FF9B6B,#F0476E);box-shadow:0 10px 30px rgb(240 71 110 / .45);cursor:pointer;animation:tappulse 1.6s ease-in-out infinite}
 .inst-note{margin:0;max-width:320px;font:500 14px/1.5 var(--f-body);color:#FFD9CF}
 .inst-skip{margin-top:18px;background:none;border:0;color:#FFB9A8;font:600 14px var(--f-body);text-decoration:underline;cursor:pointer}
+.goalwin{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.gw-badge{font-size:44px;line-height:1;animation:popn .7s cubic-bezier(.3,1.5,.5,1) both}
+.goalwin p{color:var(--ink)!important;font-size:15px}
+.gw-note{text-align:center;font-size:12.5px!important}
+.savetip{position:fixed;z-index:29;background:#1C1C1E;color:#fff;border-radius:14px;padding:11px 14px;font:500 14px/1.45 var(--f-body);box-shadow:0 10px 30px rgb(0 0 0 / .4);animation:rise .35s ease-out}
+.savetip b{font-weight:800;color:#FFB9A8}
+.savetip svg{width:17px;height:17px;vertical-align:-3px;fill:none;stroke:#fff;stroke-width:2}
+.savetip::after{content:"";position:absolute;bottom:-7px;left:var(--ax,50%);width:16px;height:16px;background:#1C1C1E;transform:rotate(45deg);border-radius:3px}
+.tool.pulse{animation:savepulse 1s ease-in-out infinite;color:#F0476E}
+@keyframes savepulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 .fserr{position:fixed;left:8px;right:8px;bottom:8px;z-index:99;background:#300;color:#fdd;font:12px/1.4 monospace;padding:8px;border-radius:8px;white-space:pre-wrap}
 .sound{position:absolute;bottom:calc(52px + env(safe-area-inset-bottom,0px));background:rgb(255 255 255 / .1);color:#FFE9E2;border:1px solid rgb(255 255 255 / .25);border-radius:999px;padding:9px 16px;font:600 13px var(--f-body);cursor:pointer;backdrop-filter:blur(6px)}
 .sound svg{width:15px;height:15px;vertical-align:-3px;margin-right:6px;fill:currentColor}
@@ -195,7 +205,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .ring-fg{fill:none;stroke:#FF7A6B;stroke-width:3;stroke-linecap:round;stroke-dasharray:69.1;stroke-dashoffset:69.1;transition:stroke-dashoffset .6s}
 .goal .flame{width:14px;height:14px;fill:#FF9B6B;margin-left:2px}
 .tab{font-size:17px}
-.tabs{gap:20px}
+.tabs{gap:16px}
 /* text size preference */
 :root[data-ts="s"] .take{font-size:15px}
 :root[data-ts="l"] .take{font-size:19px;line-height:1.5}
@@ -339,8 +349,9 @@ setTimeout(function(){var sp=document.getElementById('splash');if(sp&&!sp.hidden
 <div class="app">
   <div class="top">
     <div class="tabs" role="tablist">
-      <button class="tab" id="tab-feed" role="tab" aria-selected="true" data-tab="feed">My Feed</button>
+      <button class="tab" id="tab-feed" role="tab" aria-selected="true" data-tab="feed">Feed</button>
       <button class="tab" id="tab-saved" role="tab" aria-selected="false" data-tab="saved">Saved</button>
+      <button class="tab" id="tab-read" role="tab" aria-selected="false" data-tab="read">Read</button>
     </div>
     <div class="tr"><button class="goal" id="goal" aria-label="Daily goal"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="ring-bg" cx="14" cy="14" r="11"/><circle class="ring-fg" cx="14" cy="14" r="11"/></svg><svg class="flame" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4-3 5.5-3 9.5a3 3 0 0 0 6 0c0-1.2-.5-2.2-1-3 2.2 1.2 4.2 3.6 4.2 6.6A6.2 6.2 0 0 1 5.8 15C5.8 9.2 12 7.5 12 2z"/></svg><span class="sn">0</span></button><button class="pill" id="pill" tabindex="-1"></button></div>
   </div>
@@ -895,7 +906,7 @@ function figArt(c){
     });
     s+=charSVG({k:f.ch||'doc',m:'happy',s:.72},350,236);
   } else {
-    s+=`<text class="statn" x="150" y="152" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="108" fill="#0E7A67" stroke="#fff" stroke-width="6" paint-order="stroke">${esc(f.big)}</text>`;
+    s+=`<text class="statn" x="150" y="152" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="${Math.min(108,Math.round(270/Math.max(1,String(f.big).length*0.5)))}" fill="#0E7A67" stroke="#fff" stroke-width="6" paint-order="stroke">${esc(f.big)}</text>`;
     f.lines.forEach((t,i)=>{s+=`<text x="150" y="${194+i*22}" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="700" font-size="16" fill="${INK}">${esc(t)}</text>`;});
     s+=charSVG({k:f.ch||'doc',m:'happy',s:1.05},322,150);
   }
@@ -945,11 +956,12 @@ const art=c=>c.fig?figArt(c):c.scene?sceneArt(c):c.panels?panelsArt(c):autoArt(c
 
 /* ---------- state ---------- */
 const H4=4*3600e3, slotNow=()=>Math.floor(Date.now()/H4);
-const DEFAULTS=()=>({seen:[],liked:{},saved:{},lastN:0,profile:null,guest:false,interests:[],goal:10,days:{},theme:'system',textSize:'m',hidden:{},reports:[]});
+const DEFAULTS=()=>({seen:[],liked:{},saved:{},lastN:0,profile:null,guest:false,interests:[],goal:20,days:{},theme:'system',textSize:'m',hidden:{},reports:[]});
 let S=DEFAULTS();
 try{Object.assign(S,JSON.parse(localStorage.getItem('flapshots2')||'{}'));}catch(e){}
 const persist=()=>{try{localStorage.setItem('flapshots2',JSON.stringify(S));}catch(e){}};
 if(new URLSearchParams(location.search).has('reset-install')){S.a2hs={};S.visits=0;persist();history.replaceState(null,'',location.pathname);}
+if(!S.g20){if(S.goal===10)S.goal=20;S.g20=1;persist();}
 if(!S.vid){S.vid='v'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);persist();}
 /* ?r= carries name, role, topics, goal, likes, saves and streak (never mobile, email or registration no.) into a newly added home-screen app */
 (function(){
@@ -1032,6 +1044,10 @@ function render(scrollToFresh=true){
   if(tab==='saved'){
     const list=[...liveCards,...LIB].filter(c=>S.saved[c.id]&&topicOk(c));
     if(!list.length) feed.innerHTML=`<div class="empty"><div><b>Nothing saved yet.</b><br>Tap the bookmark on any card to keep it here.</div></div>`;
+    items=list.map(c=>({k:'card',c}));
+  } else if(tab==='read'){
+    const list=[...S.seen].reverse().map(byId).filter(c=>c&&topicOk(c)&&!S.hidden[c.id]);
+    if(!list.length) feed.innerHTML=`<div class="empty"><div><b>Nothing read yet.</b><br>Every card you read is kept here, newest first, so you can find it again.</div></div>`;
     items=list.map(c=>({k:'card',c}));
   } else {
     let {old,fresh}=feedList();
@@ -1325,11 +1341,48 @@ const allCards=()=>[...liveCards,...LIB];
 const todayKey=(back=0)=>new Date(Date.now()+5.5*3600e3-back*864e5).toISOString().slice(0,10);
 const readToday=()=>S.days[todayKey()]||0;
 function streak(){let i=readToday()>=S.goal?0:1,n=0;while((S.days[todayKey(i)]||0)>=S.goal){n++;i++;}return n;}
+/* Save tip: point at the bookmark on the card in view. 4th card of a visit (and 15th if still nothing saved);
+   at most once a day, 6 times in all; stops once the reader has saved 3 cards. */
+let saveTipN=0;
+function maybeSaveTip(){
+  if(tab!=='feed'||!$('sheet').hidden||!$('acct').hidden||$('ios-banner')||$('savetip'))return;
+  const nSaved=Object.keys(S.saved||{}).length, t=S.saveTip||{}, day=todayKey();
+  if(nSaved>=3||(t.n||0)>=6)return;
+  if(!(sessionSeen===4||(sessionSeen===15&&nSaved===0)))return;
+  if(t.d===day&&sessionSeen===4)return;
+  const card=[...feed.querySelectorAll('.card[data-id]')].find(c=>{const r=c.getBoundingClientRect(),f=feed.getBoundingClientRect();return Math.abs(r.top-f.top)<60;});
+  const btn=card&&card.querySelector('[data-a="save"]'); if(!btn)return;
+  S.saveTip={n:(t.n||0)+1,d:day};persist();track('save-tip');
+  const r=btn.getBoundingClientRect();
+  const tip=document.createElement('div');tip.className='savetip';tip.id='savetip';tip.setAttribute('role','status');
+  tip.innerHTML=`<b>Worth keeping?</b> Tap <svg aria-hidden="true"><use href="#i-save"/></svg> to save this card. Find it any time under <b>Saved</b>.`;
+  document.body.appendChild(tip);
+  const w=Math.min(290,innerWidth-24), left=Math.max(12,Math.min(innerWidth-w-12,r.left+r.width/2-w*0.62));
+  tip.style.width=w+'px';tip.style.left=left+'px';tip.style.bottom=(innerHeight-r.top+14)+'px';
+  tip.style.setProperty('--ax',(r.left+r.width/2-left-8)+'px');
+  btn.classList.add('pulse');
+  const bye=()=>{tip.remove();btn.classList.remove('pulse');feed.removeEventListener('scroll',bye);};
+  tip.onclick=bye; setTimeout(bye,7000); setTimeout(()=>feed.addEventListener('scroll',bye,{once:true}),400);
+  btn.addEventListener('click',bye,{once:true});
+}
+function goalSheet(g,st){
+  if(!$('acct').hidden)return toast(`Daily goal done! ${st}-day streak`);
+  if(!$('sheet').hidden)closeSheet();
+  track('goal-reached');
+  const left=unseenCount();
+  const sh=openSheet(`<div class="goalwin"><div class="gw-badge">🎉</div><h3>Today's goal achieved!</h3>
+    <p>You've read <b>${g} cards</b> today${st>1?` · <b>${st}-day streak</b>`:''}.${left?` ${left} more new card${left>1?'s are':' is'} waiting.`:''}</p></div>
+    <div class="row"><button class="btn primary" id="gw-more">${left?'Read more':'Relook earlier cards'}</button><button class="btn ghost" id="gw-done">Done for today</button></div>
+    <p class="gw-note">Change your daily goal any time in Profile.</p>`);
+  sh.querySelector('#gw-more').onclick=()=>{closeSheet();track('goal-more');if(!left){tab='read';render(false);}};
+  sh.querySelector('#gw-done').onclick=()=>{closeSheet();track('goal-done');toast('Well done. See you tomorrow!');};
+}
 function onSeen(){
   const k=todayKey();S.days[k]=(S.days[k]||0)+1;persist();updateGoal();
-  if(S.days[k]===S.goal){const n=streak();toast(`Daily goal done! ${n}-day streak`);playChime();}
+  if(S.days[k]===S.goal){playChime();setTimeout(()=>goalSheet(S.goal,streak()),700);}
   syncSoon();
   setTimeout(maybeA2HS,600);
+  setTimeout(maybeSaveTip,900);
 }
 function updateGoal(){
   const g=$('goal');if(!g)return;const p=Math.min(1,readToday()/S.goal),C=2*Math.PI*11;
