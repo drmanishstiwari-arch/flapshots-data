@@ -530,9 +530,9 @@ const LIB=[
  rib:"Poor leg vessels? The scapular tip gives bone without touching the leg",more:"See the evidence",u:pm('scapular tip free flap head and neck reconstruction'),likes:876},
 
 {id:'nivo',tr:'a',cat:'Systemic therapy',ev:'RCT · JCO 2023 · Tata Memorial',
- fig:{type:'bars',title:'1-year overall survival',unit:'%',bars:[{l:'Oral metronomic chemotherapy',v:6.7},{l:'+ Low-dose nivolumab (20 mg)',v:16.6,hi:1}],from:'Patil et al., JCO 2023',ch:'vial'},
+ fig:{type:'bars',title:'1-year overall survival',unit:'%',bars:[{l:'Oral metronomic chemotherapy',v:16.3},{l:'+ Low-dose nivolumab (20 mg)',v:43.4,hi:1}],from:'Patil et al., JCO 2023',ch:'vial'},
  head:"Low-dose nivolumab adds survival at a fraction of the cost",
- take:"For recurrent or metastatic head and neck cancer, Tata Memorial added a tiny flat dose of nivolumab (20 mg every 3 weeks) to cheap oral metronomic chemotherapy. One-year survival rose from 6.7% to 16.6%. Full-dose immunotherapy is unaffordable for most Indian patients; this low-dose approach brings it within reach.",
+ take:"For recurrent or metastatic head and neck cancer, Tata Memorial added a tiny flat dose of nivolumab (20 mg every 3 weeks) to cheap oral metronomic chemotherapy. One-year survival rose from 16.3% to 43.4%, and median survival from 6.7 to 10.1 months. Full-dose immunotherapy is unaffordable for most Indian patients; this low-dose approach brings it within reach.",
  rib:"20 mg nivolumab plus oral metronomic chemo: survival, affordably",more:"Read the trial",u:pm('Patil low dose nivolumab metronomic head and neck J Clin Oncol 2023'),likes:2388},
 
 {id:'itf',tr:'a',cat:'ITF clearance',ev:'Cohort studies · Indian series',
@@ -939,7 +939,7 @@ function figArt(c){
       s+=`<g class="bar" style="animation-delay:${i*.25}s"><rect x="24" y="${y+10}" width="${w.toFixed(1)}" height="36" rx="10" fill="url(#g-${b.hi?'teal':'grey'})" stroke="${INK}" stroke-width="1.6" filter="url(#fsh)"/><path d="M34 ${y+18} H${(14+w).toFixed(1)}" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".35"/></g>`;
       s+=`<text x="${(34+w).toFixed(1)}" y="${y+38}" font-family="Gaegu, cursive" font-weight="700" font-size="27" fill="${b.hi?'#0E7A67':INK}">${esc(b.v+(f.unit||''))}</text>`;
     });
-    s+=charSVG({k:f.ch||'doc',m:'happy',s:.72},350,236);
+    if(f.bars.length<3) s+=charSVG({k:f.ch||'doc',m:'happy',s:.72},350,236);
   } else {
     s+=`<text class="statn" x="150" y="152" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="${Math.min(108,Math.round(270/Math.max(1,String(f.big).length*0.5)))}" fill="#0E7A67" stroke="#fff" stroke-width="6" paint-order="stroke">${esc(f.big)}</text>`;
     f.lines.forEach((t,i)=>{s+=`<text x="150" y="${194+i*22}" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="700" font-size="16" fill="${INK}">${esc(t)}</text>`;});
@@ -1027,7 +1027,7 @@ function feedList(){
 }
 /* the paper pipeline runs at 6 minutes past every 4th hour, India time (00:06, 04:06 ... 20:06 IST) */
 function nextDrop(){const off=5.5*3600e3,ist=Date.now()+off,d=new Date(ist),h=d.getUTCHours(),t=new Date(ist);t.setUTCHours(h-h%4,6,0,0);if(t.getTime()<=ist)t.setUTCHours(h-h%4+4,6,0,0);const ms=t.getTime()-ist,hh=Math.floor(ms/3600e3),mm=Math.floor(ms%3600e3/60e3);return hh?`${hh} h ${mm} min`:`${mm} min`;}
-const CAT_ORDER=['Oncology news','Early detection','Genetics simplified','Tongue cancer','Buccal cancer','ITF clearance','Neck','Margins','Mandible','Maxillectomy','Adjuvant therapy','Immunotherapy','Systemic therapy','HPV and oropharynx','Anastomosis','ALT flap','Radial forearm flap','Fibula flap','Scapula flap','Pectoralis major flap','Flap monitoring','Flap failure','Vessel-depleted neck','Postoperative care','Dental rehab','Osteoradionecrosis'];
+const CAT_ORDER=['Oncology news','Early detection','Genetics simplified','Tongue cancer','Buccal cancer','ITF clearance','Neck','Margins','Mandible','Maxillectomy','Adjuvant therapy','Immunotherapy','Systemic therapy','HPV and oropharynx','Larynx cancer','Thyroid cancer','Sinonasal cancer','Salivary gland','Nasopharynx cancer','Anastomosis','ALT flap','Radial forearm flap','Fibula flap','Scapula flap','Pectoralis major flap','Flap monitoring','Flap failure','Vessel-depleted neck','Postoperative care','Dental rehab','Osteoradionecrosis'];
 function renderChips(){
   const all=[...liveCards,...LIB], n={};all.forEach(c=>n[c.cat]=(n[c.cat]||0)+1);
   const cats=[...CAT_ORDER.filter(c=>n[c]),...Object.keys(n).filter(c=>!CAT_ORDER.includes(c)).sort()];
@@ -1310,6 +1310,123 @@ const TIP_EXTRA={
   u:'https://doi.org/10.1007/s40487-023-00246-3',more:'Read the meta-analysis'}
 };
 TIPS.forEach(t=>Object.assign(t,TIP_EXTRA[t.id]||{}));
+/* Landmark trials: the exam favourites, one per Daily tips stop, alternating with practice tips. */
+const TRIAL_TIPS=[
+ {id:'tr-mach',area:'Chemoradiation',tip:'MACH-NC: chemotherapy helps most when given with radiotherapy, not before or after.',slides:[
+  ['The question','Does adding chemotherapy to local treatment improve survival in head and neck squamous cancer, and does timing matter?'],
+  ['Design','Individual-patient meta-analysis by Pignon and colleagues. The 2009 update pooled 93 randomised trials and 17,346 patients, grouped by induction, concurrent or adjuvant timing.'],
+  ['Result','Chemotherapy overall: HR for death 0.88, about 4.5% more alive at 5 years. Concurrent chemotherapy: HR 0.81, 6.5% more alive. Induction and adjuvant chemotherapy alone: no significant gain. The benefit fades with age and is absent beyond 70.']],
+  fig:{type:'bars',title:'Absolute 5-year survival gain',unit:'%',bars:[{l:'Any chemotherapy',v:4.5},{l:'Concurrent chemoradiation',v:6.5,hi:1}],from:'MACH-NC, Pignon et al., Radiother Oncol 2009',ch:'vial'},
+  sum:['Concurrent beats sequential: 6.5% absolute survival gain at 5 years.','Remember the numbers: 93 trials, 17,346 patients, HR 0.81.','No benefit from chemotherapy in patients over 70.'],
+  u:pm('Pignon MACH-NC meta-analysis chemotherapy head and neck 2009 Radiother Oncol'),more:'Read MACH-NC'},
+ {id:'tr-bonner',area:'Targeted therapy',tip:'Bonner: cetuximab with radiotherapy beats radiotherapy alone, but not cisplatin.',slides:[
+  ['The question','Does adding the EGFR antibody cetuximab to radiotherapy improve control and survival in locally advanced cancer of the oropharynx, larynx and hypopharynx?'],
+  ['Design','424 patients with stage III or IV disease, randomised to high-dose radiotherapy alone or with weekly cetuximab (400 mg/m² loading, then 250 mg/m² weekly).'],
+  ['Result','Median locoregional control 24.4 vs 14.9 months. Median survival 49.0 vs 29.3 months; 5-year survival 45.6% vs 36.4%. Patients who developed an acne-like rash lived longer.']],
+  fig:{type:'bars',title:'Median overall survival',unit:' mo',bars:[{l:'Radiotherapy alone',v:29.3},{l:'Radiotherapy + cetuximab',v:49.0,hi:1}],from:'Bonner et al., NEJM 2006',ch:'vial'},
+  sum:['Cetuximab-RT is for patients who cannot have cisplatin.','Rash grade 2 or more predicted better survival.','RTOG 1016 and De-ESCALaTE later showed cetuximab is inferior to cisplatin.'],
+  u:'https://doi.org/10.1056/NEJMoa053422',more:'Read Bonner 2006'},
+ {id:'tr-adjcrt',area:'Adjuvant therapy',tip:'EORTC 22931 and RTOG 9501: add cisplatin after surgery for extranodal extension or a positive margin.',slides:[
+  ['The question','Does adding cisplatin to postoperative radiotherapy help high-risk head and neck cancer after surgery?'],
+  ['Design','Two trials published together in 2004. EORTC 22931 (334 patients) and RTOG 9501 (459 patients) compared radiotherapy alone with radiotherapy plus cisplatin 100 mg/m² on days 1, 22 and 43.'],
+  ['Result','EORTC: 5-year overall survival 53% vs 40%, with better progression-free survival. RTOG: better locoregional control and disease-free survival, but no significant survival gain. A pooled analysis (Bernier 2005) found the benefit lies in extranodal extension and positive margins.']],
+  fig:{type:'bars',title:'5-year overall survival, EORTC 22931',unit:'%',bars:[{l:'Radiotherapy alone',v:40},{l:'Radiotherapy + cisplatin',v:53,hi:1}],from:'Bernier et al., NEJM 2004',ch:'vial'},
+  sum:['Indications for adjuvant chemoradiation: extranodal extension and/or positive margin.','Other risk factors (pT3–4, perineural or vascular invasion, multiple nodes): radiotherapy alone is usually enough.','Cisplatin 100 mg/m² three-weekly is the standard schedule.'],
+  u:pm('Bernier postoperative irradiation with or without concomitant chemotherapy NEJM 2004'),more:'Read the trials'},
+ {id:'tr-weekly',area:'Adjuvant therapy',tip:'Tata Memorial: three-weekly cisplatin controls the cancer better than low-dose weekly with radiotherapy.',slides:[
+  ['The question','Is weekly cisplatin 30 mg/m² as good as 100 mg/m² every three weeks with radiotherapy?'],
+  ['Design','Phase III non-inferiority trial at Tata Memorial: 300 patients, 93% treated after surgery (mostly oral cavity cancer).'],
+  ['Result','2-year locoregional control 73.1% three-weekly vs 58.5% weekly (HR 1.76): weekly failed non-inferiority. Severe acute toxicity was higher with three-weekly (85% vs 72%); survival difference not significant.']],
+  fig:{type:'bars',title:'2-year locoregional control',unit:'%',bars:[{l:'Weekly 30 mg/m²',v:58.5},{l:'3-weekly 100 mg/m²',v:73.1,hi:1}],from:'Noronha et al., JCO 2018',ch:'vial'},
+  sum:['Give 100 mg/m² three-weekly whenever the patient can tolerate it.','Weekly 30 mg/m² is not equivalent: 14.6% worse local control.','An Indian, largely adjuvant, oral cavity population: highly relevant for MCh exams.'],
+  u:'https://pubmed.ncbi.nlm.nih.gov/29220295/',more:'Read Noronha 2018'},
+ {id:'tr-ang',area:'HPV and oropharynx',tip:'Ang 2010 (RTOG 0129): HPV status is the strongest predictor of survival in oropharyngeal cancer.',slides:[
+  ['The question','Does tumour HPV status change outcome in oropharyngeal cancer treated with chemoradiation?'],
+  ['Design','Retrospective analysis of patients in the RTOG 0129 chemoradiation trial with known tumour HPV status; risk groups built from HPV, smoking pack-years and stage.'],
+  ['Result','3-year overall survival 82.4% for HPV-positive vs 57.1% for HPV-negative tumours. Patients were sorted into low, intermediate and high risk using HPV, smoking (more or less than 10 pack-years) and T/N stage.']],
+  fig:{type:'bars',title:'3-year overall survival',unit:'%',bars:[{l:'HPV-negative',v:57.1},{l:'HPV-positive',v:82.4,hi:1}],from:'Ang et al., NEJM 2010',ch:'vial'},
+  sum:['HPV-positive oropharyngeal cancer has a much better prognosis.','Smoking over 10 pack-years worsens outcome even in HPV-positive disease.','This led to separate AJCC 8th staging for p16-positive oropharyngeal cancer.'],
+  u:pm('Ang human papillomavirus survival oropharyngeal cancer NEJM 2010'),more:'Read Ang 2010'},
+ {id:'tr-1016',area:'HPV and oropharynx',tip:'RTOG 1016: in HPV-positive oropharyngeal cancer, swapping cisplatin for cetuximab costs survival.',slides:[
+  ['The question','Can cetuximab replace cisplatin with radiotherapy to reduce toxicity in HPV-positive oropharyngeal cancer, without losing survival?'],
+  ['Design','Non-inferiority trial of 987 patients: accelerated radiotherapy (70 Gy over 6 weeks) with cetuximab or with cisplatin 100 mg/m² on days 1 and 22.'],
+  ['Result','5-year overall survival 77.9% with cetuximab vs 84.6% with cisplatin; progression-free survival 67.3% vs 78.4%. Cetuximab was inferior, with no overall reduction in toxicity. De-ESCALaTE (Europe) gave the same answer.']],
+  fig:{type:'bars',title:'5-year overall survival, HPV+ oropharynx',unit:'%',bars:[{l:'RT + cetuximab',v:77.9},{l:'RT + cisplatin',v:84.6,hi:1}],from:'Gillison et al. (RTOG 1016), Lancet 2019',ch:'vial'},
+  sum:['Cisplatin remains the standard radiosensitiser, even for HPV-positive disease.','De-escalation must be proven in trials before use.','Pair with De-ESCALaTE when asked about de-intensification.'],
+  u:pm('Gillison RTOG 1016 radiotherapy plus cetuximab or cisplatin HPV oropharyngeal Lancet 2019'),more:'Read RTOG 1016'},
+ {id:'tr-tax324',area:'Induction chemotherapy',tip:'TAX 324: if you give induction, use TPF, not PF.',slides:[
+  ['The question','Does adding docetaxel to cisplatin and fluorouracil (TPF vs PF) improve induction chemotherapy before chemoradiation?'],
+  ['Design','501 patients with stage III or IV head and neck cancer: three cycles of TPF or PF induction, then carboplatin-based chemoradiation.'],
+  ['Result','Median overall survival 71 months with TPF vs 30 months with PF; 3-year survival 62% vs 48%. Locoregional control was also better with TPF.']],
+  fig:{type:'bars',title:'Median overall survival',unit:' mo',bars:[{l:'PF induction',v:30},{l:'TPF induction',v:71,hi:1}],from:'Posner et al. (TAX 324), NEJM 2007',ch:'vial'},
+  sum:['TPF is the induction regimen of choice; TAX 323 (Vermorken) agreed.','Induction itself has not beaten concurrent chemoradiation alone in later trials (PARADIGM, DeCIDE).','Use induction mainly for larynx preservation or to downstage borderline disease.'],
+  u:'https://doi.org/10.1056/NEJMoa071028',more:'Read TAX 324'},
+ {id:'tr-va',area:'Larynx cancer',tip:'VA Larynx trial: induction chemotherapy and radiation saved the larynx in two thirds, without losing survival.',slides:[
+  ['The question','Can chemotherapy plus radiotherapy replace total laryngectomy for advanced laryngeal cancer?'],
+  ['Design','332 patients with stage III or IV laryngeal cancer: total laryngectomy with postoperative radiotherapy, or induction cisplatin and fluorouracil followed by radiotherapy in responders (surgery for non-responders).'],
+  ['Result','2-year overall survival 68% in both arms. The larynx was preserved in 64% of the chemotherapy group.']],
+  fig:{type:'stat',big:'64%',lines:['kept their larynx with','induction chemo and radiation'],from:'Department of Veterans Affairs Laryngeal Cancer Study Group, NEJM 1991',ch:'vial'},
+  sum:['First proof that organ preservation is possible without sacrificing survival.','Response to induction selects patients for radiotherapy.','Followed by RTOG 91-11, which made concurrent cisplatin-RT the standard.'],
+  u:'https://doi.org/10.1056/NEJM199106133242402',more:'Read the VA trial'},
+ {id:'tr-9111',area:'Larynx cancer',tip:'RTOG 91-11: concurrent cisplatin with radiation preserves the larynx best.',slides:[
+  ['The question','Which non-surgical approach preserves the larynx best: induction chemotherapy then radiation, concurrent chemoradiation, or radiation alone?'],
+  ['Design','547 patients with stage III or IV glottic or supraglottic cancer (large T4 tumours excluded), randomised to induction PF then RT, RT with concurrent cisplatin, or RT alone.'],
+  ['Result','2-year larynx preservation 88% concurrent vs 75% induction vs 70% RT alone. At 10 years, larynx preservation was 81.7% vs 67.5% vs 63.8%; overall survival did not differ significantly.']],
+  fig:{type:'bars',title:'Larynx preservation at 10 years',unit:'%',bars:[{l:'Radiotherapy alone',v:63.8},{l:'Induction PF then RT',v:67.5},{l:'Concurrent cisplatin-RT',v:81.7,hi:1}],from:'Forastiere et al., JCO 2013',ch:'vial'},
+  sum:['Concurrent cisplatin-RT is the standard for larynx preservation.','Large T4 tumours with cartilage destruction: total laryngectomy remains best.','Late deaths unrelated to cancer were higher with concurrent treatment: watch long-term toxicity.'],
+  u:'https://doi.org/10.1200/JCO.2012.43.6097',more:'Read RTOG 91-11'},
+ {id:'tr-cm141',area:'Immunotherapy',tip:'CheckMate 141: nivolumab doubled one-year survival in platinum-refractory disease.',slides:[
+  ['The question','Does nivolumab improve survival when head and neck cancer progresses within 6 months of platinum chemotherapy?'],
+  ['Design','361 patients randomised 2:1 to nivolumab 3 mg/kg every 2 weeks or investigator\'s choice (methotrexate, docetaxel or cetuximab).'],
+  ['Result','Median overall survival 7.5 vs 5.1 months (HR 0.70); 1-year survival 36.0% vs 16.6%. Grade 3–4 side effects were less frequent with nivolumab (13.1% vs 35.1%).']],
+  fig:{type:'bars',title:'1-year overall survival',unit:'%',bars:[{l:'Investigator\'s choice',v:16.6},{l:'Nivolumab',v:36.0,hi:1}],from:'Ferris et al., NEJM 2016',ch:'vial'},
+  sum:['First immunotherapy to improve survival in head and neck cancer.','Platinum-refractory = progression within 6 months of platinum.','KEYNOTE-040 (pembrolizumab) confirmed the benefit in the second line.'],
+  u:'https://doi.org/10.1056/NEJMoa1602252',more:'Read CheckMate 141'},
+ {id:'tr-kn048',area:'Immunotherapy',tip:'KEYNOTE-048: pembrolizumab replaced EXTREME as first-line treatment for recurrent or metastatic disease.',slides:[
+  ['The question','Can pembrolizumab, alone or with chemotherapy, beat the EXTREME regimen (cetuximab plus platinum and fluorouracil) as first-line treatment?'],
+  ['Design','882 patients with recurrent or metastatic head and neck squamous cancer, randomised to pembrolizumab alone, pembrolizumab with chemotherapy, or EXTREME. Results reported by PD-L1 combined positive score (CPS).'],
+  ['Result','Pembrolizumab alone, CPS 20 or more: median survival 14.9 vs 10.7 months (HR 0.61); CPS 1 or more: 12.3 vs 10.3 months. Pembrolizumab with chemotherapy, whole population: 13.0 vs 10.7 months (HR 0.77).']],
+  fig:{type:'bars',title:'Median survival, CPS ≥20',unit:' mo',bars:[{l:'EXTREME',v:10.7},{l:'Pembrolizumab alone',v:14.9,hi:1}],from:'Burtness et al., Lancet 2019',ch:'vial'},
+  sum:['CPS 1 or more: pembrolizumab alone or with chemotherapy first line.','Fast-growing or bulky disease: add chemotherapy for a quicker response.','CPS below 1: chemotherapy-based regimens remain the choice.'],
+  u:'https://doi.org/10.1016/S0140-6736(19)32591-7',more:'Read KEYNOTE-048'},
+ {id:'tr-lownivo',area:'Immunotherapy',tip:'Tata Memorial low-dose nivolumab: 20 mg with oral metronomic chemotherapy improved survival at a fraction of the cost.',slides:[
+  ['The question','Can a very low, affordable dose of nivolumab add survival to oral metronomic chemotherapy in palliative head and neck cancer?'],
+  ['Design','Phase III trial at Tata Memorial: 151 patients randomised to triple oral metronomic chemotherapy (methotrexate, celecoxib, erlotinib) with or without nivolumab 20 mg flat dose every 3 weeks.'],
+  ['Result','1-year overall survival 43.4% vs 16.3%; median survival 10.1 vs 6.7 months (HR 0.545).']],
+  fig:{type:'bars',title:'1-year overall survival',unit:'%',bars:[{l:'Metronomic chemotherapy',v:16.3},{l:'+ Nivolumab 20 mg',v:43.4,hi:1}],from:'Patil et al., JCO 2023',ch:'vial'},
+  sum:['Low-dose immunotherapy is a realistic option in low- and middle-income settings.','Nivolumab 20 mg every 3 weeks: about 1/12th of the standard dose.','A favourite Indian trial for viva questions on value-based oncology.'],
+  u:'https://pubmed.ncbi.nlm.nih.gov/36265101/',more:'Read Patil 2023'},
+ {id:'tr-kn689',area:'Immunotherapy',tip:'KEYNOTE-689: pembrolizumab before and after surgery reduced relapse in resectable locally advanced cancer.',slides:[
+  ['The question','Does adding pembrolizumab before surgery and after it (with adjuvant radiotherapy) improve event-free survival in resectable stage III–IVA head and neck cancer?'],
+  ['Design','714 patients randomised to standard surgery and adjuvant (chemo)radiation, with or without pembrolizumab 200 mg for 2 cycles before surgery and 15 cycles after.'],
+  ['Result','36-month event-free survival in CPS 10 or more: 59.8% vs 45.9% (HR 0.66). Whole population: 57.6% vs 46.4% (HR 0.73). Pembrolizumab rarely delayed surgery.']],
+  fig:{type:'bars',title:'36-month event-free survival, CPS ≥10',unit:'%',bars:[{l:'Standard care',v:45.9},{l:'+ Perioperative pembrolizumab',v:59.8,hi:1}],from:'Uppaluri et al. (KEYNOTE-689), NEJM 2025',ch:'vial'},
+  sum:['First perioperative immunotherapy benefit in resectable head and neck cancer.','Approved by the US FDA in June 2025 for PD-L1 CPS 1 or more.','Ask for PD-L1 (CPS) on the diagnostic biopsy.'],
+  u:'https://www.nejm.org/doi/full/10.1056/NEJMoa2415434',more:'Read KEYNOTE-689'},
+ {id:'tr-dcruz',area:'Neck',tip:'D\'Cruz (Tata Memorial): elective neck dissection beats wait-and-watch in early oral cancer.',slides:[
+  ['The question','In early (T1–T2) oral cancer with a clinically negative neck, should the neck be dissected upfront or watched?'],
+  ['Design','Randomised trial at Tata Memorial: elective neck dissection at the time of primary surgery vs therapeutic neck dissection only when nodes appeared. 500 patients in the reported analysis.'],
+  ['Result','3-year overall survival 80.0% vs 67.5% (HR 0.64); disease-free survival 69.5% vs 45.9%.']],
+  fig:{type:'bars',title:'3-year overall survival',unit:'%',bars:[{l:'Wait and watch',v:67.5},{l:'Elective neck dissection',v:80.0,hi:1}],from:'D\'Cruz et al., NEJM 2015',ch:'node'},
+  sum:['Early oral cancer with an N0 neck: do an elective neck dissection.','Depth of invasion over 3–4 mm adds to the case.','Sentinel node biopsy (SENT, Garrel) is the alternative where expertise exists.'],
+  u:'https://doi.org/10.1056/NEJMoa1506007',more:'Read D\'Cruz 2015'},
+ {id:'tr-petneck',area:'Neck',tip:'PET-NECK: a clear PET-CT 12 weeks after chemoradiation spares a planned neck dissection.',slides:[
+  ['The question','After chemoradiation for N2 or N3 disease, is PET-CT surveillance as safe as planned neck dissection for everyone?'],
+  ['Design','564 patients randomised to planned neck dissection or PET-CT at 12 weeks, with surgery only for an incomplete or equivocal response.'],
+  ['Result','2-year overall survival 84.9% with surveillance vs 81.5% with planned dissection (non-inferior). Neck dissections: 54 vs 221, and surveillance cost less.']],
+  fig:{type:'bars',title:'Neck dissections performed',unit:'',bars:[{l:'Planned dissection arm',v:221},{l:'PET-CT surveillance arm',v:54,hi:1}],from:'Mehanna et al., NEJM 2016',ch:'node'},
+  sum:['Do the PET-CT at about 12 weeks, not earlier.','Complete metabolic response: observe the neck.','Incomplete or equivocal response: neck dissection.'],
+  u:'https://doi.org/10.1056/NEJMoa1514493',more:'Read PET-NECK'},
+ {id:'tr-hilo',area:'Thyroid cancer',tip:'HiLo: low-dose radioiodine (1.1 GBq) ablates low-risk thyroid cancer as well as high dose.',slides:[
+  ['The question','After total thyroidectomy for low-risk differentiated thyroid cancer, is 1.1 GBq of radioiodine as effective as 3.7 GBq, and is recombinant TSH as good as thyroid hormone withdrawal?'],
+  ['Design','UK trial of 438 patients in a 2×2 design: 1.1 or 3.7 GBq, prepared with recombinant TSH or hormone withdrawal.'],
+  ['Result','Successful ablation 85.0% with low dose vs 88.9% with high dose (equivalent), with fewer side effects and shorter hospital stay. Recombinant TSH worked as well as withdrawal. The French ESTIMABL trial agreed.']],
+  fig:{type:'bars',title:'Successful remnant ablation',unit:'%',bars:[{l:'3.7 GBq',v:88.9},{l:'1.1 GBq',v:85.0,hi:1}],from:'Mallick et al. (HiLo), NEJM 2012',ch:'vial'},
+  sum:['Low-risk thyroid cancer: 1.1 GBq (30 mCi) is enough for ablation.','Recombinant TSH avoids hypothyroid symptoms of withdrawal.','Later trials (IoN, ESTIMABL2) question whether low-risk patients need radioiodine at all.'],
+  u:'https://doi.org/10.1056/NEJMoa1108586',more:'Read HiLo'}
+].map(t=>({...t,kind:'trial',icon:'leaf',cat:'Landmark trial · '+t.area,sumTitle:'Exam pearls'}));
+TIPS.push(...TRIAL_TIPS);
+
 function bulbSVG(icon){
   return `<svg class="bulb" viewBox="0 0 120 134" role="img" aria-label="Light bulb">
    <circle class="glow" cx="60" cy="52" r="50" fill="url(#tp-glow)"/>
@@ -1331,17 +1448,17 @@ function tipHTML(t,k){
     :`<div class="tp-frame"><span class="tp-step">${i+1}</span><h3>${esc(h)}</h3><p>${esc(b)}</p>${sprig}`));
   if(t.ev) S2.push(`<div class="tp-frame"><span class="tp-kicker">Landmark evidence</span><h3 class="tp-ev">${esc(t.ev.name)}</h3><p>${esc(t.ev.line)}</p><span class="tp-cite">${esc(t.ev.cite)}</span>${sprig}`);
   if(t.fig||t.figImg) S2.push(`<div class="tp-frame has-pic"><span class="tp-kicker">Key figure</span>${t.figImg?`<img class="tp-pic" src="${esc(t.figImg)}" alt="${esc(t.figCap||'Diagram')}" loading="lazy" decoding="async"><span class="tp-figcap">${esc(t.figCap||'')}</span>`:`<div class="tp-fig">${figArt({fig:t.fig})}</div>`}`);
-  if(t.sum) S2.push(`<div class="tp-frame"><span class="tp-kicker">Bottom line</span><ul class="tp-sum">${t.sum.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${t.u?`<a class="btn primary tp-more" href="${esc(t.u)}" target="_blank" rel="noopener" data-tipmore="${t.id}">${esc(t.more||'Read more')} ↗</a>`:''}`);
+  if(t.sum) S2.push(`<div class="tp-frame"><span class="tp-kicker">${esc(t.sumTitle||'Bottom line')}</span><ul class="tp-sum">${t.sum.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${t.u?`<a class="btn primary tp-more" href="${esc(t.u)}" target="_blank" rel="noopener" data-tipmore="${t.id}">${esc(t.more||'Read more')} ↗</a>`:''}`);
   const n=S2.length+1;
   return `<article class="card tipcard" data-tip="${t.id}">
    <div class="tp-amb" aria-hidden="true"><i></i><i></i></div>
-   <div class="tp-head"><span class="tp-lbl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Daily tips</span><span class="tp-n"><b>1</b> / ${n}</span></div>
+   <div class="tp-head"><span class="tp-lbl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>${t.kind==='trial'?'Landmark trial':'Daily tips'}</span><span class="tp-n"><b>1</b> / ${n}</span></div>
    <div class="tp-rail">
     <section class="tp-slide"><div class="tp-frame tp-first">
       ${t.img?`<img class="tp-pic" src="${esc(t.img)}" alt="" loading="lazy" decoding="async">`:bulbSVG(t.icon)}
       <span class="tp-cat">${esc(t.cat)}</span>
       <p class="tp-tip">${esc(t.tip)}</p>
-      <span class="tp-hint">Swipe for ${t.slides.length>6?'the '+t.slides.length+' steps':'the why'}${t.ev?', evidence and bottom line':''} <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="tp-hint">${t.kind==='trial'?'Swipe for design, result and exam pearls':`Swipe for ${t.slides.length>6?'the '+t.slides.length+' steps':'the why'}${t.ev?', evidence and bottom line':''}`} <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       ${t.cred?`<span class="tp-cred">${esc(t.cred)}</span>`:''}
     </div></section>
     ${S2.map((h,i)=>`<section class="tp-slide">${h}${i===S2.length-1?`<span class="tp-end">That's today's tip. Swipe up to continue.</span>`:''}</div></section>`).join('')}
@@ -1360,12 +1477,11 @@ function wireTips(){
 /* the two ITF technique tips lead the Daily tips until 10 Nov 2026, then join the normal rotation */
 const TIP_FEATURE=['t-itf2','t-itf1'], TIP_FEATURE_UNTIL=Date.parse('2026-11-10T18:30:00Z');
 function tipsForFeed(count){
-  const d=tipDay();
-  if(Date.now()<TIP_FEATURE_UNTIL){
-    const lead=TIP_FEATURE.map(id=>TIPS.find(t=>t.id===id)).filter(Boolean), rest=TIPS.filter(t=>!TIP_FEATURE.includes(t.id));
-    return Array.from({length:count},(_,k)=>k<lead.length?lead[k]:rest[(d+k)%rest.length]);
-  }
-  return Array.from({length:count},(_,k)=>TIPS[(d+k)%TIPS.length]);
+  const d=tipDay(), PR=TIPS.filter(t=>t.kind!=='trial'), TR=TIPS.filter(t=>t.kind==='trial');
+  let pr=PR.map((_,i)=>PR[(d+i)%PR.length]);
+  if(Date.now()<TIP_FEATURE_UNTIL){const lead=TIP_FEATURE.map(id=>PR.find(t=>t.id===id)).filter(Boolean);pr=[...lead,...pr.filter(t=>!lead.includes(t))];}
+  const tr=TR.map((_,i)=>TR[(d*2+i)%TR.length]);
+  return Array.from({length:count},(_,k)=>k%2?tr[((k-1)/2)%tr.length]:pr[(k/2)%pr.length]);
 }
 document.addEventListener('keydown',e=>{
   if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
