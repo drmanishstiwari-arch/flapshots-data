@@ -349,6 +349,17 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .pullhint{position:absolute;left:50%;transform:translateX(-50%);z-index:5;background:rgb(20 20 22 / .82);color:#fff;font:700 12.5px var(--f-body);padding:7px 13px;border-radius:999px;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgb(0 0 0 / .25);transition:transform .2s}
 .tp-share{background:rgba(255,255,255,.55);border:1px solid var(--tp-line);color:var(--tp-sage-d);border-radius:999px;padding:6px 11px 6px 9px;display:inline-flex;align-items:center;gap:5px;font:700 12px var(--f-body);cursor:pointer;margin-left:auto;margin-right:10px}
 .tp-share svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.shimg{display:flex;justify-content:center;min-height:60px;align-items:center;color:var(--muted);font-size:13px}
+.shimg img{max-height:230px;max-width:100%;border-radius:12px;box-shadow:0 4px 16px rgb(0 0 0 / .18)}
+.grid .sh-main{background:linear-gradient(135deg,#FF9B6B,#F0476E);color:#fff}
+.grid .sh-main:disabled{opacity:.6}
+.sh-text{font-size:12.5px;white-space:pre-line}
+.sa-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(74px + env(safe-area-inset-bottom,0px));width:min(456px,calc(100% - 24px));box-sizing:border-box;display:flex;gap:10px;align-items:center;background:#141416;color:#fff;border:1px solid #2C2C30;border-radius:16px;padding:10px 8px 10px 12px;z-index:40;box-shadow:0 10px 30px rgb(0 0 0 / .4);animation:sain .35s ease-out}
+@keyframes sain{from{opacity:0;transform:translate(-50%,16px)}}
+.sa-bar svg{width:38px;height:38px;flex:0 0 auto}
+.sa-bar div{flex:1;min-width:0;font-size:13px;line-height:1.35}.sa-bar b{display:block;font-size:14px}
+.sa-bar .btn{padding:10px 12px;font-size:13.5px;flex:0 0 auto}
+.sa-x{background:none;border:0;color:#9A9AA2;font-size:20px;padding:4px 6px;cursor:pointer}
 .pullhint.arm{transform:translateX(-50%) translateY(10px) scale(1.06);background:var(--teal);color:var(--teal-ink)}
 .fb-link{background:none;border:0;padding:4px;font:600 13px var(--f-body);color:inherit;text-decoration:underline;opacity:.75;cursor:pointer}
 .stars{display:flex;gap:6px;justify-content:center}
@@ -1174,19 +1185,6 @@ function openSheet(html){const sh=$('sheet');sh.innerHTML=`<div class="sheet-wra
 function closeSheet(){const sh=$('sheet');sh.hidden=true;sh.innerHTML='';}
 $('sheet').addEventListener('click',e=>{if(e.target.dataset.close)closeSheet();});
 
-function share(c){
-  const app=APP_URL+'/?c='+encodeURIComponent(c.id), text=cardShareText(c), u=encodeURIComponent(app), t=encodeURIComponent(text);
-  track('share');
-  const sh=openSheet(`<h3>Share</h3><div class="grid">
-    <a href="https://wa.me/?text=${t}" target="_blank" rel="noopener">WhatsApp</a>
-    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${u}" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://twitter.com/intent/tweet?text=${t}" target="_blank" rel="noopener">X</a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=${u}" target="_blank" rel="noopener">Facebook</a>
-    <a href="https://t.me/share/url?url=${u}&text=${encodeURIComponent(c.head)}" target="_blank" rel="noopener">Telegram</a>
-    <button id="copy-btn">Copy text</button>${navigator.share?'<button id="native-btn">More…</button>':''}</div><p style="font-size:12.5px;white-space:pre-line">${esc(text)}</p>`);
-  sh.querySelector('#copy-btn').onclick=()=>copyText(text).then(()=>{closeSheet();toast('Copied');},()=>toast('Copy blocked here'));
-  const nb=sh.querySelector('#native-btn'); if(nb) nb.onclick=()=>navigator.share({title:'FlapShots',text}).then(closeSheet).catch(()=>{});
-}
 function topics(){
   const cats=[...new Set([...liveCards,...LIB].filter(inTrack).map(c=>c.cat))];
   const sh=openSheet(`<h3>Topics</h3><div class="grid"><button data-topic="" aria-pressed="${!topic}">All topics</button>${cats.map(c=>`<button data-topic="${esc(c)}" aria-pressed="${c===topic}">${esc(c)}</button>`).join('')}</div>`);
@@ -1617,28 +1615,108 @@ async function sendRating(rec){
   return false;
 }
 
-/* ---------- share texts, tip sharing, and the welcome for people who open a shared link ---------- */
+/* ---------- sharing: text with two links (paper + install), a picture of the card or tip attached where the phone allows ---------- */
 const INSTALL_LINK=APP_URL+'/install';
 function cardShareText(c){
-  return `${c.head}\n${c.rib}.\n\nOriginal paper: ${c.u}\n\nShared via FlapShots: ${APP_URL}/?c=${encodeURIComponent(c.id)}\nGet the free FlapShots app: ${INSTALL_LINK}`;
+  const rib=String(c.rib||'').trim().replace(/[.\s]+$/,'');
+  return `${c.head}\n${rib}.\n\nRead the paper: ${c.u}\n\nShared via FlapShots. Get the free app: ${INSTALL_LINK}`;
 }
-function tipShareText(t){
-  return `💡 ${t.kind==='trial'?'Landmark trial':'Daily tip'} (${t.cat}): ${t.tip}\n\nSwipe through the why and how: ${APP_URL}/?t=${encodeURIComponent(t.id)}\n\nShared via FlapShots by Dr Manish S. Tiwari\nGet the free FlapShots app: ${INSTALL_LINK}`;
+function tipShareText(t){return `💡 ${t.tip}\n\nWatch this tip on FlapShots: ${APP_URL}/?t=${encodeURIComponent(t.id)}`;}
+const loadImg=src=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src;});
+const svgImg=str=>{const u=URL.createObjectURL(new Blob([str],{type:'image/svg+xml'}));return loadImg(u).finally(()=>setTimeout(()=>URL.revokeObjectURL(u),2000));};
+function wrapLines(x,text,maxW){const out=[];let l='';String(text).split(/\s+/).forEach(w=>{const t=l?l+' '+w:w;if(x.measureText(t).width>maxW&&l){out.push(l);l=w;}else l=t;});if(l)out.push(l);return out;}
+function rrect(x,X,Y,w,h,r){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath();}
+function fitLines(x,text,maxW,maxLines,size,min,font){let fs=size,ls;do{x.font=font(fs);ls=wrapLines(x,text,maxW);if(ls.length<=maxLines)break;fs-=2;}while(fs>min);if(ls.length>maxLines){ls=ls.slice(0,maxLines);ls[maxLines-1]=ls[maxLines-1].replace(/\s*\S*$/,'')+'…';}return {ls,fs};}
+async function drawFooter(x,W,H){
+  const h=128,y=H-h; x.fillStyle='#000';x.fillRect(0,y,W,h);
+  try{const s=document.getElementById('brandmark');const im=await svgImg(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="160" height="160">${s?s.innerHTML:''}</svg>`);x.drawImage(im,44,y+26,76,76);}catch(e){}
+  x.textBaseline='middle';x.font='800 50px "Plus Jakarta Sans", Figtree, sans-serif';x.fillStyle='#FFE9E2';x.fillText('flap',138,y+56);const fw=x.measureText('flap').width;x.fillStyle='#FF7A6B';x.fillText('shots',138+fw,y+56);
+  x.font='600 25px Figtree, sans-serif';x.fillStyle='#B8B8BE';x.fillText('Head & neck evidence, one swipe at a time',140,y+97);
+  x.textAlign='right';x.font='700 25px Figtree, sans-serif';x.fillStyle='#FFFFFF';x.fillText('flapshots.drmanishtiwari.com',W-44,y+52);
+  x.font='500 22px Figtree, sans-serif';x.fillStyle='#8E8E93';x.fillText('© Dr Manish S. Tiwari',W-44,y+90);x.textAlign='left';
+}
+const toPNG=cv=>new Promise(ok=>{try{cv.toBlob(b=>ok(b),'image/png');}catch(e){ok(null);}});
+async function cardImage(c){
+  const W=1080,H=1350,AH=Math.round(W*310/400),cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  try{await document.fonts.ready;}catch(e){}
+  x.fillStyle='#FFFDF8';x.fillRect(0,0,W,AH);
+  try{
+    if(c.img){const i=await loadImg(c.img);const sc=Math.min(W/i.width,AH/i.height),w=i.width*sc,h=i.height*sc;x.drawImage(i,(W-w)/2,(AH-h)/2,w,h);}
+    else{let str=art(c).replace('<svg ',`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${AH}" `);str=str.replace(/(<svg[^>]*>)/,'$1'+defsMarkup());x.drawImage(await svgImg(str),0,0,W,AH);}
+  }catch(e){x.fillStyle='#F6F2FF';x.fillRect(0,0,W,AH);x.fillStyle='#2B2440';x.font='800 64px Figtree, sans-serif';x.textAlign='center';x.fillText(String(c.cat||'FlapShots'),W/2,AH/2);x.textAlign='left';}
+  const P=56, FT=H-128;
+  const hd=fitLines(x,c.head,W-2*P,3,54,38,fs=>`800 ${fs}px Figtree, sans-serif`);
+  const bandH=hd.ls.length*hd.fs*1.25+70; x.fillStyle='#111113';x.fillRect(0,AH,W,bandH);
+  x.fillStyle='#FFFFFF';x.textBaseline='top';x.font=`800 ${hd.fs}px Figtree, sans-serif`;hd.ls.forEach((l,i)=>x.fillText(l,P,AH+35+i*hd.fs*1.25));
+  x.fillStyle='#FFFFFF';x.fillRect(0,AH+bandH,W,FT-AH-bandH);
+  const room=FT-AH-bandH-40, rb=fitLines(x,String(c.rib||'').replace(/[.\s]+$/,'')+'.',W-2*P,Math.max(1,Math.floor(room/(36*1.35))),38,26,fs=>`600 ${fs}px Figtree, sans-serif`);
+  x.fillStyle='#3A3A3C';x.font=`600 ${rb.fs}px Figtree, sans-serif`;rb.ls.forEach((l,i)=>x.fillText(l,P,AH+bandH+24+i*rb.fs*1.35));
+  x.textBaseline='alphabetic';await drawFooter(x,W,H);
+  return toPNG(cv);
+}
+const TIPC={'--tp-ink2':'#4E6355','--tp-sage':'#A9C9AF','--tp-sage-d':'#7FA488','--tp-rose':'#F3C4C4','--tp-gold':'#E8C77A','--tp-glass':'#FFF6D9','--tp-metal':'#C3CEC6','--tp-ink':'#34433A'};
+async function tipImage(t){
+  const W=1080,H=1350,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  try{await document.fonts.ready;}catch(e){}
+  const g=x.createLinearGradient(0,0,W*.4,H);g.addColorStop(0,'#F5EFE4');g.addColorStop(.5,'#EEF0E6');g.addColorStop(1,'#E2EDE4');x.fillStyle=g;x.fillRect(0,0,W,H);
+  x.globalAlpha=.35;x.fillStyle='#A9C9AF';x.beginPath();x.arc(120,120,330,0,7);x.fill();x.fillStyle='#F3C4C4';x.beginPath();x.arc(W-90,H-300,300,0,7);x.fill();x.globalAlpha=1;
+  const FT=H-128, fx=48, fy=118, fw=W-96, fh=FT-fy-40;
+  x.fillStyle='rgba(255,255,255,.66)';rrect(x,fx,fy,fw,fh,52);x.fill();x.strokeStyle='rgba(127,164,136,.55)';x.lineWidth=3;x.stroke();
+  x.setLineDash([12,10]);x.lineWidth=2;rrect(x,fx+20,fy+20,fw-40,fh-40,38);x.stroke();x.setLineDash([]);
+  x.fillStyle='#7FA488';x.font='800 30px Figtree, sans-serif';x.textBaseline='middle';
+  const lbl=(t.kind==='trial'?'LANDMARK TRIAL':'DAILY TIP').split('').join(String.fromCharCode(8202));x.fillText('💡  '+lbl,60,64);
+  let y=fy+70;
+  try{
+    let im;
+    if(t.img) im=await loadImg(t.img);
+    else{let b=bulbSVG(t.icon).replace(/var\((--tp-[a-z0-9-]+)\)/g,(m,v)=>TIPC[v]||'#4E6355');b=b.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" width="360" height="402" ').replace(/(<svg[^>]*>)/,'$1<defs><radialGradient id="tp-glow"><stop offset="0" stop-color="#FFE7A3" stop-opacity=".95"/><stop offset=".55" stop-color="#F6D98A" stop-opacity=".35"/><stop offset="1" stop-color="#F6D98A" stop-opacity="0"/></radialGradient></defs>');im=await svgImg(b);}
+    const mh=t.img?400:330, sc=Math.min((fw-160)/im.width,mh/im.height), w=im.width*sc, h=im.height*sc;
+    if(t.img){x.save();rrect(x,(W-w)/2,y,w,h,24);x.clip();x.drawImage(im,(W-w)/2,y,w,h);x.restore();} else x.drawImage(im,(W-w)/2,y,w,h);
+    y+=h+34;
+  }catch(e){y+=40;}
+  x.font='800 26px Figtree, sans-serif';const cat=String(t.cat||'').toUpperCase(),cw=x.measureText(cat).width+48;
+  x.fillStyle='rgba(169,201,175,.45)';rrect(x,(W-cw)/2,y,cw,50,25);x.fill();x.fillStyle='#5E8468';x.textAlign='center';x.fillText(cat,W/2,y+26);
+  y+=86;
+  const room=fy+fh-110-y, tp=fitLines(x,t.tip,fw-150,Math.max(2,Math.floor(room/(52*1.4))),56,34,fs=>`italic 500 ${fs}px Lora, Georgia, serif`);
+  x.fillStyle='#34433A';x.font=`italic 500 ${tp.fs}px Lora, Georgia, serif`;x.textBaseline='top';
+  const th=tp.ls.length*tp.fs*1.4; y=Math.max(y,y+(room-th)/2-20); tp.ls.forEach((l,i)=>x.fillText(l,W/2,y+i*tp.fs*1.4));
+  x.textBaseline='middle';x.font='600 28px Figtree, sans-serif';x.fillStyle='#5E7A66';x.fillText('Swipe for the why and how  →',W/2,fy+fh-62);
+  x.textAlign='left';x.textBaseline='alphabetic';await drawFooter(x,W,H);
+  return toPNG(cv);
+}
+function shareSheet(title,text,links,make,fname){
+  const sh=openSheet(`<h3>${esc(title)}</h3><div class="shimg" id="sh-prev">Preparing the picture…</div>
+    <div class="grid">${navigator.share?'<button id="sh-native" class="sh-main" disabled>Share with picture</button>':''}${links}<button id="sh-copy">Copy text</button><a id="sh-save" download="${esc(fname)}" hidden>Save picture</a></div>
+    <p class="sh-text">${esc(text)}</p>`);
+  const nb=sh.querySelector('#sh-native'), sv=sh.querySelector('#sh-save'), pv=sh.querySelector('#sh-prev');
+  let file=null;
+  make().then(blob=>{
+    if(!blob)throw 0; const u=URL.createObjectURL(blob);
+    try{file=new File([blob],fname,{type:'image/png'});}catch(e){file=null;}
+    pv.innerHTML=`<img src="${u}" alt="The picture that is shared">`; sv.href=u; sv.hidden=false;
+    if(nb){nb.disabled=false; if(!(file&&navigator.canShare&&navigator.canShare({files:[file]})))nb.textContent='Share…';}
+  }).catch(()=>{pv.remove(); if(nb){nb.disabled=false;nb.textContent='Share…';}});
+  if(nb) nb.onclick=()=>{const d={text}; if(file&&navigator.canShare&&navigator.canShare({files:[file]}))d.files=[file]; navigator.share(d).then(()=>{closeSheet();T_('share-native'+(d.files?'-pic':''));}).catch(()=>{});};
+  sv.addEventListener('click',()=>T_('share-save-pic'));
+  sh.querySelector('#sh-copy').onclick=()=>copyText(text).then(()=>toast('Text copied'),()=>toast('Copy blocked here'));
+  return sh;
+}
+function share(c){
+  T_('share');
+  const text=cardShareText(c), te=encodeURIComponent(text), pu=encodeURIComponent(c.u);
+  shareSheet('Share this card',text,`<a href="https://wa.me/?text=${te}" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${pu}" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://twitter.com/intent/tweet?text=${te}" target="_blank" rel="noopener">X</a>
+    <a href="https://t.me/share/url?url=${pu}&text=${encodeURIComponent(c.head)}" target="_blank" rel="noopener">Telegram</a>`,()=>cardImage(c),'flapshots-card.png');
 }
 function shareTip(id){
   const t=TIPS.find(x=>x.id===id); if(!t)return;
   T_('share-tip-'+id);
   const text=tipShareText(t), te=encodeURIComponent(text), link=encodeURIComponent(APP_URL+'/?t='+encodeURIComponent(t.id));
-  const sh=openSheet(`<h3>Share this tip</h3><p>Colleagues open this same tip screen; if they don't have FlapShots yet, they're offered the free app.</p>
-    <div class="grid">${navigator.share?'<button id="tsh-native">Share…</button>':''}
-    <a href="https://wa.me/?text=${te}" target="_blank" rel="noopener">WhatsApp</a>
+  shareSheet('Share this tip',text,`<a href="https://wa.me/?text=${te}" target="_blank" rel="noopener">WhatsApp</a>
     <a href="https://www.linkedin.com/sharing/share-offsite/?url=${link}" target="_blank" rel="noopener">LinkedIn</a>
     <a href="https://twitter.com/intent/tweet?text=${te}" target="_blank" rel="noopener">X</a>
-    <a href="https://t.me/share/url?url=${link}&text=${encodeURIComponent(t.tip)}" target="_blank" rel="noopener">Telegram</a>
-    <a href="mailto:?subject=${encodeURIComponent('A FlapShots tip: '+t.tip)}&body=${te}">Email</a>
-    <button id="tsh-copy">Copy text</button></div><p style="font-size:12.5px;white-space:pre-line">${esc(text)}</p>`);
-  const nb=sh.querySelector('#tsh-native'); if(nb) nb.onclick=()=>navigator.share({title:'FlapShots tip',text}).then(closeSheet).catch(()=>{});
-  sh.querySelector('#tsh-copy').onclick=()=>copyText(text).then(()=>{closeSheet();toast('Tip copied. Paste it in any chat');},()=>toast('Copy blocked here'));
+    <a href="https://t.me/share/url?url=${link}&text=${encodeURIComponent('💡 '+t.tip)}" target="_blank" rel="noopener">Telegram</a>`,()=>tipImage(t),'flapshots-tip.png');
 }
 feed.addEventListener('click',e=>{const b=e.target.closest('[data-tipshare]');if(b){e.stopPropagation();shareTip(b.dataset.tipshare);}});
 function openTip(id){
@@ -1648,18 +1726,25 @@ function openTip(id){
   requestAnimationFrame(()=>{feed.scrollTop=0;updateOlderHint();});
   return true;
 }
-/* Someone opened a shared card or tip: show it first (sign-up can wait), then offer the free app if they don't have it. */
+/* Someone opened a shared tip or card: show it first (sign-up can wait). Once they swipe, a slim bar offers the free app. */
+function installNow(){T_('shared-install');const ev=deferredInstall;if(ev){deferredInstall=null;ev.prompt();ev.userChoice.then(r=>{if(r.outcome==='accepted'){S.a2hs={...(S.a2hs||{}),done:1};persist();T_('install');}}).catch(()=>{});}else if(isAndroid())androidInstallScreen();else a2hsSheet();}
 function sharedArrival(what){
   T_('shared-open-'+what);
   const o=$('acct'); if(!o.hidden&&!S.profile){o.hidden=true;o.innerHTML='';}
   if(isStandalone()||(S.a2hs||{}).done)return;
-  setTimeout(()=>{
-    if(!$('sheet').hidden||$('inst'))return;
-    const sh=openSheet(`<div class="a2hs"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div><h3>Shared with you via FlapShots</h3><p>Head and neck oncology and flap evidence as one-minute swipe cards, by Dr Manish S. Tiwari. Free, no app store needed.</p></div></div>
-      <div class="row"><button class="btn primary" id="sa-inst">Install the free app</button><button class="btn ghost" id="sa-later">Keep reading</button></div>`);
-    sh.querySelector('#sa-inst').onclick=()=>{closeSheet();T_('shared-install');setTimeout(()=>{if(isAndroid()&&!deferredInstall)androidInstallScreen();else a2hsSheet();},200);};
-    sh.querySelector('#sa-later').onclick=()=>{closeSheet();T_('shared-later');};
-  },4000);
+  let shown=false;
+  const offer=()=>{
+    if(shown||$('sa-bar'))return; shown=true; T_('shared-offer-'+what);
+    const b=document.createElement('div');b.className='sa-bar';b.id='sa-bar';
+    b.innerHTML=`<svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div><b>Get the free FlapShots app</b>Head and neck evidence, one swipe at a time</div><button class="btn primary" id="sa-inst">Install</button><button class="sa-x" id="sa-x" aria-label="Close">×</button>`;
+    document.body.appendChild(b);
+    $('sa-inst').onclick=()=>{b.remove();installNow();};
+    $('sa-x').onclick=()=>{b.remove();T_('shared-later');};
+  };
+  const first=feed.firstElementChild, rail=what==='tip'&&first&&first.querySelector('.tp-rail');
+  if(rail) rail.addEventListener('scroll',function f(){if(rail.scrollLeft>rail.clientWidth*.5){rail.removeEventListener('scroll',f);setTimeout(offer,500);}},{passive:true});
+  feed.addEventListener('scroll',function g(){if(feed.scrollTop>feed.clientHeight*.5){feed.removeEventListener('scroll',g);offer();}},{passive:true});
+  if(what!=='tip') setTimeout(offer,5000);
 }
 
 /* ---------- boot ---------- */
