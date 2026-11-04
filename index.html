@@ -1689,15 +1689,17 @@ function shareSheet(title,text,links,make,fname){
     <div class="grid">${navigator.share?'<button id="sh-native" class="sh-main" disabled>Share with picture</button>':''}${links}<button id="sh-copy">Copy text</button><a id="sh-save" download="${esc(fname)}" hidden>Save picture</a></div>
     <p class="sh-text">${esc(text)}</p>`);
   const nb=sh.querySelector('#sh-native'), sv=sh.querySelector('#sh-save'), pv=sh.querySelector('#sh-prev');
-  let file=null;
+  let file=null, pic=null;
   make().then(blob=>{
-    if(!blob)throw 0; const u=URL.createObjectURL(blob);
+    if(!blob)throw 0; pic=blob; const u=URL.createObjectURL(blob);
     try{file=new File([blob],fname,{type:'image/png'});}catch(e){file=null;}
     pv.innerHTML=`<img src="${u}" alt="The picture that is shared">`; sv.href=u; sv.hidden=false;
     if(nb){nb.disabled=false; if(!(file&&navigator.canShare&&navigator.canShare({files:[file]})))nb.textContent='Share…';}
   }).catch(()=>{pv.remove(); if(nb){nb.disabled=false;nb.textContent='Share…';}});
   if(nb) nb.onclick=()=>{const d={text}; if(file&&navigator.canShare&&navigator.canShare({files:[file]}))d.files=[file]; navigator.share(d).then(()=>{closeSheet();T_('share-native'+(d.files?'-pic':''));}).catch(()=>{});};
-  sv.addEventListener('click',()=>T_('share-save-pic'));
+  /* inside the claude.ai app a page cannot download directly: hand the picture to the viewer through the downloads capability */
+  let dl=null; if(window.claude&&window.claude.use) Promise.resolve(window.claude.use('downloads')).then(d=>{dl=d;}).catch(()=>{});
+  sv.addEventListener('click',e=>{T_('share-save-pic');if(!dl||!pic)return;e.preventDefault();dl.save({filename:fname,data:pic}).catch(err=>{if(err&&err.code&&err.code!=='declined')toast('Could not save the picture here');});});
   sh.querySelector('#sh-copy').onclick=()=>copyText(text).then(()=>toast('Text copied'),()=>toast('Copy blocked here'));
   return sh;
 }
