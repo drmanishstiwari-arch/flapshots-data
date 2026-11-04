@@ -1703,22 +1703,59 @@ function shareSheet(title,text,links,make,fname){
   sh.querySelector('#sh-copy').onclick=()=>copyText(text).then(()=>toast('Text copied'),()=>toast('Copy blocked here'));
   return sh;
 }
-function share(c){
-  T_('share');
+function shareCardSheet(c){
   const text=cardShareText(c), te=encodeURIComponent(text), pu=encodeURIComponent(c.u);
   shareSheet('Share this card',text,`<a href="https://wa.me/?text=${te}" target="_blank" rel="noopener">WhatsApp</a>
     <a href="https://www.linkedin.com/sharing/share-offsite/?url=${pu}" target="_blank" rel="noopener">LinkedIn</a>
     <a href="https://twitter.com/intent/tweet?text=${te}" target="_blank" rel="noopener">X</a>
     <a href="https://t.me/share/url?url=${pu}&text=${encodeURIComponent(c.head)}" target="_blank" rel="noopener">Telegram</a>`,()=>cardImage(c),'flapshots-card.png');
 }
-function shareTip(id){
+function shareTipSheet(id){
   const t=TIPS.find(x=>x.id===id); if(!t)return;
-  T_('share-tip-'+id);
   const text=tipShareText(t), te=encodeURIComponent(text), link=encodeURIComponent(APP_URL+'/?t='+encodeURIComponent(t.id));
   shareSheet('Share this tip',text,`<a href="https://wa.me/?text=${te}" target="_blank" rel="noopener">WhatsApp</a>
     <a href="https://www.linkedin.com/sharing/share-offsite/?url=${link}" target="_blank" rel="noopener">LinkedIn</a>
     <a href="https://twitter.com/intent/tweet?text=${te}" target="_blank" rel="noopener">X</a>
     <a href="https://t.me/share/url?url=${link}&text=${encodeURIComponent('💡 '+t.tip)}" target="_blank" rel="noopener">Telegram</a>`,()=>tipImage(t),'flapshots-tip.png');
+}
+
+/* One tap = the phone's own share menu with the picture and text attached (WhatsApp, LinkedIn, etc. are chosen there).
+   Pictures are prepared quietly while a card or tip is on screen, so the share menu opens instantly.
+   Where a browser has no share menu (desktop, some in-app views), the old share sheet appears instead. */
+const picReady=new Map(), picJobs=new Map();
+function picFor(key,make,fname){
+  if(!picJobs.has(key)){
+    picJobs.set(key,make().then(b=>{let f=null;try{f=b?new File([b],fname,{type:'image/png'}):null;}catch(e){}picReady.set(key,f);return f;}).catch(()=>{picReady.set(key,null);return null;}));
+    if(picJobs.size>16){const k=picJobs.keys().next().value;picJobs.delete(k);picReady.delete(k);}
+  }
+  return picJobs.get(key);
+}
+const allTips=()=>(typeof CTIPS!=='undefined'?[...CTIPS,...TIPS]:TIPS);
+const cardPic=c=>picFor('c:'+c.id,()=>cardImage(c),'flapshots-card.png');
+const tipPic=t=>picFor('t:'+t.id,()=>tipImage(t),'flapshots-tip.png');
+function nativeShare(file,text){const d={text};if(file&&navigator.canShare&&navigator.canShare({files:[file]}))d.files=[file];return navigator.share(d);}
+function quickShare(key,getPic,text,fallback,label){
+  if(!navigator.share){fallback();return;}
+  const done=()=>T_('share-'+label+'-native');
+  const fail=e=>{if(e&&e.name==='AbortError')return; if(e&&e.name==='NotAllowedError'){retrySheet(key,text,done);return;} fallback();};
+  if(picReady.has(key)){nativeShare(picReady.get(key),text).then(done,fail);return;}
+  toast('Preparing the picture…');
+  getPic().then(f=>nativeShare(f,text).then(done,fail));
+}
+function retrySheet(key,text,done){ /* the phone wants a fresh tap after the picture took a moment to prepare */
+  const f=picReady.get(key), u=f?URL.createObjectURL(f):'';
+  const sh=openSheet(`<h3>Ready to share</h3>${u?`<div class="shimg"><img src="${u}" alt="The picture that is shared"></div>`:''}<button class="btn primary" id="qs-go">Share</button>`);
+  sh.querySelector('#qs-go').onclick=()=>nativeShare(f,text).then(()=>{closeSheet();done();},e=>{if(!e||e.name!=='AbortError')toast('Sharing is not available here');});
+}
+function share(c){T_('share');quickShare('c:'+c.id,()=>cardPic(c),cardShareText(c),()=>shareCardSheet(c),'card');}
+function shareTip(id){const t=allTips().find(x=>x.id===id);if(!t)return;T_('share-tip-'+id);quickShare('t:'+t.id,()=>tipPic(t),tipShareText(t),()=>shareTipSheet(id),'tip');}
+if(navigator.share){
+  const warm=new IntersectionObserver(es=>es.forEach(e=>{
+    const el=e.target; clearTimeout(el._warm); if(!e.isIntersecting)return;
+    el._warm=setTimeout(()=>{const run=()=>{const id=el.dataset.id,tp=el.dataset.tip;if(id){const c=byId(id);if(c)cardPic(c);}else if(tp){const t=allTips().find(x=>x.id===tp);if(t)tipPic(t);}};(window.requestIdleCallback||setTimeout)(run,{timeout:1500});},900);
+  }),{root:feed,threshold:.6});
+  const watch=()=>feed.querySelectorAll('.card[data-id]:not([data-warm]),.tipcard[data-tip]:not([data-warm])').forEach(el=>{el.dataset.warm='1';warm.observe(el);});
+  new MutationObserver(watch).observe(feed,{childList:true}); watch();
 }
 feed.addEventListener('click',e=>{const b=e.target.closest('[data-tipshare]');if(b){e.stopPropagation();shareTip(b.dataset.tipshare);}});
 function openTip(id){
