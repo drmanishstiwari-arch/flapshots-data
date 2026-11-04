@@ -347,6 +347,8 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 /* resume, older cards, invite, rate (Nov 2026) */
 .app{position:relative}
 .pullhint{position:absolute;left:50%;transform:translateX(-50%);z-index:5;background:rgb(20 20 22 / .82);color:#fff;font:700 12.5px var(--f-body);padding:7px 13px;border-radius:999px;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgb(0 0 0 / .25);transition:transform .2s}
+.tp-share{background:rgba(255,255,255,.55);border:1px solid var(--tp-line);color:var(--tp-sage-d);border-radius:999px;padding:6px 11px 6px 9px;display:inline-flex;align-items:center;gap:5px;font:700 12px var(--f-body);cursor:pointer;margin-left:auto;margin-right:10px}
+.tp-share svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .pullhint.arm{transform:translateX(-50%) translateY(10px) scale(1.06);background:var(--teal);color:var(--teal-ink)}
 .fb-link{background:none;border:0;padding:4px;font:600 13px var(--f-body);color:inherit;text-decoration:underline;opacity:.75;cursor:pointer}
 .stars{display:flex;gap:6px;justify-content:center}
@@ -1173,7 +1175,7 @@ function closeSheet(){const sh=$('sheet');sh.hidden=true;sh.innerHTML='';}
 $('sheet').addEventListener('click',e=>{if(e.target.dataset.close)closeSheet();});
 
 function share(c){
-  const app=location.origin+location.pathname+'?c='+encodeURIComponent(c.id), text=`${c.head}. ${c.rib}. Source: ${c.u} — via FlapShots ${app}`, u=encodeURIComponent(app), t=encodeURIComponent(text);
+  const app=APP_URL+'/?c='+encodeURIComponent(c.id), text=cardShareText(c), u=encodeURIComponent(app), t=encodeURIComponent(text);
   track('share');
   const sh=openSheet(`<h3>Share</h3><div class="grid">
     <a href="https://wa.me/?text=${t}" target="_blank" rel="noopener">WhatsApp</a>
@@ -1181,8 +1183,9 @@ function share(c){
     <a href="https://twitter.com/intent/tweet?text=${t}" target="_blank" rel="noopener">X</a>
     <a href="https://www.facebook.com/sharer/sharer.php?u=${u}" target="_blank" rel="noopener">Facebook</a>
     <a href="https://t.me/share/url?url=${u}&text=${encodeURIComponent(c.head)}" target="_blank" rel="noopener">Telegram</a>
-    <button id="copy-btn">Copy text</button></div>`);
-  sh.querySelector('#copy-btn').onclick=()=>navigator.clipboard.writeText(text).then(()=>{closeSheet();toast('Copied');},()=>toast('Copy blocked here'));
+    <button id="copy-btn">Copy text</button>${navigator.share?'<button id="native-btn">More…</button>':''}</div><p style="font-size:12.5px;white-space:pre-line">${esc(text)}</p>`);
+  sh.querySelector('#copy-btn').onclick=()=>copyText(text).then(()=>{closeSheet();toast('Copied');},()=>toast('Copy blocked here'));
+  const nb=sh.querySelector('#native-btn'); if(nb) nb.onclick=()=>navigator.share({title:'FlapShots',text}).then(closeSheet).catch(()=>{});
 }
 function topics(){
   const cats=[...new Set([...liveCards,...LIB].filter(inTrack).map(c=>c.cat))];
@@ -1468,7 +1471,7 @@ function tipHTML(t,k){
   const n=S2.length+1;
   return `<article class="card tipcard" data-tip="${t.id}">
    <div class="tp-amb" aria-hidden="true"><i></i><i></i></div>
-   <div class="tp-head"><span class="tp-lbl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>${t.kind==='trial'?'Landmark trial':'Daily tips'}</span><span class="tp-n"><b>1</b> / ${n}</span></div>
+   <div class="tp-head"><span class="tp-lbl"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V17h5v-1.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>${t.kind==='trial'?'Landmark trial':'Daily tips'}</span><button class="tp-share" data-tipshare="${t.id}" aria-label="Share this tip"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-share"/></svg>Share</button><span class="tp-n"><b>1</b> / ${n}</span></div>
    <div class="tp-rail">
     <section class="tp-slide"><div class="tp-frame tp-first">
       ${t.img?`<img class="tp-pic" src="${esc(t.img)}" alt="" loading="lazy" decoding="async">`:bulbSVG(t.icon)}
@@ -1612,6 +1615,51 @@ async function sendRating(rec){
     try{await fetch(FEEDBACK.url,{method:'POST',mode:'no-cors',body:d});return true;}catch(e){}
   }
   return false;
+}
+
+/* ---------- share texts, tip sharing, and the welcome for people who open a shared link ---------- */
+const INSTALL_LINK=APP_URL+'/install';
+function cardShareText(c){
+  return `${c.head}\n${c.rib}.\n\nOriginal paper: ${c.u}\n\nShared via FlapShots: ${APP_URL}/?c=${encodeURIComponent(c.id)}\nGet the free FlapShots app: ${INSTALL_LINK}`;
+}
+function tipShareText(t){
+  return `💡 ${t.kind==='trial'?'Landmark trial':'Daily tip'} (${t.cat}): ${t.tip}\n\nSwipe through the why and how: ${APP_URL}/?t=${encodeURIComponent(t.id)}\n\nShared via FlapShots by Dr Manish S. Tiwari\nGet the free FlapShots app: ${INSTALL_LINK}`;
+}
+function shareTip(id){
+  const t=TIPS.find(x=>x.id===id); if(!t)return;
+  T_('share-tip-'+id);
+  const text=tipShareText(t), te=encodeURIComponent(text), link=encodeURIComponent(APP_URL+'/?t='+encodeURIComponent(t.id));
+  const sh=openSheet(`<h3>Share this tip</h3><p>Colleagues open this same tip screen; if they don't have FlapShots yet, they're offered the free app.</p>
+    <div class="grid">${navigator.share?'<button id="tsh-native">Share…</button>':''}
+    <a href="https://wa.me/?text=${te}" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="https://www.linkedin.com/sharing/share-offsite/?url=${link}" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://twitter.com/intent/tweet?text=${te}" target="_blank" rel="noopener">X</a>
+    <a href="https://t.me/share/url?url=${link}&text=${encodeURIComponent(t.tip)}" target="_blank" rel="noopener">Telegram</a>
+    <a href="mailto:?subject=${encodeURIComponent('A FlapShots tip: '+t.tip)}&body=${te}">Email</a>
+    <button id="tsh-copy">Copy text</button></div><p style="font-size:12.5px;white-space:pre-line">${esc(text)}</p>`);
+  const nb=sh.querySelector('#tsh-native'); if(nb) nb.onclick=()=>navigator.share({title:'FlapShots tip',text}).then(closeSheet).catch(()=>{});
+  sh.querySelector('#tsh-copy').onclick=()=>copyText(text).then(()=>{closeSheet();toast('Tip copied. Paste it in any chat');},()=>toast('Copy blocked here'));
+}
+feed.addEventListener('click',e=>{const b=e.target.closest('[data-tipshare]');if(b){e.stopPropagation();shareTip(b.dataset.tipshare);}});
+function openTip(id){
+  const t=TIPS.find(x=>x.id===id); if(!t)return false;
+  tab='feed';topic=null;render(false);
+  feed.insertAdjacentHTML('afterbegin',tipHTML(t)); wireTips(); observe();
+  requestAnimationFrame(()=>{feed.scrollTop=0;updateOlderHint();});
+  return true;
+}
+/* Someone opened a shared card or tip: show it first (sign-up can wait), then offer the free app if they don't have it. */
+function sharedArrival(what){
+  T_('shared-open-'+what);
+  const o=$('acct'); if(!o.hidden&&!S.profile){o.hidden=true;o.innerHTML='';}
+  if(isStandalone()||(S.a2hs||{}).done)return;
+  setTimeout(()=>{
+    if(!$('sheet').hidden||$('inst'))return;
+    const sh=openSheet(`<div class="a2hs"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div><h3>Shared with you via FlapShots</h3><p>Head and neck oncology and flap evidence as one-minute swipe cards, by Dr Manish S. Tiwari. Free, no app store needed.</p></div></div>
+      <div class="row"><button class="btn primary" id="sa-inst">Install the free app</button><button class="btn ghost" id="sa-later">Keep reading</button></div>`);
+    sh.querySelector('#sa-inst').onclick=()=>{closeSheet();T_('shared-install');setTimeout(()=>{if(isAndroid()&&!deferredInstall)androidInstallScreen();else a2hsSheet();},200);};
+    sh.querySelector('#sa-later').onclick=()=>{closeSheet();T_('shared-later');};
+  },4000);
 }
 
 /* ---------- boot ---------- */
@@ -2299,8 +2347,9 @@ async function refreshLive(){
 }
 (async()=>{
   await refreshLive();
-  const want=new URLSearchParams(location.search).get('c');
-  if(want){const go=()=>{if(byId(want))openCard(want);};if(booted)go();else{const t=setInterval(()=>{if(booted){clearInterval(t);go();}},200);setTimeout(()=>clearInterval(t),15000);}}
+  const QS=new URLSearchParams(location.search), want=QS.get('c'), wantTip=QS.get('t');
+  if(wantTip){const go=()=>{if(openTip(wantTip))sharedArrival('tip');};if(booted)go();else{const t=setInterval(()=>{if(booted){clearInterval(t);go();}},200);setTimeout(()=>clearInterval(t),15000);}}
+  else if(want){const go=()=>{if(byId(want)){openCard(want);sharedArrival('card');}};if(booted)go();else{const t=setInterval(()=>{if(booted){clearInterval(t);go();}},200);setTimeout(()=>clearInterval(t),15000);}}
   setInterval(refreshLive,30*60e3);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshLive();});
 })();
