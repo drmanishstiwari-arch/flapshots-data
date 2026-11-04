@@ -343,6 +343,20 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 @media (prefers-reduced-motion: reduce){.tipcard *{animation:none!important}}
 </style>
 
+<style>
+/* resume, older cards, invite, rate (Nov 2026) */
+.app{position:relative}
+.pullhint{position:absolute;left:50%;transform:translateX(-50%);z-index:5;background:rgb(20 20 22 / .82);color:#fff;font:700 12.5px var(--f-body);padding:7px 13px;border-radius:999px;pointer-events:none;white-space:nowrap;box-shadow:0 4px 14px rgb(0 0 0 / .25);transition:transform .2s}
+.pullhint.arm{transform:translateX(-50%) translateY(10px) scale(1.06);background:var(--teal);color:var(--teal-ink)}
+.fb-link{background:none;border:0;padding:4px;font:600 13px var(--f-body);color:inherit;text-decoration:underline;opacity:.75;cursor:pointer}
+.stars{display:flex;gap:6px;justify-content:center}
+.stars button{background:none;border:0;font-size:40px;line-height:1;color:var(--line);cursor:pointer;padding:2px;transition:transform .15s,color .15s}
+.stars button.on{color:#F5B400}
+.stars button:active{transform:scale(1.2)}
+.rt-lbl{text-align:center;font-weight:700;color:var(--ink)!important;min-height:1.3em}
+.rt-chk{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.4;color:var(--ink)}
+.rt-chk input{width:18px;height:18px;margin-top:1px;accent-color:#F0476E;flex:0 0 auto}
+</style>
 <div class="splash" id="splash" aria-label="FlapShots">
   <div class="orbs" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="stage"><svg class="logo" viewBox="0 0 120 120" role="img" aria-label="FlapShots logo"><defs>
@@ -1055,17 +1069,18 @@ function doneHTML(n){
    charSVG({k:'doc',m:'happy',s:1.2},130,170)+charSVG({k:'flap',m:'happy'},270,150)+charSVG({k:'screen',t:'✓ '+n,w:1.2,s:.9},280,236)+`</svg>`;
   return `<article class="card done" id="done-card"><div class="img">${s}</div>
    <div class="ribbon"><b>Done for today's knowledge ritual</b><span>${n} shots</span></div>
-   <div class="body"><h2>You're up to date</h2>
-   <p class="take">${topic?'You have seen every shot in '+esc(topic)+'.':'You have seen every shot.'} New papers and oncology news are added regularly. Swipe back up to relook, or pick another category above.</p>
+   <div class="body"><h2>You're all caught up</h2>
+   <p class="take">${topic?'You have seen every shot in '+esc(topic)+'.':'You have seen every shot.'} New papers and oncology news are added regularly. Pull down at the top, or tap below, to relook older cards, or pick another category above.</p>
    <div class="cd" id="cd"></div>
-   <div class="row"><button class="btn ghost" id="relook">Relook earlier shots</button><button class="btn primary" id="checknew">Check for new</button></div>
+   <div class="row"><button class="btn ghost" id="relook">Load older cards</button><button class="btn primary" id="checknew">Check for new</button></div>
+   <button class="fb-link" data-invite="done">Invite a colleague to FlapShots</button>
    <button class="fb-link" data-fb="New topic" data-from="done">Want a topic covered? Write to Dr Manish</button></div></article>`;
 }
 let io, seenTimer={};
 /* Cards are rendered in batches as you swipe, not all at once: with 250+ cards the full feed froze phones after the intro. */
 const BATCH=20, OLD_KEEP=20;
 let items=[], itemPos=0, doneN=0;
-function itemHTML(it){return it.k==='card'?cardHTML(it.c):it.k==='tip'?tipHTML(it.t):it.k==='note'?noteHTML():joinHTML();}
+function itemHTML(it){if(it.k==='invite')return inviteHTML();return it.k==='card'?cardHTML(it.c):it.k==='tip'?tipHTML(it.t):it.k==='note'?noteHTML():joinHTML();}
 function renderMore(n=BATCH){
   if(itemPos>=items.length)return false;
   const chunk=items.slice(itemPos,itemPos+n); itemPos+=chunk.length;
@@ -1073,7 +1088,7 @@ function renderMore(n=BATCH){
   feed.insertAdjacentHTML('beforeend',html); wireTips(); observe(); wireDone();
   return true;
 }
-function wireDone(){const r=$('relook'), cn=$('checknew'); if(r) r.onclick=()=>feed.scrollTo({top:0,behavior:'smooth'}); if(cn) cn.onclick=checkNew;}
+function wireDone(){const r=$('relook'), cn=$('checknew'); if(r) r.onclick=()=>loadOlder('done'); if(cn) cn.onclick=checkNew;}
 function render(scrollToFresh=true){
   document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.tab===tab));
   renderChips();
@@ -1090,19 +1105,20 @@ function render(scrollToFresh=true){
   } else {
     let {old,fresh}=feedList();
     doneN=old.length+fresh.length;
-    old=old.slice(-OLD_KEEP);
     const fh=fresh.map(c=>({k:'card',c})); if(!S.profile&&fh.length>6) fh.splice(6,0,{k:'join'});
     { // a calm Daily tips stop after every 10 swipes, in every feed
       const at=[];for(let p=10;p<fh.length;p+=10)at.push(p);
       const tp=tipsForFeed(at.length); for(let j=at.length-1;j>=0;j--) fh.splice(at[j],0,{k:'tip',t:tp[j]});
     }
     if(noteDue()&&fh.length>13) fh.splice(12,0,{k:'note'});
-    items=[...old.map(c=>({k:'card',c})),...fh];
-    start=old.length;
+    addInvites(fh);
+    olderPool=old.slice().reverse(); // already-seen cards, most recent first: loaded on pull-down or from the caught-up card
+    items=fh;
+    start=0;
   }
   renderMore(start+BATCH);
   if(tab==='feed'&&!items.length) feed.insertAdjacentHTML('beforeend',doneHTML(doneN)),wireDone();
-  requestAnimationFrame(()=>{feed.scrollTop=scrollToFresh?start*feed.clientHeight:0;});
+  requestAnimationFrame(()=>{feed.scrollTop=scrollToFresh?start*feed.clientHeight:0;updateOlderHint();});
   updatePill();
 }
 /* shrink text to fit, one card at a time as it comes into view (doing every card at once was slow on phones) */
@@ -1135,7 +1151,7 @@ function observe(){
     }
     if(e.isIntersecting&&el.id==='note-card') noteShown();
     if(!id)return;
-    if(e.isIntersecting){seenTimer[id]=setTimeout(()=>{if(!S.seen.includes(id)){S.seen.push(id);persist();updatePill();onSeen();}},1200);}
+    if(e.isIntersecting){seenTimer[id]=setTimeout(()=>{if(!S.seen.includes(id)){S.seen.push(id);persist();updatePill();onSeen();setTimeout(maybeRate,1500);}},800);}
     else clearTimeout(seenTimer[id]);
   }),{root:feed,threshold:.6});
   feed.querySelectorAll('.card:not([data-obs])').forEach(el=>{el.dataset.obs='1';io.observe(el);});
@@ -1488,6 +1504,115 @@ document.addEventListener('keydown',e=>{
   const c=feed.querySelector('.tipcard.vis .tp-rail');if(!c)return;e.preventDefault();
   c.scrollBy({left:(e.key==='ArrowRight'?1:-1)*c.clientWidth,behavior:'smooth'});
 });
+
+/* ---------- resume where you left off, older cards on pull-down, invite a colleague, rate the app ---------- */
+/* The feed opens on the newest card you have not seen. Cards you have already read are not repeated; pull down at the top
+   (or tap "Load older cards" on the caught-up card) to bring them back, 10 at a time, most recently read first. */
+const OLDER_BATCH=10, APP_URL='https://flapshots.drmanishtiwari.com';
+let olderPool=[], atTopSince=Date.now();
+const T_=e=>{try{if(typeof track==='function')track(e);}catch(_){}};
+const pullHint=(()=>{const h=document.createElement('div');h.id='pullhint';h.className='pullhint';h.hidden=true;h.textContent='↓ Pull down for older cards';document.querySelector('.app').appendChild(h);return h;})();
+function updateOlderHint(){
+  const show=tab==='feed'&&olderPool.length>0&&feed.scrollTop<=2&&$('sheet').hidden;
+  pullHint.hidden=!show; if(show) pullHint.style.top=(feed.offsetTop+10)+'px';
+}
+feed.addEventListener('scroll',()=>{if(feed.scrollTop>2)atTopSince=0;else if(!atTopSince)atTopSince=Date.now();updateOlderHint();},{passive:true});
+function loadOlder(at){
+  if(tab!=='feed')return 0;
+  const shown=new Set([...feed.querySelectorAll('.card[data-id]')].map(x=>x.dataset.id));
+  olderPool=olderPool.filter(c=>!shown.has(c.id)&&!S.hidden[c.id]);
+  const batch=olderPool.splice(0,OLDER_BATCH);
+  if(!batch.length){toast('No older cards here yet');updateOlderHint();return 0;}
+  const H=feed.clientHeight, d=$('done-card');
+  if(at==='done'&&d){
+    d.insertAdjacentHTML('beforebegin',batch.map(cardHTML).join('')); observe();
+    const i=[...feed.children].findIndex(x=>x.dataset.id===batch[0].id);
+    if(i>=0) feed.scrollTo({top:i*H,behavior:'smooth'});
+  } else {
+    feed.insertAdjacentHTML('afterbegin',batch.slice().reverse().map(cardHTML).join('')); observe();
+    feed.scrollTop=batch.length*H; /* absolute: the browser may already have shifted the view to keep the current card */ requestAnimationFrame(()=>feed.scrollBy({top:-H,behavior:'smooth'}));
+  }
+  T_('older-'+at); toast(`${batch.length} older card${batch.length>1?'s':''} loaded${olderPool.length?'':' (that is all)'}`);
+  updateOlderHint(); return batch.length;
+}
+let pullY=null;
+feed.addEventListener('touchstart',e=>{pullY=(feed.scrollTop<=2&&olderPool.length)?e.touches[0].clientY:null;},{passive:true});
+feed.addEventListener('touchmove',e=>{if(pullY===null)return;pullHint.classList.toggle('arm',e.touches[0].clientY-pullY>70);},{passive:true});
+feed.addEventListener('touchend',e=>{if(pullY===null)return;const t=e.changedTouches[0],dy=t?t.clientY-pullY:0;pullY=null;pullHint.classList.remove('arm');if(dy>70&&feed.scrollTop<=2)loadOlder('top');},{passive:true});
+feed.addEventListener('wheel',e=>{if(e.deltaY<-20&&feed.scrollTop<=2&&atTopSince&&Date.now()-atTopSince>500&&!loadOlder.busy){loadOlder.busy=setTimeout(()=>loadOlder.busy=0,1000);loadOlder('top');}},{passive:true});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowUp'&&feed.scrollTop<=2&&$('sheet').hidden&&$('acct').hidden&&olderPool.length)loadOlder('top');});
+
+/* invite a colleague: profile menu, the caught-up card, and a gentle card every 25 swipes (paused for a week after an invite) */
+function inviteText(){return `I use FlapShots, a free app by Dr Manish S. Tiwari, oral oncosurgeon and microvascular reconstruction surgeon. Head and neck oncology and flap evidence as one-minute swipe cards, each linked to its source. Try it: ${APP_URL}`;}
+function addInvites(fh){
+  const v=S.inv||{}; if(v.sent&&Date.now()-v.sent<7*864e5)return;
+  const at=[];for(let p=25;p<fh.length&&at.length<3;p+=25)at.push(p); /* at most 3 per visit */
+  for(let j=at.length-1;j>=0;j--) fh.splice(at[j],0,{k:'invite'});
+}
+function inviteHTML(){
+  return `<article class="card done invite" id="invite-card"><div class="img">${sceneArt({scene:{bg:'mint',cap:['KNOW A COLLEAGUE','WHO WOULD LIKE THIS?'],ch:[{k:'doc',m:'happy',x:.3},{k:'doc',m:'calm',x:.7}]}})}</div>
+   <div class="ribbon"><b>FlapShots grows when surgeons share it</b></div>
+   <div class="body"><h2>Invite a colleague</h2><p class="take">Send FlapShots to a surgeon, oncologist or trainee who would enjoy one-minute evidence cards. It is free.</p>
+   <div class="row"><button class="btn primary" data-invite="card">Invite a colleague</button></div><p class="cd">Or just keep swiping</p></div></article>`;
+}
+function invited(how){S.inv={...(S.inv||{}),sent:Date.now(),n:((S.inv||{}).n||0)+1};persist();syncSoon();T_('invite-'+how);}
+function copyText(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText) return navigator.clipboard.writeText(t);
+  return new Promise((ok,no)=>{try{const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();const r=document.execCommand('copy');a.remove();r?ok():no();}catch(e){no(e);}});
+}
+function inviteSheet(from){
+  T_('invite-open-'+from);
+  const t=inviteText(), te=encodeURIComponent(t), ue=encodeURIComponent(APP_URL);
+  const sh=openSheet(`<h3>Invite a colleague</h3><p>Know a surgeon, oncologist or trainee who would like FlapShots? Send them the link. It is free.</p>
+    <div class="grid" id="iv">${navigator.share?'<button id="iv-native">Share…</button>':''}
+      <a href="https://wa.me/?text=${te}" target="_blank" rel="noopener" data-iv="whatsapp">WhatsApp</a>
+      <a href="mailto:?subject=${encodeURIComponent('Try FlapShots: head and neck evidence, one swipe at a time')}&body=${te}" data-iv="email">Email</a>
+      <a href="https://t.me/share/url?url=${ue}&text=${encodeURIComponent('FlapShots by Dr Manish S. Tiwari: head and neck evidence, one swipe at a time')}" target="_blank" rel="noopener" data-iv="telegram">Telegram</a>
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=${ue}" target="_blank" rel="noopener" data-iv="linkedin">LinkedIn</a>
+      <button id="iv-copy">Copy link</button></div>
+    <p style="font-size:12.5px">${esc(t)}</p>`);
+  sh.querySelector('#iv').addEventListener('click',e=>{const a=e.target.closest('[data-iv]');if(a){invited(a.dataset.iv);setTimeout(closeSheet,300);}});
+  const nb=sh.querySelector('#iv-native');
+  if(nb) nb.onclick=()=>navigator.share({title:'FlapShots',text:t.replace(' Try it: '+APP_URL,''),url:APP_URL}).then(()=>{invited('native');closeSheet();toast('Thank you for sharing FlapShots');}).catch(()=>{});
+  sh.querySelector('#iv-copy').onclick=()=>copyText(t).then(()=>{invited('copy');closeSheet();toast('Invite copied. Paste it in any chat');},()=>toast('Copy blocked here. Long-press the text to copy'));
+}
+feed.addEventListener('click',e=>{const b=e.target.closest('[data-invite]');if(b)inviteSheet(b.dataset.invite);});
+
+/* rate the app: asked once, after 30 cards or on the 3rd day of use; "Not now" waits a week; never blocks the feed */
+function rateDue(){const r=S.rate||{};if(r.done)return false;if(r.later&&Date.now()-r.later<7*864e5)return false;return S.seen.length>=30||Object.keys(S.days||{}).length>=3;}
+function maybeRate(){if(!rateDue()||!$('sheet').hidden||!$('acct').hidden||!$('splash').hidden)return;rateSheet('auto');}
+const RT_LBL=['','Needs a lot of work','Could be better','Good','Very good','Excellent'];
+function rateSheet(from){
+  T_('rate-open-'+from);
+  const r=S.rate||{}; if(from==='auto'){S.rate={...r,later:Date.now(),asked:(r.asked||0)+1};persist();syncSoon();}
+  const sh=openSheet(`<h3>Enjoying FlapShots?</h3><p>Tap a star to rate the app. Your rating and note go straight to Dr Manish S. Tiwari and shape what comes next.</p>
+    <div class="stars" id="rt-stars" role="radiogroup" aria-label="Your rating">${[1,2,3,4,5].map(n=>`<button role="radio" aria-checked="false" data-n="${n}" aria-label="${n} star${n>1?'s':''}">★</button>`).join('')}</div>
+    <p class="rt-lbl" id="rt-lbl">&nbsp;</p>
+    <textarea class="sinput" id="rt-c" rows="3" maxlength="800" placeholder="What do you like, and what should be better? (optional, no patient details)"></textarea>
+    <label class="rt-chk"><input type="checkbox" id="rt-q"> FlapShots may quote this (first name, role) as a testimonial</label>
+    <div class="row"><button class="btn primary" id="rt-send" disabled>Send rating</button><button class="btn ghost" id="rt-later">Not now</button></div>`);
+  let n=0; const st=[...sh.querySelectorAll('#rt-stars button')];
+  sh.querySelector('#rt-stars').onclick=e=>{const b=e.target.closest('[data-n]');if(!b)return;n=+b.dataset.n;st.forEach((x,i)=>{x.classList.toggle('on',i<n);x.setAttribute('aria-checked',i===n-1);});sh.querySelector('#rt-lbl').textContent=RT_LBL[n];sh.querySelector('#rt-send').disabled=false;};
+  sh.querySelector('#rt-later').onclick=()=>{S.rate={...(S.rate||{}),later:Date.now()};persist();syncSoon();closeSheet();T_('rate-later');};
+  sh.querySelector('#rt-send').onclick=async()=>{
+    const p=S.profile||{}, first=String(p.name||'').split(/\s+/).filter(w=>w&&!/^dr\.?$/i.test(w))[0]||'';
+    const rec={rating:n,comment:sh.querySelector('#rt-c').value.trim().slice(0,800),quoteOk:sh.querySelector('#rt-q').checked,name:p.name||'',firstName:first,role:p.role||'',at:new Date().toISOString(),from,cards:S.seen.length,days:Object.keys(S.days||{}).length};
+    const btn=sh.querySelector('#rt-send');btn.disabled=true;btn.textContent='Sending…';
+    S.rate={done:1,rating:n,at:rec.at};persist();syncSoon();T_('rate-'+n);
+    const ok=await sendRating(rec); closeSheet();
+    toast(ok?'Thank you for rating FlapShots!':'Thank you! Saved on this device.');
+  };
+}
+async function sendRating(rec){
+  if(DBH&&UID){try{const ref=DBH.doc('feedback/'+UID),snap=await ref.get(),prev=snap.exists?snap.data():{};await ref.set({...prev,uid:UID,name:S.profile?.name||prev.name||'',rating:rec,ratings:[...(prev.ratings||[]),rec].slice(-20),updatedAt:rec.at});return true;}catch(e){}}
+  if(typeof FEEDBACK!=='undefined'&&FEEDBACK.url){
+    const d=new URLSearchParams(),f=FEEDBACK.f,put=(x,v)=>d.append(f[x],String(v??''));
+    put('kind','Other');put('msg',`APP RATING ${rec.rating}/5 ${'★'.repeat(rec.rating)}${rec.comment?' | Comment: '+rec.comment:''} | Testimonial OK: ${rec.quoteOk?'Yes':'No'} | ${rec.cards} cards, ${rec.days} days`);
+    put('name',rec.name||'Guest');put('mobile',(S.profile||{}).mobile||'');put('role',rec.role||'Guest');put('vid',S.vid||'');
+    try{await fetch(FEEDBACK.url,{method:'POST',mode:'no-cors',body:d});return true;}catch(e){}
+  }
+  return false;
+}
 
 /* ---------- boot ---------- */
 $('gdefs').insertAdjacentHTML('afterbegin',defsMarkup());
@@ -1858,6 +1983,7 @@ function searchSheet(){
 function openCard(id){
   const c=byId(id);tab='feed';topic=c?c.cat:null;render(false);
   while(!feed.querySelector(`.card[data-id="${CSS.escape(id)}"]`)&&renderMore(BATCH));
+  if(c&&!feed.querySelector(`.card[data-id="${CSS.escape(id)}"]`)){olderPool=olderPool.filter(x=>x.id!==id);feed.insertAdjacentHTML('afterbegin',cardHTML(c));observe();}
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const els=[...feed.children];const i=els.findIndex(x=>x.dataset.id===id);if(i>=0)feed.scrollTop=i*feed.clientHeight;}));
 }
 
@@ -1896,7 +2022,7 @@ function profile(){
    <h3>Appearance</h3>${seg('p-theme',[['system','Automatic'],['light','Light'],['dark','Dark']],S.theme)}${seg('p-ts',[['s','Small text'],['m','Medium'],['l','Large']],S.textSize)}
    <h3>Live papers and news</h3><p>${esc(liveStatus)} Your likes, saves and streak stay on this device.</p>
    <h3>Ideas for FlapShots?</h3><p>Suggest a topic or a change straight to the app's creator.</p><div class="grid"><button id="p-fb">Write to Dr Manish S. Tiwari</button></div>
-   <h3>Account</h3><div class="grid">${p?'<button id="p-edit">Edit profile</button>':''}<button id="p-report">Report a problem</button><button id="unread">Mark all as unread</button><button id="replay">Replay intro</button>${isStandalone()?'':'<button id="p-a2hs">Add to home screen</button>'}<button id="p-del" class="danger">Delete my data</button></div>
+   <h3>Account</h3><div class="grid">${p?'<button id="p-edit">Edit profile</button>':''}<button id="iv-p">Invite a colleague</button><button id="rt-p">Rate FlapShots</button><button id="p-report">Report a problem</button><button id="unread">Mark all as unread</button><button id="replay">Replay intro</button>${isStandalone()?'':'<button id="p-a2hs">Add to home screen</button>'}<button id="p-del" class="danger">Delete my data</button></div>
    ${isOwner?'<h3>Admin</h3><div class="grid"><button id="p-admin">Members and reports</button></div>':''}
    <h3>About</h3><div class="grid"><button data-legal="terms">Terms of use</button><button data-legal="privacy">Privacy policy</button><button data-legal="disclaimer">Medical disclaimer</button></div>
    <p style="font-size:12px">FlapShots is created and edited by Dr Manish S. Tiwari. © 2026 Dr Manish S. Tiwari. All rights reserved. Content is for professional education and does not replace clinical judgement.</p>`);
@@ -1908,6 +2034,7 @@ function profile(){
   q('#p-ts').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;S.textSize=b.dataset.v;persist();syncSoon();applyPrefs();profile();};
   q('#p-int').onclick=()=>{closeSheet();regDraft={...(S.profile||{})};showReg(2,true);};
   q('#p-report').onclick=()=>reportSheet(null);
+  q('#iv-p').onclick=()=>inviteSheet('profile'); q('#rt-p').onclick=()=>rateSheet('profile');
   q('#p-fb').onclick=()=>{track('fb-open-profile');feedbackSheet('New topic');};
   q('#unread').onclick=()=>{S.seen=[];persist();syncSoon();closeSheet();topic=null;render();toast('All shots marked unread');};
   q('#replay').onclick=()=>{closeSheet();replaySplash();};
