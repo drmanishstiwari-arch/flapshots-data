@@ -251,6 +251,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .steps{font-size:12.5px;color:#9A9AA2;letter-spacing:.02em}.steps b{color:#FF9B8B}
 .err{color:#FF8A8A;min-height:1em;margin:0!important;font-size:14px}
 .join .row{margin-top:4px}
+.jn h3{margin:0 0 4px}.jn p{margin:0 0 8px}.jn-list{margin:0 0 6px;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:15px;line-height:1.45}
 .imgart{width:100%;height:100%;display:block;object-fit:contain;background:#fff}
 .img .imgcred{position:absolute;right:8px;top:6px;font:500 9.5px/1 var(--f-body);color:#7A7A8E;background:rgb(255 255 255 / .8);padding:3px 6px;border-radius:6px}
 .tp-frame.has-pic{justify-content:flex-start;gap:8px;padding:14px 16px 16px}
@@ -426,6 +427,8 @@ setTimeout(function(){var sp=document.getElementById('splash');if(sp&&!sp.hidden
 <div class="toast" id="toast" hidden></div>
 
 <script>
+/* opened from a shared card or tip, or from the install link: install is offered early in this visit */
+const FROM_LINK=/[?&](c|t|install)=?/.test(location.search);
 const INK='#2B2440';
 const C={tumour:'#9B7FD6',tongue:'#EE8E86',artery:'#E05A5A',vein:'#5B86D9',bone:'#F2E6C8',flap:'#F4A98B',flapBad:'#8E7BB8',node:'#8CCB9E',blob:'#F6C9A8',vial:'#CFE5F7',doc:'#7FC4C0',lens:'#DCEFFF'};
 const pm=q=>'https://pubmed.ncbi.nlm.nih.gov/?term='+encodeURIComponent(q);
@@ -1118,7 +1121,7 @@ function render(scrollToFresh=true){
   } else {
     let {old,fresh}=feedList();
     doneN=old.length+fresh.length;
-    const fh=fresh.map(c=>({k:'card',c})); if(!S.profile&&fh.length>6) fh.splice(6,0,{k:'join'});
+    const fh=fresh.map(c=>({k:'card',c})); if(!S.profile){const at=[];for(let p=6;p<fh.length;p+=30)at.push(p);for(let j=at.length-1;j>=0;j--)fh.splice(at[j],0,{k:'join'});}
     { // a calm Daily tips stop after every 10 swipes, in every feed
       const at=[];for(let p=10;p<fh.length;p+=10)at.push(p);
       const tp=tipsForFeed(at.length); for(let j=at.length-1;j>=0;j--) fh.splice(at[j],0,{k:'tip',t:tp[j]});
@@ -1920,6 +1923,24 @@ function onSeen(){
   syncSoon();
   setTimeout(maybeA2HS,600);
   setTimeout(maybeSaveTip,900);
+  setTimeout(maybeJoinNudge,1100);
+}
+/* Guests: invite them to join (topics of their choice first) at the 8th card of a visit (12th if the install prompt
+   already showed this visit); once a day at most, 8 times in all. */
+let joinNudged=false;
+function maybeJoinNudge(){
+  if(S.profile||joinNudged||tab!=='feed')return;
+  if(!$('sheet').hidden||!$('acct').hidden||$('ios-banner')||$('savetip'))return;
+  if(sessionSeen!==(a2hsThisVisit?12:8))return;
+  const j=S.jn||{}, day=todayKey();
+  if((j.n||0)>=8||j.d===day)return;
+  joinNudged=true;S.jn={n:(j.n||0)+1,d:day};persist();track('join-nudge');
+  const sh=openSheet(`<div class="jn"><h3>Make FlapShots yours</h3><p>Free, takes 30 seconds. Members get:</p>
+    <ul class="jn-list"><li><b>Your topics first:</b> pick from oral cancer, ITF, flaps, larynx, thyroid and more</li>
+    <li><b>Streak and saved cards</b> kept safely</li><li><b>WhatsApp alert</b> when a major trial lands (optional)</li><li><b>Weekly digest</b> by email (optional)</li></ul></div>
+    <div class="row"><button class="btn primary" id="jn-yes">Join free</button><button class="btn ghost" id="jn-no">Keep browsing</button></div>`);
+  sh.querySelector('#jn-yes').onclick=()=>{closeSheet();track('join-nudge-yes');showReg(1);};
+  sh.querySelector('#jn-no').onclick=()=>{closeSheet();track('join-nudge-later');};
 }
 function updateGoal(){
   const g=$('goal');if(!g)return;const p=Math.min(1,readToday()/S.goal),C=2*Math.PI*11;
@@ -2084,7 +2105,7 @@ document.addEventListener('click',e=>{const l=e.target.closest('[data-legal]');i
 
 /* ---- guest prompt card inside the feed ---- */
 function joinHTML(){
-  return `<article class="card done join" id="join-card"><div class="img">${sceneArt({scene:{bg:'butter',cap:['JOIN FREE','KEEP YOUR STREAK'],ch:[{k:'doc',m:'happy',x:.3},{k:'flap',m:'happy',x:.7}]}})}</div>
+  return `<article class="card done join"><div class="img">${sceneArt({scene:{bg:'butter',cap:['JOIN FREE','KEEP YOUR STREAK'],ch:[{k:'doc',m:'happy',x:.3},{k:'flap',m:'happy',x:.7}]}})}</div>
    <div class="ribbon"><b>Join free: keep your streak and get the weekly digest</b></div>
    <div class="body"><h2>Make FlapShots yours</h2><p class="take">Tell us who you are and what you want to read. Your feed puts your topics first, and members help keep FlapShots free and growing. It takes 30 seconds; guests can keep reading.</p>
    <div class="row"><button class="btn primary" data-join="1">Join free</button></div></div></article>`;
@@ -2293,17 +2314,21 @@ addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;
 addEventListener('appinstalled',()=>{S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');});
 const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
+let a2hsThisVisit=false;
 function maybeA2HS(){
   sessionSeen++;
-  const a=S.a2hs||{}, ios=isIOS();
-  if(sessionSeen<2||isStandalone()||a.done)return;
+  const a=S.a2hs||{}, ios=isIOS(), day=todayKey();
+  if(isStandalone()||a.done||a2hsThisVisit)return;
   if(!$('sheet').hidden||!$('acct').hidden||$('ios-banner'))return;
-  if(ios&&(a.n||0)>=1){showIosBanner();return;}   /* iPhone: full picture guide once, then a small banner on later visits */
-  if((a.n||0)>=3)return;
-  if(a.last&&Date.now()-a.last<5*864e5)return;
-  if(!deferredInstall&&!ios&&!(isAndroid()&&!canOneTap()))return;
-  S.a2hs={...a,n:(a.n||0)+1,last:Date.now(),ld:todayKey()};persist();
-  a2hsSheet();
+  const canShow=!!deferredInstall||ios||(isAndroid()&&!canOneTap());
+  if(!canShow)return;                                   /* e.g. desktop browsers that cannot install */
+  /* arrived from a shared card, tip or the install link: offer it after the first card, on every such visit */
+  if(FROM_LINK){a2hsThisVisit=true;S.a2hs={...a,n:(a.n||0)+1,last:Date.now(),ld:day};persist();track('a2hs-fromlink');a2hsSheet();return;}
+  /* otherwise: from the 2nd card, once a day, alternating the full prompt and the small banner; 20 reminders in all */
+  if(sessionSeen<2||a.ld===day||a.bd===day||(a.n||0)+(a.bn||0)>=20)return;
+  a2hsThisVisit=true;
+  if((a.n||0)<=(a.bn||0)){S.a2hs={...a,n:(a.n||0)+1,last:Date.now(),ld:day};persist();a2hsSheet();}
+  else showIosBanner();
 }
 /* ---- iPhone: picture guide, "open in Safari" helper, gentle reminder banner ---- */
 const INSTALL_URL='https://flapshots.drmanishtiwari.com/install';
@@ -2360,15 +2385,16 @@ function wireIosGuide(sh){
 function hideIosBanner(){const b=$('ios-banner');if(b)b.remove();}
 let iosBannerShown=false;
 function showIosBanner(){
-  const a=S.a2hs||{}, now=Date.now();
-  const day=todayKey();
-  if(iosBannerShown||(a.bn||0)>=6)return;          /* at most 6 reminders in all */
-  if(a.bd===day||a.ld===day)return;                 /* at most one a day, never on the day of the full guide */
+  const a=S.a2hs||{}, day=todayKey();
+  if(iosBannerShown)return;
   iosBannerShown=true;
-  S.a2hs={...a,bn:(a.bn||0)+1,bl:now,bd:day};persist();track('ios-banner');
-  document.body.insertAdjacentHTML('beforeend',`<div class="ios-banner" id="ios-banner" role="dialog" aria-label="Add FlapShots to your home screen"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div class="ib-t"><b>Add FlapShots to your home screen</b><span>Opens in one tap, like an app</span></div><button class="ib-how" id="ib-how">How?</button><button class="ib-x" id="ib-x" aria-label="Close">×</button></div>`);
-  $('ib-how').onclick=()=>{hideIosBanner();a2hsSheet();};
-  $('ib-x').onclick=()=>{hideIosBanner();track('ios-banner-close');};
+  S.a2hs={...a,bn:(a.bn||0)+1,bl:Date.now(),bd:day};persist();track('install-banner');
+  const one=!!deferredInstall;
+  document.body.insertAdjacentHTML('beforeend',`<div class="ios-banner" id="ios-banner" role="dialog" aria-label="Add FlapShots to your home screen"><svg viewBox="0 0 120 120" aria-hidden="true"><use href="#brandmark"/></svg><div class="ib-t"><b>Add FlapShots to your home screen</b><span>${one?'One tap, opens like an app':'Opens in one tap, like an app'}</span></div><button class="ib-how" id="ib-how">${one?'Install':'How?'}</button><button class="ib-x" id="ib-x" aria-label="Close">×</button></div>`);
+  $('ib-how').onclick=async()=>{hideIosBanner();track('install-banner-tap');
+    if(one&&deferredInstall){const ev=deferredInstall;deferredInstall=null;ev.prompt();try{const r=await ev.userChoice;if(r.outcome==='accepted'){S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');}}catch(e){}}
+    else a2hsSheet();};
+  $('ib-x').onclick=()=>{hideIosBanner();track('install-banner-close');};
 }
 if(isIOS()&&isStandalone()&&!(S.a2hs||{}).done){S.a2hs={...(S.a2hs||{}),done:1};persist();track('open-installed-ios');}
 /* Android, opened from the install link: a one-tap install screen before anything else */
@@ -2442,7 +2468,7 @@ if(new URLSearchParams(location.search).has('install')&&!isStandalone()){
   history.replaceState(null,'',location.pathname);
   track('install-link');
   /* iPhone: let them read first; the picture guide appears after 5 swipes (see maybeA2HS). Android: offer one-tap install straight away. */
-  if(!isIOS())androidInstallScreen();
+  if(!isIOS()){a2hsThisVisit=true;androidInstallScreen();}
 }
 async function loadCards(){
   for(const u of CARDS_URLS){
