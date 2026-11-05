@@ -2349,7 +2349,19 @@ const REPORT_EMAIL='drmanishstiwari@gmail.com';
 const GC_CODE='flapshots';
 /* Member sign-ups: Google Form "formResponse" URL and the entry ids of its questions. Empty url = off. */
 const SIGNUP={url:'https://docs.google.com/forms/d/e/1FAIpQLSeNUS0Yur2I_wTp35opbpNI3T2oNjo7xJsfrBWQW5K0iNpNhQ/formResponse',f:{name:'entry.1745553417',role:'entry.348116155',focus:'entry.2135813957',institution:'entry.1376213516',city:'entry.31515118',country:'entry.834806224',regNo:'entry.1691522250',email:'entry.938354676',digest:'entry.974416394',topics:'entry.2123935416',vid:'entry.1999298312',kind:'entry.1885583431',mobile:'entry.608241224',wa:'entry.1435784399'}};
-if(GC_CODE){const g=document.createElement('script');g.async=true;g.src='https://gc.zgo.at/count.js';g.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;g.onload=()=>track(S.profile?'open-member':S.guest?'open-guest':'open-new');document.head.appendChild(g);}
+
+/* Engagement: once per past reading day, report how many cards that reader saw (bucketed), as member or guest.
+   Sent on the first open after the day ends, so each reader-day is counted once. GoatCounter shows e.g. "cards-day-10-19-member". */
+function reportDays(){
+  try{
+    const today=todayKey(), done=new Set(S.dayRep||[]);
+    const past=Object.keys(S.days||{}).filter(d=>d<today&&!done.has(d)).sort().slice(-3);
+    const b=n=>n>=40?'40+':n>=20?'20-39':n>=10?'10-19':n>=5?'5-9':'1-4';
+    past.forEach(d=>{const n=S.days[d]||0;if(n>0)track('cards-day-'+b(n)+'-'+(S.profile?'member':'guest'));done.add(d);});
+    if(past.length){S.dayRep=[...done].sort().slice(-30);persist();}
+  }catch(e){}
+}
+if(GC_CODE){const g=document.createElement('script');g.async=true;g.src='https://gc.zgo.at/count.js';g.dataset.goatcounter=`https://${GC_CODE}.goatcounter.com/count`;g.onload=()=>{track(S.profile?'open-member':S.guest?'open-guest':'open-new');reportDays();};document.head.appendChild(g);}
 function track(ev){try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'event-'+ev,title:ev,event:true});}catch(e){}}
 function normMob(raw,country){
   const t=String(raw||'').trim(), dg=t.replace(/\D/g,'');
