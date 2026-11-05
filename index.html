@@ -1058,7 +1058,7 @@ const CAT_ORDER=['Oncology news','Early detection','Genetics simplified','Tongue
 function renderChips(){
   const all=[...liveCards,...LIB], n={};all.forEach(c=>n[c.cat]=(n[c.cat]||0)+1);
   const cats=[...CAT_ORDER.filter(c=>n[c]),...Object.keys(n).filter(c=>!CAT_ORDER.includes(c)).sort()];
-  $('chips').innerHTML=`<button class="chip" data-cat="" aria-pressed="${!topic}">All<i>${all.length}</i></button>`+cats.map(c=>`<button class="chip" data-cat="${esc(c)}" aria-pressed="${c===topic}">${esc(c)}<i>${n[c]}</i></button>`).join('');
+  $('chips').innerHTML=`<button class="chip" data-cat="" aria-pressed="${!topic}">All</button>`+cats.map(c=>`<button class="chip" data-cat="${esc(c)}" aria-pressed="${c===topic}">${esc(c)}</button>`).join('');
   const on=$('chips').querySelector('[aria-pressed="true"]');on&&on.scrollIntoView({inline:'center',block:'nearest'});
 }
 
@@ -1079,9 +1079,9 @@ function cardHTML(c){
 function doneHTML(n){
   const s=`<svg viewBox="0 0 400 310" role="img" aria-label="Cartoon: surgeon and patient celebrating">`+defs()+`<rect x="6" y="6" width="388" height="298" rx="16" fill="url(#p-mint)"/><rect x="6" y="6" width="388" height="298" rx="16" fill="url(#dots)" stroke="#BFE0CC"/>`+
    `<text x="200" y="52" text-anchor="middle" font-family="Gaegu, cursive" font-weight="700" font-size="30" fill="${INK}">RITUAL COMPLETE!</text>`+
-   charSVG({k:'doc',m:'happy',s:1.2},130,170)+charSVG({k:'flap',m:'happy'},270,150)+charSVG({k:'screen',t:'✓ '+n,w:1.2,s:.9},280,236)+`</svg>`;
+   charSVG({k:'doc',m:'happy',s:1.2},130,170)+charSVG({k:'flap',m:'happy'},270,150)+charSVG({k:'screen',t:'✓',w:1.2,s:.9},280,236)+`</svg>`;
   return `<article class="card done" id="done-card"><div class="img">${s}</div>
-   <div class="ribbon"><b>Done for today's knowledge ritual</b><span>${n} shots</span></div>
+   <div class="ribbon"><b>Done for today's knowledge ritual</b></div>
    <div class="body"><h2>You're all caught up</h2>
    <p class="take">${topic?'You have seen every shot in '+esc(topic)+'.':'You have seen every shot.'} New papers and oncology news are added regularly. Pull down at the top, or tap below, to relook older cards, or pick another category above.</p>
    <div class="cd" id="cd"></div>
@@ -1152,7 +1152,7 @@ function unseenCount(){if(tab!=='feed')return 0;const seen=new Set(S.seen);retur
 function updatePill(){
   const p=$('pill');
   if(pendingLive>0){p.className='pill live';p.textContent=`${pendingLive} new paper${pendingLive>1?'s':''} ↻`;p.tabIndex=0;return;}
-  p.className='pill';p.tabIndex=-1;const u=unseenCount();p.textContent=tab==='saved'?`${Object.keys(S.saved).length} saved`:(u?`${u} new`:'All caught up');
+  p.className='pill';p.tabIndex=-1;const u=unseenCount();p.textContent=tab==='saved'?`${Object.keys(S.saved).length} saved`:(u?'New for you':'All caught up');
 }
 function observe(){
   if(!io) io=new IntersectionObserver(es=>es.forEach(e=>{
@@ -1793,7 +1793,7 @@ function boot(){
   booted=true; applyPrefs(); render(); updateGoal();
   if(!S.profile&&!S.guest) showWelcome();
   const n=allReleased().length, d=n-(S.lastN||0);
-  if(S.lastN&&d>0) toast(`${d} new shots since your last visit`);
+  if(S.lastN&&d>0) toast('New shots since your last visit');
   S.lastN=n; persist();
 }
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1906,7 +1906,7 @@ function goalSheet(g,st){
   track('goal-reached');
   const left=unseenCount();
   const sh=openSheet(`<div class="goalwin"><div class="gw-badge">🎉</div><h3>Today's goal achieved!</h3>
-    <p>You've read <b>${g} cards</b> today${st>1?` · <b>${st}-day streak</b>`:''}.${left?` ${left} more new card${left>1?'s are':' is'} waiting.`:''}</p></div>
+    <p>You've read <b>${g} cards</b> today${st>1?` · <b>${st}-day streak</b>`:''}.${left?' More new cards are waiting.':''}</p></div>
     <div class="row"><button class="btn primary" id="gw-more">${left?'Read more':'Relook earlier cards'}</button><button class="btn ghost" id="gw-done">Done for today</button></div>
     <p class="gw-note">Change your daily goal any time in Profile.</p>
     <p class="gw-note"><button class="fb-link" id="gw-fb">Missing a topic? Write to Dr Manish</button></p>`);
@@ -2141,7 +2141,7 @@ function searchSheet(){
   const n={};allCards().forEach(c=>n[c.cat]=(n[c.cat]||0)+1);
   const cats=[...CAT_ORDER.filter(c=>n[c]),...Object.keys(n).filter(c=>!CAT_ORDER.includes(c))];
   const sh=openSheet(`<h3>Search</h3><input class="sinput" id="sq" type="search" placeholder="Search trials, drugs, flaps, topics" autocomplete="off">
-    <div id="sres" class="sres"></div><h3>Browse topics</h3><div class="grid" id="scats">${cats.map(c=>`<button data-topic="${esc(c)}" aria-pressed="${c===topic}">${esc(c)} <span class="cnt">${n[c]}</span></button>`).join('')}</div>`);
+    <div id="sres" class="sres"></div><h3>Browse topics</h3><div class="grid" id="scats">${cats.map(c=>`<button data-topic="${esc(c)}" aria-pressed="${c===topic}">${esc(c)}</button>`).join('')}</div>`);
   const q=sh.querySelector('#sq'), out=sh.querySelector('#sres');
   q.oninput=()=>{
     const v=q.value.trim().toLowerCase(), words=v.split(/\s+/).filter(Boolean);
@@ -2187,7 +2187,7 @@ function profile(){
   const p=S.profile, nl=Object.keys(S.liked).length, ns=Object.keys(S.saved).length, total=allCards().length;
   const seg=(id,opts,cur)=>`<div class="grid" id="${id}">${opts.map(([v,l])=>`<button data-v="${v}" aria-pressed="${String(cur)===String(v)}">${l}</button>`).join('')}</div>`;
   const sh=openSheet(`<div class="prof"><div class="av">${esc(initials(p?.name))}</div><div class="pn"><b>${esc(p?.name||'Guest')}</b><span>${p?esc([p.role,p.city].filter(Boolean).join(' · ')):'Not signed up'}</span>${p?(verified?'<em class="vb ok">Verified professional</em>':(p.regNo?'<em class="vb">Verification pending</em>':'')):''}</div></div>
-   <div class="stats"><div><b>${streak()}</b><span>day streak</span></div><div><b>${readToday()}/${S.goal}</b><span>today</span></div><div><b>${S.seen.length}</b><span>of ${total} read</span></div><div><b>${ns}</b><span>saved</span></div></div>
+   <div class="stats"><div><b>${streak()}</b><span>day streak</span></div><div><b>${readToday()}/${S.goal}</b><span>today</span></div><div><b>${S.seen.length}</b><span>cards read</span></div><div><b>${ns}</b><span>saved</span></div></div>
    ${p?'':'<button class="btn primary" id="p-join">Create free account</button>'}
    <h3>Daily goal</h3>${seg('p-goal',[[5,'5 cards'],[10,'10 cards'],[20,'20 cards']],S.goal)}
    <h3>Your topics</h3><p>${S.interests.length?esc(S.interests.join(', ')):'All topics, in the default order.'}</p><div class="grid"><button id="p-int">Edit topics</button></div>
@@ -2463,7 +2463,7 @@ async function refreshLive(){
   const grew=next.length!==liveCards.length;
   liveCards=next; if(booted) renderChips();
   const last=next[0]?.addedAt?new Date(next[0].addedAt).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}):null;
-  liveStatus=`${next.length} cards added automatically from papers and news; latest ${last||'recently'}.`;
+  liveStatus=`New cards are added automatically from papers and news; latest ${last||'recently'}.`;
   if(!booted||!grew) return;
   const nNew=next.length-renderedLive;
   const onDone=(()=>{const d=$('done-card');if(!d)return false;const r=d.getBoundingClientRect(),f=feed.getBoundingClientRect();return Math.abs(r.top-f.top)<40;})();
