@@ -34,7 +34,7 @@ jobs:
                 "contents":{"en":"Join free in 30 seconds: your topics first, your streak saved, and an alert when a major trial lands."},
                 "url":"https://flapshots.drmanishtiwari.com/?join=1"})
           else:
-              base.update({"filters":[{"field":"tag","key":"installed","relation":"=","value":"no"},{"operator":"AND"},{"field":"tag","key":"ios","relation":"!=","value":"yes"}],
+              base.update({"filters":[{"field":"tag","key":"installed","relation":"=","value":"no"},{"field":"tag","key":"ios","relation":"!=","value":"yes"}],
                 "headings":{"en":"Add FlapShots to your home screen"},
                 "contents":{"en":"Open your daily evidence in one tap, full screen, like an app. Takes 10 seconds."},
                 "url":"https://flapshots.drmanishtiwari.com/?install=1"})
