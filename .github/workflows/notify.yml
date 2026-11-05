@@ -1,0 +1,40 @@
+# Sends one push notification after the daily "Update cards" publish, listing the new cards.
+# Needs the repository secret ONESIGNAL_API_KEY (OneSignal > Settings > Keys & IDs > App API key).
+name: Notify new cards
+on:
+  push:
+    branches: [main]
+    paths: [cards.json]
+jobs:
+  notify:
+    if: startsWith(github.event.head_commit.message, 'Update cards')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Build and send the notification
+        env:
+          ONESIGNAL_API_KEY: ${{ secrets.ONESIGNAL_API_KEY }}
+        run: |
+          if [ -z "$ONESIGNAL_API_KEY" ]; then echo "No ONESIGNAL_API_KEY secret; skipping"; exit 0; fi
+          git show HEAD~1:cards.json > prev.json 2>/dev/null || echo '{"cards":[]}' > prev.json
+          python3 - <<'PY'
+          import json
+          cur=json.load(open('cards.json'))['cards']; prev={c['id'] for c in json.load(open('prev.json')).get('cards',[])}
+          new=[c for c in cur if c['id'] not in prev]
+          if not new:
+              open('skip','w').write('1'); raise SystemExit
+          n=len(new); heads=[c['head'] for c in new[:2]]
+          body={"app_id":"4eea1fc3-55da-475f-a85a-13d71f85a8ef","included_segments":["Total Subscriptions"],
+                "headings":{"en":f"FlapShots: {n} new card{'s' if n>1 else ''} today"},
+                "contents":{"en":" · ".join(heads)+(" and more" if n>2 else "")},
+                "url":"https://flapshots.drmanishtiwari.com/?c=db-"+new[0]['id'],
+                "web_push_topic":"daily-cards","chrome_web_icon":"https://flapshots.drmanishtiwari.com/icon-192.png"}
+          json.dump(body,open('body.json','w'))
+          print(body['headings']['en'],'|',body['contents']['en'])
+          PY
+          if [ -f skip ]; then echo "No new cards"; exit 0; fi
+          curl -sS -X POST "https://api.onesignal.com/notifications?c=push" \
+            -H "Authorization: Key $ONESIGNAL_API_KEY" -H "Content-Type: application/json" \
+            --data @body.json

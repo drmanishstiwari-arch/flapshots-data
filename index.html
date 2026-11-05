@@ -1924,7 +1924,59 @@ function onSeen(){
   setTimeout(maybeA2HS,600);
   setTimeout(maybeSaveTip,900);
   setTimeout(maybeJoinNudge,1100);
+  setTimeout(maybeNotifPrompt,1300);
 }
+/* ---- push notifications (OneSignal). The SDK shares sw.js; a soft question comes first, the browser's own prompt only on "Yes". ---- */
+const OS_APP='4eea1fc3-55da-475f-a85a-13d71f85a8ef';
+const pushOK=()=>'Notification' in window&&'serviceWorker' in navigator&&'PushManager' in window&&location.protocol==='https:';
+window.OneSignalDeferred=window.OneSignalDeferred||[];
+function loadOneSignal(){
+  if(window.__osl||!pushOK())return; window.__osl=1;
+  const sc=document.createElement('script');sc.src='https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';sc.defer=true;document.head.appendChild(sc);
+  OneSignalDeferred.push(async OneSignal=>{
+    try{
+      await OneSignal.init({appId:OS_APP,safari_web_id:'web.onesignal.auto.336e9d4c-289f-452d-8560-a451da3453b9',
+        serviceWorkerPath:'sw.js',serviceWorkerParam:{scope:'/'},notifyButton:{enable:false},autoResubscribe:true});
+      OneSignal.Notifications.addEventListener('permissionChange',g=>track(g?'push-on':'push-off'));
+      if(S.profile)OneSignal.User.addTags({member:'yes',role:String(S.profile.role||'').slice(0,40),focus:String(S.profile.focus||'').slice(0,20)});
+    }catch(e){}
+  });
+}
+if(pushOK())addEventListener('load',()=>setTimeout(loadOneSignal,1500));
+function askPush(){
+  track('push-yes');
+  if(window.OneSignal&&OneSignal.Notifications&&OneSignal.Notifications.requestPermission){OneSignal.Notifications.requestPermission().catch(()=>{});}
+  else if('Notification' in window){Notification.requestPermission().then(()=>loadOneSignal());}
+}
+let notifAsked=false;
+function maybeNotifPrompt(){
+  if(notifAsked||!pushOK()||Notification.permission!=='default'||tab!=='feed')return;
+  if(!$('sheet').hidden||!$('acct').hidden||$('ios-banner')||$('savetip'))return;
+  if(a2hsThisVisit||joinNudged||sessionSeen!==6)return;
+  const p=S.np||{}; if((p.n||0)>=5||(p.at&&Date.now()-p.at<3*864e5))return;
+  notifAsked=true;S.np={n:(p.n||0)+1,at:Date.now()};persist();track('push-ask');
+  const sh=openSheet(`<div class="jn"><h3>Get new evidence as it lands?</h3><p>At most one notification a day, when new cards are added: trials, guidelines and head and neck news. Turn it off any time in Profile.</p></div>
+    <div class="row"><button class="btn primary" id="np-yes">Yes, notify me</button><button class="btn ghost" id="np-no">Not now</button></div>`);
+  sh.querySelector('#np-yes').onclick=()=>{closeSheet();askPush();};
+  sh.querySelector('#np-no').onclick=()=>{closeSheet();track('push-later');};
+}
+function pushLabel(){
+  if(!pushOK())return isIOS()&&!isStandalone()?'Notifications: add to home screen first':null;
+  const p=Notification.permission;
+  if(p==='denied')return 'Notifications: blocked in browser settings';
+  if(p==='granted')return (window.OneSignal&&OneSignal.User&&OneSignal.User.PushSubscription&&OneSignal.User.PushSubscription.optedIn===false)?'Notifications: off (tap to turn on)':'Notifications: on (tap to turn off)';
+  return 'Turn on daily notifications';
+}
+function togglePush(){
+  if(!pushOK()){if(isIOS()&&!isStandalone()){closeSheet();setTimeout(a2hsSheet,250);}return;}
+  const p=Notification.permission;
+  if(p==='default'){closeSheet();askPush();return;}
+  if(p==='granted'&&window.OneSignal&&OneSignal.User){const sub=OneSignal.User.PushSubscription;
+    if(sub.optedIn===false){sub.optIn();track('push-optin');toast('Notifications on');}else{sub.optOut();track('push-optout');toast('Notifications off');}
+    closeSheet();return;}
+  toast('Allow notifications for this site in your browser settings');
+}
+
 /* Guests: invite them to join (topics of their choice first) at the 8th card of a visit (12th if the install prompt
    already showed this visit); once a day at most, 8 times in all. */
 let joinNudged=false;
@@ -2215,6 +2267,7 @@ function profile(){
    <h3>Appearance</h3>${seg('p-theme',[['system','Automatic'],['light','Light'],['dark','Dark']],S.theme)}${seg('p-ts',[['s','Small text'],['m','Medium'],['l','Large']],S.textSize)}
    <h3>Live papers and news</h3><p>${esc(liveStatus)} Your likes, saves and streak stay on this device.</p>
    <h3>Ideas for FlapShots?</h3><p>Suggest a topic or a change straight to the app's creator.</p><div class="grid"><button id="p-fb">Write to Dr Manish S. Tiwari</button></div>
+   ${pushLabel()?`<h3>Notifications</h3><div class="grid"><button id="p-push">${esc(pushLabel())}</button></div>`:''}
    <h3>Account</h3><div class="grid">${p?'<button id="p-edit">Edit profile</button>':''}<button id="iv-p">Invite a colleague</button><button id="rt-p">Rate FlapShots</button><button id="p-report">Report a problem</button><button id="unread">Mark all as unread</button><button id="replay">Replay intro</button>${isStandalone()?'':'<button id="p-a2hs">Add to home screen</button>'}<button id="p-del" class="danger">Delete my data</button></div>
    ${isOwner?'<h3>Admin</h3><div class="grid"><button id="p-admin">Members and reports</button></div>':''}
    <h3>About</h3><div class="grid"><button data-legal="terms">Terms of use</button><button data-legal="privacy">Privacy policy</button><button data-legal="disclaimer">Medical disclaimer</button></div>
@@ -2228,6 +2281,7 @@ function profile(){
   q('#p-int').onclick=()=>{closeSheet();regDraft={...(S.profile||{})};showReg(2,true);};
   q('#p-report').onclick=()=>reportSheet(null);
   q('#iv-p').onclick=()=>inviteSheet('profile'); q('#rt-p').onclick=()=>rateSheet('profile');
+  q('#p-push')&&(q('#p-push').onclick=togglePush);
   q('#p-fb').onclick=()=>{track('fb-open-profile');feedbackSheet('New topic');};
   q('#unread').onclick=()=>{S.seen=[];persist();syncSoon();closeSheet();topic=null;render();toast('All shots marked unread');};
   q('#replay').onclick=()=>{closeSheet();replaySplash();};
