@@ -1,0 +1,44 @@
+# Weekly reminder notifications, sent only to people who allowed notifications:
+#   Tuesday 7:30 pm IST  -> guests (tag member=no): join free to get their own topics first
+#   Friday  7:30 pm IST  -> people still using the browser (tag installed=no, not iPhone): add to home screen
+# Each person drops out automatically once they join or install (the app updates their tags).
+# To pause: GitHub > Actions > "Weekly reminders" > ... > Disable workflow.
+name: Weekly reminders
+on:
+  schedule:
+    - cron: '0 14 * * 2'
+    - cron: '0 14 * * 5'
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: 'join or install'
+        required: true
+        default: 'join'
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send the reminder
+        env:
+          ONESIGNAL_API_KEY: ${{ secrets.ONESIGNAL_API_KEY }}
+          KIND: ${{ github.event.inputs.kind || (github.event.schedule == '0 14 * * 2' && 'join' || 'install') }}
+        run: |
+          if [ -z "$ONESIGNAL_API_KEY" ]; then echo "No ONESIGNAL_API_KEY secret; skipping"; exit 0; fi
+          python3 - <<'PY'
+          import json,os
+          k=os.environ['KIND']
+          base={"app_id":"4eea1fc3-55da-475f-a85a-13d71f85a8ef","chrome_web_icon":"https://flapshots.drmanishtiwari.com/icon-192.png","web_push_topic":"reminder-"+k}
+          if k=='join':
+              base.update({"filters":[{"field":"tag","key":"member","relation":"=","value":"no"}],
+                "headings":{"en":"Make FlapShots yours"},
+                "contents":{"en":"Join free in 30 seconds: your topics first, your streak saved, and an alert when a major trial lands."},
+                "url":"https://flapshots.drmanishtiwari.com/?join=1"})
+          else:
+              base.update({"filters":[{"field":"tag","key":"installed","relation":"=","value":"no"},{"operator":"AND"},{"field":"tag","key":"ios","relation":"!=","value":"yes"}],
+                "headings":{"en":"Add FlapShots to your home screen"},
+                "contents":{"en":"Open your daily evidence in one tap, full screen, like an app. Takes 10 seconds."},
+                "url":"https://flapshots.drmanishtiwari.com/?install=1"})
+          json.dump(base,open('body.json','w')); print(base['headings']['en'])
+          PY
+          curl -sS -X POST "https://api.onesignal.com/notifications?c=push" \
+            -H "Authorization: Key $ONESIGNAL_API_KEY" -H "Content-Type: application/json" --data @body.json

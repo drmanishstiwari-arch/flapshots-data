@@ -1938,11 +1938,18 @@ function loadOneSignal(){
       await OneSignal.init({appId:OS_APP,safari_web_id:'web.onesignal.auto.336e9d4c-289f-452d-8560-a451da3453b9',
         serviceWorkerPath:'sw.js',serviceWorkerParam:{scope:'/'},notifyButton:{enable:false},autoResubscribe:true});
       OneSignal.Notifications.addEventListener('permissionChange',g=>track(g?'push-on':'push-off'));
-      if(S.profile)OneSignal.User.addTags({member:'yes',role:String(S.profile.role||'').slice(0,40),focus:String(S.profile.focus||'').slice(0,20)});
+      pushTags();
     }catch(e){}
   });
 }
 if(pushOK())addEventListener('load',()=>setTimeout(loadOneSignal,1500));
+/* tags let OneSignal remind only guests to join, and only browser users to install */
+function pushTags(){
+  try{if(!window.OneSignal||!OneSignal.User)return;
+    const t={member:S.profile?'yes':'no',installed:isStandalone()||(S.a2hs||{}).done?'yes':'no',ios:isIOS()?'yes':'no'};
+    if(S.profile){t.role=String(S.profile.role||'').slice(0,40);t.focus=String(S.profile.focus||'').slice(0,20);}
+    OneSignal.User.addTags(t);}catch(e){}
+}
 function askPush(){
   track('push-yes');
   if(window.OneSignal&&OneSignal.Notifications&&OneSignal.Notifications.requestPermission){OneSignal.Notifications.requestPermission().catch(()=>{});}
@@ -2129,7 +2136,7 @@ function showReg(step,edit=false){
       S.profile={...regDraft,termsVersion:TERMS_V,consentAt:new Date().toISOString(),joinedAt:S.profile?.joinedAt||new Date().toISOString()};
       S.guest=false;regDraft={};persist();
       o.hidden=true;o.innerHTML='';render();updateGoal();playChime();
-      const ok=DBH?await saveMember():await sendSignup(S.profile.returning&&first?'return':first?'join':'update');syncSoon();if(first)track('join');
+      const ok=DBH?await saveMember():await sendSignup(S.profile.returning&&first?'return':first?'join':'update');syncSoon();if(first)track('join');pushTags();
       toast(first?`Welcome to FlapShots, ${S.profile.name.split(' ')[0]}`:(ok?'Profile updated':'Saved on this device'));
     };
   }
@@ -2365,7 +2372,7 @@ async function sendSignup(kind){
 /* Add to home screen: offered once the reader has swiped 8 cards in a visit; at most 3 times, 5 days apart. */
 let deferredInstall=null, sessionSeen=0;
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});
-addEventListener('appinstalled',()=>{S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');});
+addEventListener('appinstalled',()=>{S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');pushTags();});
 const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
 let a2hsThisVisit=false;
@@ -2517,6 +2524,11 @@ function a2hsSheet(){
   const ch=sh.querySelector('#a2-chrome');if(ch)ch.onclick=()=>{closeSheet();openInChrome();};
 }
 document.addEventListener('click',e=>{if(e.target.closest('#p-a2hs')){closeSheet();setTimeout(a2hsSheet,250);}});
+/* Join link (?join=1, used by the weekly reminder notification): opens the sign-up form for guests. */
+if(new URLSearchParams(location.search).has('join')){
+  history.replaceState(null,'',location.pathname);track('join-link');
+  if(!S.profile)setTimeout(()=>{if(!S.profile&&$('acct').hidden)showReg(1);},2500);
+}
 /* Install link: https://flapshots.drmanishtiwari.com/install (or ?install=1) opens straight to the install prompt. */
 if(new URLSearchParams(location.search).has('install')&&!isStandalone()){
   history.replaceState(null,'',location.pathname);
