@@ -2557,7 +2557,8 @@ async function refreshLive(){
   setInterval(refreshLive,30*60e3);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshLive();});
 })();
-if('serviceWorker' in navigator&&location.protocol==='https:'){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+/* where push works, OneSignal registers this same sw.js (with its own parameters); registering it here too would swap the two back and forth */
+if('serviceWorker' in navigator&&location.protocol==='https:'&&!pushOK()){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 </script>
 
 </body></html>
