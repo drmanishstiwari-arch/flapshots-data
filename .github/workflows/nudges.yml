@@ -1,0 +1,82 @@
+# Reminders for readers who have not opened FlapShots, sent only to people who allowed notifications.
+#   Every evening 8:00 pm IST -> readers who used FlapShots in the past 7 days but have not opened it today
+#   Sunday 11:00 am IST       -> readers away 8-60 days: this week's top 3 cards (one a week, then they stop)
+# The app tags each reader with d = the IST day they last opened it, and nudge = off if they turned the
+# evening reminder off in Profile. On Tuesday/Friday evenings the people who get the 7:30 pm weekly reminder
+# (reminders.yml) are left out, so nobody gets two pushes that evening.
+# Never more than 2 pushes a day: the morning "new cards" alert (notify.yml) plus at most one of these.
+# To pause: GitHub > Actions > "Inactive reminders" > ... > Disable workflow.
+name: Inactive reminders
+on:
+  schedule:
+    - cron: '30 14 * * *'
+    - cron: '30 5 * * 0'
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: 'evening or weekly'
+        required: true
+        default: 'evening'
+      dry_run:
+        description: 'yes = print the notification only, do not send'
+        required: true
+        default: 'yes'
+jobs:
+  nudge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and send the reminder
+        env:
+          ONESIGNAL_API_KEY: ${{ secrets.ONESIGNAL_API_KEY }}
+          KIND: ${{ github.event.inputs.kind || (github.event.schedule == '30 5 * * 0' && 'weekly' || 'evening') }}
+          DRY: ${{ github.event.inputs.dry_run || 'no' }}
+        run: |
+          python3 - <<'PY'
+          import json,os,time,datetime as dt
+          k=os.environ['KIND']
+          IST=dt.timezone(dt.timedelta(hours=5,minutes=30))
+          now=dt.datetime.now(IST); today=int((time.time()+19800)//86400)   # IST day number, same as the app's tag d
+          cards=json.load(open('cards.json'))['cards']
+          site="https://flapshots.drmanishtiwari.com/"
+          def ago(c):
+              try: return (dt.datetime.now(dt.timezone.utc)-dt.datetime.fromisoformat(c['addedAt'].replace('Z','+00:00'))).total_seconds()/86400
+              except Exception: return 999
+          def tag(key,rel,val=None):
+              f={"field":"tag","key":key,"relation":rel}
+              if val is not None: f["value"]=str(val)
+              return f
+          OR={"operator":"OR"}
+          base=[tag("nudge","!=","off")]
+          body={"app_id":"4eea1fc3-55da-475f-a85a-13d71f85a8ef","chrome_web_icon":site+"icon-192.png","web_push_topic":"nudge-"+k}
+          if k=='evening':
+              fresh=[c for c in cards if ago(c)<1]
+              pick=(fresh[2] if len(fresh)>2 else (fresh or cards)[0])   # the morning alert already showed the first two
+              grp=base+[tag("d","<",today),tag("d",">",today-8)]
+              wd=now.weekday()   # Tue=1, Fri=4: the weekly reminder goes out at 7:30 pm
+              if wd==1: groups=[grp+[tag("member","=","yes")]]
+              elif wd==4: groups=[grp+[tag("installed","=","yes")],grp+[tag("ios","=","yes")]]
+              else: groups=[grp]
+              body.update({"headings":{"en":"Your 2-minute FlapShots read"},
+                "contents":{"en":pick['head']+(" · and more new today" if len(fresh)>1 else "")},
+                "url":site+"?c=db-"+pick['id']+"&src=nudge",
+                "ttl":max(3600,int(((now.replace(hour=23,minute=59)-now).total_seconds())))})   # gone by midnight
+          else:
+              week=[c for c in cards if ago(c)<7][:3] or cards[:3]
+              grp=base+[{"field":"last_session","relation":"<","hours_ago":"1440"}]
+              groups=[grp+[tag("d","<",today-7),tag("d",">",today-61)],grp+[tag("d","not_exists")]]
+              body.update({"headings":{"en":"This week on FlapShots"},
+                "contents":{"en":" · ".join(c['head'] for c in week)},
+                "url":site+"?c=db-"+week[0]['id']+"&src=weekly","ttl":3*86400})
+          filters=[]
+          for i,g in enumerate(groups):
+              if i: filters.append(OR)
+              filters+=g
+          body["filters"]=filters
+          json.dump(body,open('body.json','w'))
+          print(json.dumps(body,indent=1,ensure_ascii=False))
+          PY
+          if [ "$DRY" = "yes" ]; then echo "Dry run: not sent"; exit 0; fi
+          if [ -z "$ONESIGNAL_API_KEY" ]; then echo "No ONESIGNAL_API_KEY secret; skipping"; exit 0; fi
+          curl -sS -X POST "https://api.onesignal.com/notifications?c=push" \
+            -H "Authorization: Key $ONESIGNAL_API_KEY" -H "Content-Type: application/json" --data @body.json

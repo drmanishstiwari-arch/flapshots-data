@@ -1943,10 +1943,15 @@ function loadOneSignal(){
   });
 }
 if(pushOK())addEventListener('load',()=>setTimeout(loadOneSignal,1500));
-/* tags let OneSignal remind only guests to join, and only browser users to install */
+/* tags let OneSignal remind only guests to join, and only browser users to install;
+   d = IST day number of the last visit and nudge = on/off drive the evening "not opened today" reminder (nudges.yml) */
+const istDay=()=>Math.floor((Date.now()+19800e3)/864e5);
+let tagDay=0;
 function pushTags(){
   try{if(!window.OneSignal||!OneSignal.User)return;
-    const t={member:S.profile?'yes':'no',installed:isStandalone()||(S.a2hs||{}).done?'yes':'no',ios:isIOS()?'yes':'no'};
+    const t={member:S.profile?'yes':'no',installed:isStandalone()||(S.a2hs||{}).done?'yes':'no',ios:isIOS()?'yes':'no',
+      d:String(istDay()),nudge:S.nudge===false?'off':'on'};
+    tagDay=istDay();
     if(S.profile){t.role=String(S.profile.role||'').slice(0,40);t.focus=String(S.profile.focus||'').slice(0,20);}
     OneSignal.User.addTags(t);}catch(e){}
 }
@@ -1962,7 +1967,7 @@ function maybeNotifPrompt(){
   if(a2hsThisVisit||joinNudged||sessionSeen!==6)return;
   const p=S.np||{}; if((p.n||0)>=5||(p.at&&Date.now()-p.at<3*864e5))return;
   notifAsked=true;S.np={n:(p.n||0)+1,at:Date.now()};persist();track('push-ask');
-  const sh=openSheet(`<div class="jn"><h3>Get new evidence as it lands?</h3><p>At most one notification a day, when new cards are added: trials, guidelines and head and neck news. Turn it off any time in Profile.</p></div>
+  const sh=openSheet(`<div class="jn"><h3>Get new evidence as it lands?</h3><p>A morning alert when new trials, guidelines and head and neck news are added, and an evening reminder only on days you haven't opened FlapShots. Turn either off any time in Profile.</p></div>
     <div class="row"><button class="btn primary" id="np-yes">Yes, notify me</button><button class="btn ghost" id="np-no">Not now</button></div>`);
   sh.querySelector('#np-yes').onclick=()=>{closeSheet();askPush();};
   sh.querySelector('#np-no').onclick=()=>{closeSheet();track('push-later');};
@@ -2274,7 +2279,7 @@ function profile(){
    <h3>Appearance</h3>${seg('p-theme',[['system','Automatic'],['light','Light'],['dark','Dark']],S.theme)}${seg('p-ts',[['s','Small text'],['m','Medium'],['l','Large']],S.textSize)}
    <h3>Live papers and news</h3><p>${esc(liveStatus)} Your likes, saves and streak stay on this device.</p>
    <h3>Ideas for FlapShots?</h3><p>Suggest a topic or a change straight to the app's creator.</p><div class="grid"><button id="p-fb">Write to Dr Manish S. Tiwari</button></div>
-   ${pushLabel()?`<h3>Notifications</h3><div class="grid"><button id="p-push">${esc(pushLabel())}</button></div>`:''}
+   ${pushLabel()?`<h3>Notifications</h3><div class="grid"><button id="p-push">${esc(pushLabel())}</button>${pushOK()&&Notification.permission==='granted'?`<button id="p-nudge">${S.nudge===false?'Evening reminder: off (tap to turn on)':'Evening reminder if I haven\'t opened FlapShots: on'}</button>`:''}</div>`:''}
    <h3>Account</h3><div class="grid">${p?'<button id="p-edit">Edit profile</button>':''}<button id="iv-p">Invite a colleague</button><button id="rt-p">Rate FlapShots</button><button id="p-report">Report a problem</button><button id="unread">Mark all as unread</button><button id="replay">Replay intro</button>${isStandalone()?'':'<button id="p-a2hs">Add to home screen</button>'}<button id="p-del" class="danger">Delete my data</button></div>
    ${isOwner?'<h3>Admin</h3><div class="grid"><button id="p-admin">Members and reports</button></div>':''}
    <h3>About</h3><div class="grid"><button data-legal="terms">Terms of use</button><button data-legal="privacy">Privacy policy</button><button data-legal="disclaimer">Medical disclaimer</button></div>
@@ -2289,6 +2294,7 @@ function profile(){
   q('#p-report').onclick=()=>reportSheet(null);
   q('#iv-p').onclick=()=>inviteSheet('profile'); q('#rt-p').onclick=()=>rateSheet('profile');
   q('#p-push')&&(q('#p-push').onclick=togglePush);
+  q('#p-nudge')&&(q('#p-nudge').onclick=()=>{S.nudge=S.nudge===false;persist();syncSoon();pushTags();track(S.nudge?'nudge-on':'nudge-off');toast(S.nudge?'Evening reminder on':'Evening reminder off');profile();});
   q('#p-fb').onclick=()=>{track('fb-open-profile');feedbackSheet('New topic');};
   q('#unread').onclick=()=>{S.seen=[];persist();syncSoon();closeSheet();topic=null;render();toast('All shots marked unread');};
   q('#replay').onclick=()=>{closeSheet();replaySplash();};
@@ -2579,7 +2585,7 @@ async function refreshLive(){
   if(wantTip){const go=()=>{if(openTip(wantTip))sharedArrival('tip');};if(booted)go();else{const t=setInterval(()=>{if(booted){clearInterval(t);go();}},200);setTimeout(()=>clearInterval(t),15000);}}
   else if(want){const go=()=>{if(byId(want)){openCard(want);sharedArrival('card');}};if(booted)go();else{const t=setInterval(()=>{if(booted){clearInterval(t);go();}},200);setTimeout(()=>clearInterval(t),15000);}}
   setInterval(refreshLive,30*60e3);
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshLive();});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){refreshLive();if(tagDay&&tagDay!==istDay())pushTags();}});
 })();
 /* where push works, OneSignal registers this same sw.js (with its own parameters); registering it here too would swap the two back and forth */
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!pushOK()){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
