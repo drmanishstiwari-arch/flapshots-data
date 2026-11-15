@@ -1026,7 +1026,7 @@ const H4=4*3600e3, slotNow=()=>Math.floor(Date.now()/H4);
 const DEFAULTS=()=>({seen:[],liked:{},saved:{},lastN:0,profile:null,guest:false,interests:[],goal:20,days:{},theme:'system',textSize:'m',hidden:{},reports:[]});
 let S=DEFAULTS();
 try{Object.assign(S,JSON.parse(localStorage.getItem('flapshots2')||'{}'));}catch(e){}
-const persist=()=>{try{localStorage.setItem('flapshots2',JSON.stringify(S));}catch(e){}};
+const persist=()=>{try{localStorage.setItem('flapshots2',JSON.stringify(S));}catch(e){}badgeSoon();};
 if(new URLSearchParams(location.search).has('reset-install')){S.a2hs={};S.visits=0;persist();history.replaceState(null,'',location.pathname);}
 if(!S.g20){if(S.goal===10)S.goal=20;S.g20=1;persist();}
 if(!S.vid){S.vid='v'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);persist();}
@@ -2277,6 +2277,7 @@ function profile(){
    <h3>Daily goal</h3>${seg('p-goal',[[5,'5 cards'],[10,'10 cards'],[20,'20 cards']],S.goal)}
    <h3>Your topics</h3><p>${S.interests.length?esc(S.interests.join(', ')):'All topics, in the default order.'}</p><div class="grid"><button id="p-int">Edit topics</button></div>
    <h3>Appearance</h3>${seg('p-theme',[['system','Automatic'],['light','Light'],['dark','Dark']],S.theme)}${seg('p-ts',[['s','Small text'],['m','Medium'],['l','Large']],S.textSize)}
+   ${badgeRow()}
    <h3>Live papers and news</h3><p>${esc(liveStatus)} Your likes, saves and streak stay on this device.</p>
    <h3>Ideas for FlapShots?</h3><p>Suggest a topic or a change straight to the app's creator.</p><div class="grid"><button id="p-fb">Write to Dr Manish S. Tiwari</button></div>
    ${pushLabel()?`<h3>Notifications</h3><div class="grid"><button id="p-push">${esc(pushLabel())}</button>${pushOK()&&Notification.permission==='granted'?`<button id="p-nudge">${S.nudge===false?'Evening reminder: off (tap to turn on)':'Evening reminder if I haven\'t opened FlapShots: on'}</button>`:''}</div>`:''}
@@ -2296,6 +2297,7 @@ function profile(){
   q('#p-push')&&(q('#p-push').onclick=togglePush);
   q('#p-nudge')&&(q('#p-nudge').onclick=()=>{S.nudge=S.nudge===false;persist();syncSoon();pushTags();track(S.nudge?'nudge-on':'nudge-off');toast(S.nudge?'Evening reminder on':'Evening reminder off');profile();});
   q('#p-fb').onclick=()=>{track('fb-open-profile');feedbackSheet('New topic');};
+  q('#p-badge')&&(q('#p-badge').onclick=toggleBadge);
   q('#unread').onclick=()=>{S.seen=[];persist();syncSoon();closeSheet();topic=null;render();toast('All shots marked unread');};
   q('#replay').onclick=()=>{closeSheet();replaySplash();};
   q('#p-admin')&&(q('#p-admin').onclick=adminSheet);
@@ -2571,7 +2573,7 @@ async function refreshLive(){
   const next=await loadCards();
   if(!next){if(!liveCards.length)liveStatus='Could not reach the live library just now; showing the built-in cards.';return;}
   const grew=next.length!==liveCards.length;
-  liveCards=next; if(booted) renderChips();
+  liveCards=next; if(booted) renderChips(); badgeSoon();
   const last=next[0]?.addedAt?new Date(next[0].addedAt).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}):null;
   liveStatus=`New cards are added automatically from papers and news; latest ${last||'recently'}.`;
   if(!booted||!grew) return;
@@ -2589,6 +2591,52 @@ async function refreshLive(){
 })();
 /* where push works, OneSignal registers this same sw.js (with its own parameters); registering it here too would swap the two back and forth */
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!pushOK()){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+
+/* ---- App-icon badge: the number of cards this reader has not seen yet (all topics; hidden cards left out; shows 99 at most).
+   Works where the browser has the Badging API: home-screen app on iPhone/iPad (iOS 16.4+, needs notifications allowed),
+   installed app on Windows, Mac and ChromeOS. Android launchers show their own dot from notifications instead.
+   The page saves a small copy of the reading state (seen + hidden ids) for the service worker, which refreshes the count
+   from cards.json when a push arrives (FlapShots) or on periodic background sync, so the number grows while the app is closed. ---- */
+const BADGE_MAX=99, hasBadge=()=>'setAppBadge' in navigator;
+var badgeLast=-1, badgeT=0;
+function badgeSoon(){clearTimeout(badgeT);badgeT=setTimeout(updateBadge,600);}
+function badgeCount(){const seen=new Set(S.seen),hid=S.hidden||{};return allReleased().filter(c=>!seen.has(c.id)&&!hid[c.id]).length;}
+function updateBadge(){
+  try{
+    if(!liveCards.length)return;                       /* wait for the live library, or the count would be too low */
+    const n=S.badgeOff?0:Math.min(badgeCount(),BADGE_MAX);
+    if(hasBadge()&&n!==badgeLast){badgeLast=n;(n?navigator.setAppBadge(n):navigator.clearAppBadge()).catch(()=>{});}
+    saveBadgeState();
+  }catch(e){}
+}
+var badgeSaved="";
+function saveBadgeState(){
+  try{
+    if(!('caches' in window))return;
+    const seen=new Set(S.seen),hid=S.hidden||{};
+    const st={seen:S.seen.slice(-4000),hidden:Object.keys(hid),lib:LIB.filter(c=>!seen.has(c.id)&&!hid[c.id]).length,off:!!S.badgeOff,max:BADGE_MAX};
+    const body=JSON.stringify(st); if(body===badgeSaved)return; badgeSaved=body;
+    caches.open('badge-state').then(c=>c.put('badge-state.json',new Response(body,{headers:{'content-type':'application/json'}}))).catch(()=>{});
+  }catch(e){}
+}
+function badgeRow(){
+  if(!hasBadge())return '';
+  const needPerm=isIOS()&&'Notification' in window&&Notification.permission!=='granted';
+  const lab=S.badgeOff?'Unread count on app icon: off (tap to turn on)':needPerm?(Notification.permission==='denied'?'Unread count on app icon: allow notifications in Settings':'Show unread count on app icon (tap to allow)'):'Unread count on app icon: on (tap to turn off)';
+  return `<h3>App icon</h3><div class="grid"><button id="p-badge">${esc(lab)}</button></div>`;
+}
+function toggleBadge(){
+  const needPerm=isIOS()&&'Notification' in window&&Notification.permission!=='granted';
+  if(!S.badgeOff&&needPerm){
+    if(Notification.permission==='denied'){toast('Allow notifications for FlapShots in iPhone Settings to see the count');return;}
+    closeSheet();askPush(); return;
+  }
+  S.badgeOff=!S.badgeOff;badgeLast=-1;persist();if(typeof syncSoon==='function')syncSoon();track(S.badgeOff?'badge-off':'badge-on');
+  toast(S.badgeOff?'Icon count off':'Icon count on');profile();
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')updateBadge();});
+/* background refresh where supported (installed Chrome/Edge apps); the browser decides the actual timing */
+if('serviceWorker' in navigator)navigator.serviceWorker.ready.then(reg=>{if(reg.periodicSync)reg.periodicSync.register('badge',{minInterval:6*3600e3}).catch(()=>{});}).catch(()=>{});
 </script>
 
 </body></html>

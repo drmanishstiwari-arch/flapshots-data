@@ -1,9 +1,9 @@
 /* OneSignal push (shares this service worker) */
 try{importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');}catch(e){}
 /* FlapShots offline support: page and icons cached; cards.json always fetched fresh, cached copy used offline. */
-const V='flapshots-v33', CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','cards.json'];
+const V='flapshots-v34', CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','cards.json'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!=='badge-state').map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{
   const r=e.request; if(r.method!=='GET')return;
   const u=new URL(r.url);
@@ -18,3 +18,22 @@ self.addEventListener('fetch',e=>{
     e.respondWith(caches.match(r).then(hit=>hit||fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp));}return res;})));
   }
 });
+
+/* App-icon badge: recount unread cards from the latest cards.json and the reading state the page saved. */
+async function refreshBadge(){
+  try{
+    if(!('setAppBadge' in self.navigator))return;
+    const r=await (await caches.open('badge-state')).match('badge-state.json'); if(!r)return;
+    const st=await r.json(); if(st.off){await self.navigator.clearAppBadge();return;}
+    const res=await fetch('cards.json?t='+Date.now(),{cache:'no-store'}); if(!res.ok)return;
+    const cp=res.clone(); caches.open(V).then(c=>c.put('cards.json',cp)).catch(()=>{});
+    const j=await res.json(), arr=Array.isArray(j)?j:(j.cards||[]);
+    const seen=new Set(st.seen||[]), hid=new Set(st.hidden||[]);
+    const ok=d=>d&&d.id&&typeof d.head==='string'&&typeof d.take==='string'&&typeof d.u==='string'&&/^https:\/\//.test(d.u)&&typeof d.cat==='string';
+    let n=(st.lib||0)+arr.filter(ok).map(d=>'db-'+d.id).filter(id=>!seen.has(id)&&!hid.has(id)).length;
+    n=Math.min(n,st.max||99);
+    if(n)await self.navigator.setAppBadge(n); else await self.navigator.clearAppBadge();
+  }catch(e){}
+}
+self.addEventListener('push',e=>{e.waitUntil(refreshBadge());});
+self.addEventListener('periodicsync',e=>{if(e.tag==='badge')e.waitUntil(refreshBadge());});
