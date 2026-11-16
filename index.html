@@ -2592,7 +2592,8 @@ async function refreshLive(){
 /* where push works, OneSignal registers this same sw.js (with its own parameters); registering it here too would swap the two back and forth */
 if('serviceWorker' in navigator&&location.protocol==='https:'&&!pushOK()){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
 
-/* ---- App-icon badge: the number of cards this reader has not seen yet (all topics; hidden cards left out; shows 99 at most).
+/* ---- App-icon badge: cards left for today's goal (goal minus today's swipes), plus yesterday's shortfall
+   (e.g. goal 20, read 5 yesterday -> 35 today). Never more than the unread cards left (hidden cards left out).
    Works where the browser has the Badging API: home-screen app on iPhone/iPad (iOS 16.4+, needs notifications allowed),
    installed app on Windows, Mac and ChromeOS. Android launchers show their own dot from notifications instead.
    The page saves a small copy of the reading state (seen + hidden ids) for the service worker, which refreshes the count
@@ -2601,10 +2602,11 @@ const BADGE_MAX=99, hasBadge=()=>'setAppBadge' in navigator;
 var badgeLast=-1, badgeT=0;
 function badgeSoon(){clearTimeout(badgeT);badgeT=setTimeout(updateBadge,600);}
 function badgeCount(){const seen=new Set(S.seen),hid=S.hidden||{};return allReleased().filter(c=>!seen.has(c.id)&&!hid[c.id]).length;}
+function badgeDue(){const g=S.goal||20,y=S.days[todayKey(1)]||0;return Math.max(0,g+Math.max(0,g-y)-readToday());}
 function updateBadge(){
   try{
     if(!liveCards.length)return;                       /* wait for the live library, or the count would be too low */
-    const n=S.badgeOff?0:Math.min(badgeCount(),BADGE_MAX);
+    const n=S.badgeOff?0:Math.min(badgeCount(),badgeDue(),BADGE_MAX);
     if(hasBadge()&&n!==badgeLast){badgeLast=n;(n?navigator.setAppBadge(n):navigator.clearAppBadge()).catch(()=>{});}
     saveBadgeState();
   }catch(e){}
@@ -2614,7 +2616,7 @@ function saveBadgeState(){
   try{
     if(!('caches' in window))return;
     const seen=new Set(S.seen),hid=S.hidden||{};
-    const st={seen:S.seen.slice(-4000),hidden:Object.keys(hid),lib:LIB.filter(c=>!seen.has(c.id)&&!hid[c.id]).length,off:!!S.badgeOff,max:BADGE_MAX};
+    const st={seen:S.seen.slice(-4000),hidden:Object.keys(hid),lib:LIB.filter(c=>!seen.has(c.id)&&!hid[c.id]).length,off:!!S.badgeOff,max:BADGE_MAX,goal:S.goal||20,days:{[todayKey()]:readToday(),[todayKey(1)]:S.days[todayKey(1)]||0,[todayKey(2)]:S.days[todayKey(2)]||0}};
     const body=JSON.stringify(st); if(body===badgeSaved)return; badgeSaved=body;
     caches.open('badge-state').then(c=>c.put('badge-state.json',new Response(body,{headers:{'content-type':'application/json'}}))).catch(()=>{});
   }catch(e){}
@@ -2622,7 +2624,7 @@ function saveBadgeState(){
 function badgeRow(){
   if(!hasBadge())return '';
   const needPerm=isIOS()&&'Notification' in window&&Notification.permission!=='granted';
-  const lab=S.badgeOff?'Unread count on app icon: off (tap to turn on)':needPerm?(Notification.permission==='denied'?'Unread count on app icon: allow notifications in Settings':'Show unread count on app icon (tap to allow)'):'Unread count on app icon: on (tap to turn off)';
+  const lab=S.badgeOff?'Cards-left count on app icon: off (tap to turn on)':needPerm?(Notification.permission==='denied'?'Cards-left count on app icon: allow notifications in Settings':'Show cards left today on app icon (tap to allow)'):'Cards-left count on app icon: on (tap to turn off)';
   return `<h3>App icon</h3><div class="grid"><button id="p-badge">${esc(lab)}</button></div>`;
 }
 function toggleBadge(){

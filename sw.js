@@ -1,7 +1,7 @@
 /* OneSignal push (shares this service worker) */
 try{importScripts('https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.sw.js');}catch(e){}
 /* FlapShots offline support: page and icons cached; cards.json always fetched fresh, cached copy used offline. */
-const V='flapshots-v34', CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','cards.json'];
+const V='flapshots-v35', CORE=['./','index.html','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','cards.json'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V&&k!=='badge-state').map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{
@@ -19,7 +19,8 @@ self.addEventListener('fetch',e=>{
   }
 });
 
-/* App-icon badge: recount unread cards from the latest cards.json and the reading state the page saved. */
+/* App-icon badge: cards left for today's goal plus yesterday's shortfall, capped by unread cards in the latest cards.json. */
+const dayKey=(b=0)=>new Date(Date.now()+5.5*3600e3-b*864e5).toISOString().slice(0,10);
 async function refreshBadge(){
   try{
     if(!('setAppBadge' in self.navigator))return;
@@ -31,7 +32,8 @@ async function refreshBadge(){
     const seen=new Set(st.seen||[]), hid=new Set(st.hidden||[]);
     const ok=d=>d&&d.id&&typeof d.head==='string'&&typeof d.take==='string'&&typeof d.u==='string'&&/^https:\/\//.test(d.u)&&typeof d.cat==='string';
     let n=(st.lib||0)+arr.filter(ok).map(d=>'db-'+d.id).filter(id=>!seen.has(id)&&!hid.has(id)).length;
-    n=Math.min(n,st.max||99);
+    const g=st.goal||20, dd=st.days||{}, due=Math.max(0,g+Math.max(0,g-(dd[dayKey(1)]||0))-(dd[dayKey()]||0));
+    n=Math.min(n,due,st.max||99);
     if(n)await self.navigator.setAppBadge(n); else await self.navigator.clearAppBadge();
   }catch(e){}
 }
