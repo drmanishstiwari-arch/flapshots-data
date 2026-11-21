@@ -206,6 +206,41 @@ button:focus-visible,a:focus-visible{outline:2px solid #5B8CFF;outline-offset:2p
 .goal .flame{width:14px;height:14px;fill:#FF9B6B;margin-left:2px}
 .tab{font-size:17px}
 .tabs{gap:16px}
+/* daily goal progress sheet */
+.gp{display:flex;flex-direction:column;gap:14px}
+.gp-top{display:flex;align-items:center;gap:16px}
+.gp-ring{position:relative;width:104px;height:104px;flex:0 0 auto}
+.gp-ring svg{width:104px;height:104px;transform:rotate(-90deg)}
+.gp-ring .bg{fill:none;stroke:var(--line);stroke-width:9}
+.gp-ring .fg{fill:none;stroke:#FF7A6B;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .6s}
+.gp-ring .ct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.gp-ring .ct b{font-size:28px;font-weight:800;line-height:1}
+.gp-ring .ct span{font-size:12px;color:var(--muted)}
+.gp-nudge{margin:0;font-size:15px;line-height:1.4}
+.gp-flame{margin:4px 0 0;font-size:13px;color:var(--muted);line-height:1.4}
+.gp-h{margin:2px 0 -6px;font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.gp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.gp-tiles div{background:var(--chip);border-radius:12px;padding:10px 8px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.gp-tiles b{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.gp-tiles span{font-size:12px;color:var(--muted)}
+.gp-bars{position:relative;height:96px;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;padding-top:6px}
+.gp-bars .bar{display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.gp-bars .bar i{display:block;width:100%;max-width:26px;border-radius:5px 5px 2px 2px;background:#FFB7AE;min-height:2px}
+.gp-bars .bar.met i{background:#FF7A6B}
+.gp-bars .bar em{font-style:normal;font-size:11px;color:var(--muted)}
+.gp-bars .bar.today em{color:var(--ink);font-weight:700}
+.gp-bars .gl{position:absolute;left:0;right:0;border-top:1.5px dashed var(--muted);pointer-events:none}
+.gp-bars .gl span{position:absolute;right:0;top:-16px;font-size:10px;color:var(--muted)}
+.gp-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.gp-cal .wd{font-size:11px;color:var(--muted);text-align:center}
+.gp-cal .d{aspect-ratio:1;border-radius:8px;background:var(--line);display:grid;place-items:center;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.gp-cal .d.some{background:#FFD3CC;color:#7A2A20}
+.gp-cal .d.met{background:#FF7A6B;color:#fff}
+.gp-cal .d.today{outline:2px solid var(--ink);outline-offset:1px}
+.gp-cal .d.fut{background:none;border:1.5px dashed var(--line)}
+.gp-key{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.gp-key i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.gp-note{margin:0;font-size:12.5px;color:var(--muted);line-height:1.45}
 /* text size preference */
 :root[data-ts="s"] .take{font-size:15px}
 :root[data-ts="l"] .take{font-size:19px;line-height:1.5}
@@ -1773,6 +1808,7 @@ function installNow(){T_('shared-install');const ev=deferredInstall;if(ev){defer
 function sharedArrival(what){
   T_('shared-open-'+what);
   const o=$('acct'); if(!o.hidden&&!S.profile){o.hidden=true;o.innerHTML='';}
+  if(!S.profile)sharedGate=sessionSeen+3;
   if(isStandalone()||(S.a2hs||{}).done)return;
   let shown=false;
   const offer=()=>{
@@ -1794,7 +1830,7 @@ $('gdefs').insertAdjacentHTML('afterbegin',defsMarkup());
 let booted=false;
 function boot(){
   booted=true; applyPrefs(); render(); updateGoal();
-  if(!S.profile&&!S.guest) showWelcome();
+  if(!S.profile) showWelcome();
   const n=allReleased().length, d=n-(S.lastN||0);
   if(S.lastN&&d>0) toast('New shots since your last visit');
   S.lastN=n; persist();
@@ -2006,6 +2042,43 @@ function maybeJoinNudge(){
   sh.querySelector('#jn-yes').onclick=()=>{closeSheet();track('join-nudge-yes');showReg(1);};
   sh.querySelector('#jn-no').onclick=()=>{closeSheet();track('join-nudge-later');};
 }
+function bestStreak(){const g=S.goal||20,ks=Object.keys(S.days).filter(k=>(S.days[k]||0)>=g).sort();let best=0,run=0,prev=null;
+  for(const k of ks){const t=Date.parse(k+'T00:00:00Z');run=(prev!==null&&t-prev===864e5)?run+1:1;best=Math.max(best,run);prev=t;}return Math.max(best,streak());}
+function sumDays(n){let t=0;for(let i=0;i<n;i++)t+=S.days[todayKey(i)]||0;return t;}
+function goalProgressSheet(){
+  track('goal-sheet');
+  const g=S.goal||20,n=readToday(),st=streak(),left=Math.max(0,g-n),C=2*Math.PI*44,p=Math.min(1,n/g);
+  const dows=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],dow=k=>new Date(k+'T00:00:00Z').getUTCDay();
+  const nudge=n>=g?`Goal met for today${st>1?`, <b>${st} days</b> in a row`:''}. Well done.`
+    :st>0?`<b>${left} card${left===1?'':'s'}</b> to go to keep your <b>${st}-day streak</b>.`
+    :`<b>${left} card${left===1?'':'s'}</b> to go to reach today's goal.`;
+  const daysRead=Object.values(S.days).filter(v=>v>0).length;
+  const last7=[...Array(7)].map((_,i)=>todayKey(6-i)),mx=Math.max(g,...last7.map(k=>S.days[k]||0));
+  const bars=last7.map((k,i)=>{const v=S.days[k]||0;return `<div class="bar${v>=g?' met':''}${i===6?' today':''}" title="${v} cards"><i style="height:${(v/mx*72).toFixed(1)}px"></i><em>${i===6?'Today':dows[dow(k)]}</em></div>`;}).join('');
+  const glTop=(96-18-(g/mx*72)).toFixed(1);
+  const back=(dow(todayKey())+6)%7; // days since Monday
+  let cal=['M','T','W','T','F','S','S'].map(d=>`<div class="wd">${d}</div>`).join('');
+  for(let i=21+back;i>=back-6;i--){
+    if(i<0){cal+=`<div class="d fut"></div>`;continue;}
+    const k=todayKey(i),v=S.days[k]||0;
+    cal+=`<div class="d${v>=g?' met':v>0?' some':''}${i===0?' today':''}" title="${k}: ${v} cards">${+k.slice(8)}</div>`;
+  }
+  const sh=openSheet(`<div class="gp"><h3>Your daily goal</h3>
+    <div class="gp-top"><div class="gp-ring"><svg viewBox="0 0 104 104" aria-hidden="true"><circle class="bg" cx="52" cy="52" r="44"/><circle class="fg" cx="52" cy="52" r="44" style="stroke-dasharray:${C.toFixed(1)};stroke-dashoffset:${(C*(1-p)).toFixed(1)}"/></svg><div class="ct"><b>${n}</b><span>of ${g} today</span></div></div>
+      <div><p class="gp-nudge">${nudge}</p><p class="gp-flame">The number beside the flame is your day streak: days in a row you met your goal.</p></div></div>
+    <div class="gp-tiles"><div><b>${st}</b><span>Day streak</span></div><div><b>${bestStreak()}</b><span>Best streak</span></div><div><b>${daysRead}</b><span>Days read</span></div></div>
+    <p class="gp-h">Cards read</p>
+    <div class="gp-tiles"><div><b>${n}</b><span>Today</span></div><div><b>${sumDays(7)}</b><span>Last 7 days</span></div><div><b>${sumDays(28)}</b><span>Last 4 weeks</span></div></div>
+    <div class="gp-bars" role="img" aria-label="Cards read on each of the last 7 days">${bars}<div class="gl" style="top:${glTop}px"><span>goal ${g}</span></div></div>
+    <p class="gp-h">Last 4 weeks</p>
+    <div class="gp-cal">${cal}</div>
+    <div class="gp-key"><span><i style="background:#FF7A6B"></i>Goal met</span><span><i style="background:#FFD3CC"></i>Some reading</span><span><i style="background:var(--line)"></i>None</span></div>
+    <p class="gp-h">Daily goal</p>
+    <div class="seg" id="gp-goal">${[5,10,20].map(v=>`<button type="button" data-v="${v}" aria-pressed="${g===v}">${v} cards</button>`).join('')}</div>
+    <p class="gp-note">Days follow Indian time (IST). Meet your goal each day to grow your streak; a missed day resets it to zero.</p></div>`);
+  sh.querySelector('#gp-goal').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;S.goal=+b.dataset.v;persist();syncSoon();updateGoal();track('goal-set-'+S.goal);goalProgressSheet();};
+}
+document.addEventListener('click',e=>{if(e.target.closest('#goal'))goalProgressSheet();});
 function updateGoal(){
   const g=$('goal');if(!g)return;const p=Math.min(1,readToday()/S.goal),C=2*Math.PI*11;
   g.querySelector('.ring-fg').style.strokeDashoffset=(C*(1-p)).toFixed(1);
@@ -2055,8 +2128,8 @@ function showWelcome(){
       <li><b>Always fresh.</b> New papers and oncology news added regularly.</li>
       <li><b>Made by a head and neck surgeon,</b> for surgeons, oncologists and trainees.</li>
     </ul>
-    <button class="start" id="w-join">Customise for you</button>
-    <p class="obnote">Free, takes 30 seconds: pick your topics and daily goal, and FlapShots shapes your feed around them.</p>
+    <button class="start" id="w-join">Let's customise FlapShots for you</button>
+    <p class="obnote">Free for healthcare professionals. Takes 30 seconds: tell us your role and pick your topics, and FlapShots shapes your feed around them.</p>
     <button class="lnk obback" id="w-back">Already joined? Continue with your mobile number</button>
     <div class="obcopy">For healthcare professionals. By continuing you accept the <button class="lnk" data-legal="terms">Terms</button> and <button class="lnk" data-legal="privacy">Privacy policy</button>.<br>© 2026 Dr Manish S. Tiwari</div></div>`;
   $('w-join').onclick=()=>showReg(1);
@@ -2105,7 +2178,7 @@ function showReg(step,edit=false){
       <button class="ghostbtn" type="button" id="r-back">${edit?'Cancel':'Back'}</button>
     </form>`;
     $('r-focus').onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;$('r-focus').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));};
-    $('r-back').onclick=()=>{regDraft={};if(edit||S.profile||S.guest){o.hidden=true;o.innerHTML='';}else showWelcome();};
+    $('r-back').onclick=()=>{regDraft={};if(edit||S.profile){o.hidden=true;o.innerHTML='';}else showWelcome();};
     $('regf').onsubmit=e=>{
       e.preventDefault();
       const v=id=>$(id).value.trim();
@@ -2389,13 +2462,15 @@ async function sendSignup(kind){
 }
 /* Add to home screen: offered once the reader has swiped 8 cards in a visit; at most 3 times, 5 days apart. */
 let deferredInstall=null, sessionSeen=0;
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;});
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();if(/SamsungBrowser/i.test(navigator.userAgent))return;deferredInstall=e;});
 addEventListener('appinstalled',()=>{S.a2hs={...(S.a2hs||{}),done:1};persist();track('install');pushTags();});
 const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
 let a2hsThisVisit=false;
+let sharedGate=0;
 function maybeA2HS(){
   sessionSeen++;
+  if(sharedGate&&sessionSeen>=sharedGate&&!S.profile&&$('acct').hidden){sharedGate=0;$('sa-bar')&&$('sa-bar').remove();if(!$('sheet').hidden)closeSheet();track('shared-welcome');showWelcome();return;}
   const a=S.a2hs||{}, ios=isIOS(), day=todayKey();
   if(isStandalone()||a.done||a2hsThisVisit)return;
   if(!$('sheet').hidden||!$('acct').hidden||$('ios-banner'))return;
@@ -2480,7 +2555,8 @@ if(isIOS()&&isStandalone()&&!(S.a2hs||{}).done){S.a2hs={...(S.a2hs||{}),done:1};
 /* Android browsers: only Chrome (and Samsung Internet, Edge) offer one-tap install. Others get "Open in Chrome". */
 const UA=navigator.userAgent;
 const isAndroid=()=>/Android/i.test(UA);
-const canOneTap=()=>/Chrome\/\d+/.test(UA)&&!/(HeyTapBrowser|OppoBrowser|OnePlusBrowser|MiuiBrowser|XiaoMi|VivoBrowser|UCBrowser|OPR\/|OPX\/|Opera|YaBrowser|Firefox|DuckDuckGo|Brave|PhxBrowser|HiBrowser|HuaweiBrowser|QQBrowser|Instagram|FBAN|FBAV|LinkedInApp|Line\/|wv\)|Version\/\d)/.test(UA);
+const isSamsung=()=>/SamsungBrowser/i.test(navigator.userAgent);
+const canOneTap=()=>/Chrome\/\d+/.test(UA)&&!isSamsung()&&!/(HeyTapBrowser|OppoBrowser|OnePlusBrowser|MiuiBrowser|XiaoMi|VivoBrowser|UCBrowser|OPR\/|OPX\/|Opera|YaBrowser|Firefox|DuckDuckGo|Brave|PhxBrowser|HiBrowser|HuaweiBrowser|QQBrowser|Instagram|FBAN|FBAV|LinkedInApp|Line\/|wv\)|Version\/\d)/.test(UA);
 const chromeIntent=()=>{const u=location.origin+location.pathname.replace(/[^/]*$/,'')+'install/';return 'intent://'+u.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(u)+';end';};
 function openInChrome(){track('open-in-chrome');location.href=chromeIntent();}
 function androidInstallScreen(){
@@ -2490,13 +2566,13 @@ function androidInstallScreen(){
      <div class="inst-word">flap<b>shots</b></div>
      <p class="inst-tag">Head and neck evidence in three minutes a day</p>
      <button class="inst-btn" id="inst-chrome">Open in Chrome to install</button>
-     <p class="inst-note">This browser can't install apps. Chrome will open FlapShots with a one-tap <b>Install</b> button.</p>
-     <button class="inst-skip" id="inst-short" style="margin-top:6px">Or add a shortcut in this browser</button>
+     <p class="inst-note">${isSamsung()?'Samsung Internet\'s installer is blocked by Google Play Protect on many phones. Chrome installs FlapShots safely with one tap.':'This browser can\'t install apps. Chrome will open FlapShots with a one-tap <b>Install</b> button.'}</p>
+     ${isSamsung()?'':'<button class="inst-skip" id="inst-short" style="margin-top:6px">Or add a shortcut in this browser</button>'}
      <button class="inst-skip" id="inst-skip" style="margin-top:4px">Continue in this browser</button>`;
     document.body.appendChild(o);
     const done=()=>{o.classList.add('out');setTimeout(()=>o.remove(),450);};
     $('inst-chrome').onclick=openInChrome;
-    $('inst-short').onclick=()=>{track('install-shortcut');o.querySelector('.inst-note').innerHTML='Tap this browser\'s menu (<b>☰</b> at the bottom, or <b>⋮</b> at the top) and choose <b>Add to Home screen</b>. The shortcut opens FlapShots inside this browser; for the full-screen app, use <b>Open in Chrome</b>.';$('inst-short').remove();};
+    if($('inst-short'))$('inst-short').onclick=()=>{track('install-shortcut');o.querySelector('.inst-note').innerHTML='Tap this browser\'s menu (<b>☰</b> at the bottom, or <b>⋮</b> at the top) and choose <b>Add to Home screen</b>. The shortcut opens FlapShots inside this browser; for the full-screen app, use <b>Open in Chrome</b>.';$('inst-short').remove();};
     $('inst-skip').onclick=()=>{done();track('install-skip');};
     track('install-otherbrowser');
     return;
